@@ -14,7 +14,6 @@ from src.tools_servers.ros_client import RosCommandClient
 
 ros_client = RosCommandClient(logger=logger)
 
-@tool
 def stand_up() -> Dict:
     """Method to make the robot dog stand up (Action). 
     
@@ -28,7 +27,6 @@ def stand_up() -> Dict:
     logger.info("Stand up executed.")
     return {"status": "success", "message": "Robot dog is now standing"}
 
-@tool
 def sit_down() -> Dict:
     """Method to make the robot dog sit down (Action). 
 
@@ -58,10 +56,9 @@ def navigate(person: str, location: str) -> Dict:
               'message': A message indicating the result of the action,
     """
 
-    # the person coordinates is mapped on Jetson side
-    goal = {"person": person, "room": location}
+    # goal = {"person": person, "room": location}
     # testing goal
-    goal = {"person": "Alice", "room": "3.012"}
+    goal = {"person": "satya", "room": "pos3"}
     
     # TODO: Human-In-the-loop confirmation before executing navigation tool
     # Pause execution to ask for user approval, using interrupt
@@ -77,8 +74,18 @@ def navigate(person: str, location: str) -> Dict:
         # go head with navigation
         logger.info(f"User approved navigation to {location} for {person}. Executing navigation.")
         try:
-            result = ros_client.start_navigation(goal, timeout=900) # empty result dict is returned if using movebase action
-            return {"status": "success", "reason": result["reason"], "message": f"Robot arrived at {location}."}
+            result = ros_client.start_navigation(goal, timeout=3)
+            if result.get("success"):
+                return {
+                    "status": "success",
+                    "reason": result.get("reason", ""),
+                    "message": f"Robot arrived at {location}.",
+                }
+            return {
+                "status": "failure",
+                "reason": result.get("reason", "unknown"),
+                "message": f"Navigation to {location} failed.",
+            }
         except Exception as e:
             logger.error(f"Exception occurred in navigate tool: {e}")
             return {"status": "failure", "reason": str(e)}
@@ -86,7 +93,6 @@ def navigate(person: str, location: str) -> Dict:
         logger.info(f"User rejected navigation to {location} for {person}.")
         return {"status": "failure", "reason": "User rejected navigation."}
         
-@tool
 def emergency_stop() -> Dict:
     """Emergency stop - halt all movement (Action). 
     

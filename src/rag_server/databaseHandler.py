@@ -20,6 +20,15 @@ class DatabaseHandler:
         self.collection = self.client.get_or_create_collection(name="ias_documents_store")
         self.model = SentenceTransformer(model_name)
         self.logger = logger
+        # E5 family models expect "passage: " / "query: " prefixes for best retrieval.
+        # For non-E5 models, prefixes are left empty so behavior is identical to before.
+        self._is_e5 = "e5" in (model_name or "").lower()
+        self._passage_prefix = "passage: " if self._is_e5 else ""
+        self._query_prefix = "query: " if self._is_e5 else ""
+        if self._is_e5:
+            self.logger.info(
+                f"E5 model detected ({model_name}); using 'query:'/'passage:' prefixes."
+            )
         self.logger.info("DatabaseHandler initialized successfully.")
 
     def store_documents(self, chunks, metadatas):
@@ -32,7 +41,8 @@ class DatabaseHandler:
         """
         
         for idx, chunk in enumerate(chunks):
-            embedding = self.model.encode(chunk, normalize_embeddings=True).tolist() # using normalize for better results
+            text_to_embed = f"{self._passage_prefix}{chunk}"
+            embedding = self.model.encode(text_to_embed, normalize_embeddings=True).tolist() # using normalize for better results
             self.collection.add(
                 ids=[f"doc_{idx}"],
                 documents=[chunk],
@@ -53,7 +63,8 @@ class DatabaseHandler:
             List[str]: List of relevant document texts.
         """
         self.logger.info(f"Executing Query Retrieval.")
-        query_embedding = self.model.encode([query_text], normalize_embeddings=True).tolist()
+        text_to_embed = f"{self._query_prefix}{query_text}"
+        query_embedding = self.model.encode([text_to_embed], normalize_embeddings=True).tolist()
         results = self.collection.query(query_embeddings=query_embedding, n_results=top_k)
         self.logger.info(f"Query Retrieval successful.")
         return results["documents"]

@@ -1,3 +1,10 @@
+import os
+
+# Force fully offline operation for Hugging Face / Transformers:
+# use only the local model cache, never contact huggingface.co.
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+
 import random
 from src.graph.workflow import build_robotdog_workflow_graph
 from langchain_core.messages import SystemMessage
@@ -46,16 +53,24 @@ def main(generate_graph=False):
         # TODO: speak few sentences to start conversation
         logger.info("Starting RobotDog conversation...")
         text_to_speech("Hello! I am your RobotDog assistant. How can I help you today?")
-        result = robot_graph.invoke(initial_state, config=config_thread, )
-        
-        interrupt = result.get("__interrupt__", [])
-        if interrupt:
-            logger.info(f"Interrupt received: {interrupt[0]}")
-            text = interrupt[0].value.get("message")
-            text_to_speech(text)
-        
-        # need to resume graph
-        final_state = robot_graph.invoke(Command(resume=get_user_permission()), config=config_thread)
+        result = robot_graph.invoke(initial_state, config=config_thread)
+
+        # Handle any (possibly repeated) human-in-the-loop interrupts raised by tools.
+        while True:
+            interrupt_list = result.get("__interrupt__", [])
+            if not interrupt_list:
+                final_state = result
+                break
+
+            logger.info(f"Interrupt received: {interrupt_list[0]}")
+            text = interrupt_list[0].value.get("message", "")
+            if text:
+                text_to_speech(text)
+
+            result = robot_graph.invoke(
+                Command(resume=get_user_permission()),
+                config=config_thread,
+            )
         
         logger.info("Your RobotDog session has ended.")
         end_text = "Your RobotDog session has ended. If you need further assistance, please start a new session. Goodbye!"

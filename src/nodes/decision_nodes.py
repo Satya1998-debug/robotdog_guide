@@ -39,6 +39,8 @@ def context_processor(state: RobotDogState) -> RobotDogState:
     Makes LLM-1 call to extract both context and intent classification.
     """
     logger.info("[Node] -> context_processor_node")
+    from src.nodes.speech_process_nodes import narrate
+    narrate("thinking")
     query = state.get("original_query", "")
 
     # Combined prompt that extracts context AND classifies intent in ONE LLM call

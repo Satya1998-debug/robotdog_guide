@@ -46,6 +46,8 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     Uses LLM-3 for RAG-based answer generation.
     """
     logger.info("[Node] -> rag_node")
+    from src.nodes.speech_process_nodes import narrate
+    narrate("looking_up")
     query = state.get("original_query", "")
     context_output = state.get("context_proc_node_output", {})
     context_tags = context_output.get("context_tags", {})

@@ -8,6 +8,13 @@ import os, sys
 import contextlib
 import time
 from datetime import datetime
+
+# Allow running this file directly: `python src/rag_server/voiceAssistant.py`.
+# When imported (e.g. from main.py), this block is skipped.
+if __package__ is None or __package__ == "":
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
     
 from src.rag_server.config import (
     SPEECH_RECOGNITION_MODEL_PATH,
@@ -39,7 +46,7 @@ class VoiceAssistant:
         
         # set espeak properties (tune as needed)
         self.tts_engine.setProperty('rate', 170)  # slower rate for clarity
-        self.tts_engine.setProperty('volume', 0.1)
+        self.tts_engine.setProperty('volume', 1.0)
 
         # Keep Vosk logs optional to reduce console noise on embedded targets.
         SetLogLevel(0 if VOSK_ENABLE_LOGS else -1)
@@ -276,26 +283,26 @@ def get_voice_assistant(enable_listening=True):
     return _voice_assistant_instance
 
 
-# if __name__ == "__main__":
-#     assistant = VoiceAssistant(enable_listening=True)
-#     try:
-#         # only play wav file for testing
-#         # assistant.speak("/home/ias/satya/catkin_ws/src/door_navigation/scripts/output/dog-bark.wav")
-#         text_response = "Hello! I am your door navigation assistant. How can I help you today?"
-#         assistant.speak(text_response)
-#         if assistant.recognizer is None:
-#             print("Listening is disabled. Enable listening to use voice input.")
-#         else:
-#             while True:
-#                 user_input = assistant.get_voice_input()
-#                 print(f"You said: {user_input}")
-#                 if "exit" in user_input or "quit" in user_input:
-#                     print("Exiting voice assistant.")
-#                     break
-#                 response = f"You said: {user_input}"
-#                 assistant.speak(response)
+if __name__ == "__main__":
+    assistant = VoiceAssistant(enable_listening=True)
+    try:
+        # only play wav file for testing
+        # assistant.speak("/home/ias/satya/catkin_ws/src/door_navigation/scripts/output/dog-bark.wav")
+        text_response = "Hello! I am your door navigation assistant. How can I help you today?"
+        assistant.speak(text_response)
+        if assistant.recognizer is None:
+            print("Listening is disabled. Enable listening to use voice input.")
+        else:
+            while True:
+                user_input = assistant.get_voice_input()
+                print(f"You said: {user_input}")
+                if "exit" in user_input or "quit" in user_input:
+                    print("Exiting voice assistant.")
+                    break
+                response = f"You said: {user_input}"
+                assistant.speak(response)
 
-#     finally:
-#         assistant.close()
+    finally:
+        assistant.close()
     
  

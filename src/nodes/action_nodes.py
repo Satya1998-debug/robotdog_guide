@@ -196,7 +196,9 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     This is the LangGraph recommended pattern for MCP integration.
     """
     logger.info("[Node] -> llm_tools_node")
-        
+    from src.nodes.speech_process_nodes import narrate
+    narrate("acting")
+
     # Get action context
     action_input_data = state.get("action_input_to_tools_llm", {})
     original_query = state.get("original_query", "")

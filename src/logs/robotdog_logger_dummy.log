@@ -1,0 +1,73 @@
+
+
+=========== GRAPH Initialized ===========
+
+2026-02-10 22:07:18,318 - INFO - Starting RobotDog conversation loop...
+2026-02-10 22:07:18,318 - INFO - A RobotDog session with thread ID: 194981 started.
+
+# --- Turn 1: Institutional query (RAG, no action) ---
+2026-02-10 22:07:18,319 - INFO - [Node] -> listen_to_human_node
+2026-02-10 22:07:24,101 - INFO - [listen_to_human] original_query: "Do you know Joachim Grimstad?"
+2026-02-10 22:07:24,102 - INFO - [Node] -> context_processor_node
+2026-02-10 22:07:24,102 - INFO - [context_processor] Invoking context LLM...
+2026-02-10 22:07:25,310 - INFO - [context_processor] Context LLM completed. Intent: institutional
+2026-02-10 22:07:25,311 - INFO - [Node] -> decision_node
+2026-02-10 22:07:25,311 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.85, 'functional': 0.10, 'ambiguous': 0.03, 'conversation': 0.02}
+2026-02-10 22:07:25,312 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2026-02-10 22:07:25,312 - INFO - [Node] -> rag_node
+2026-02-10 22:07:25,312 - INFO - [rag_node] Starting document retrieval...
+2026-02-10 22:07:25,498 - INFO - [rag_node] Retrieved 1 docs | Query: "Do you know Joachim Grimstad?"
+2026-02-10 22:07:25,498 - INFO - [rag_node] Invoking RAG LLM for structured output...
+2026-02-10 22:07:26,903 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Room 3.251 | Person: Joachim Grimstad
+2026-02-10 22:07:26,904 - INFO - [Node] -> action_classifier_node
+2026-02-10 22:07:26,904 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.70 | Requires action: False
+2026-02-10 22:07:26,905 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2026-02-10 22:07:26,905 - INFO - [Node] -> conversation_node
+2026-02-10 22:07:26,905 - INFO - [conversation_node] Invoking conversation LLM...
+2026-02-10 22:07:27,611 - INFO - [conversation_node] Conversation LLM completed successfully
+2026-02-10 22:07:27,612 - INFO - [Node] -> summarizer_node
+2026-02-10 22:07:27,612 - INFO - [summarizer_node] Summary node is enabled.
+2026-02-10 22:07:27,613 - INFO - [Node] -> speak_to_human_node
+2026-02-10 22:07:27,613 - INFO - [speak_to_human] Speaking out: "Yes. Joachim Grimstad is in Room 3.251. Would you like me to guide you there?"
+
+# --- Turn 2: Functional request (tool-call, HITL approval, navigation start) ---
+2026-02-10 22:07:40,118 - INFO - [Node] -> listen_to_human_node
+2026-02-10 22:07:45,002 - INFO - [listen_to_human] original_query: "Please take me to his office."
+2026-02-10 22:07:45,003 - INFO - [Node] -> context_processor_node
+2026-02-10 22:07:45,003 - INFO - [context_processor] Invoking context LLM...
+2026-02-10 22:07:46,176 - INFO - [context_processor] Context LLM completed. Intent: functional
+2026-02-10 22:07:46,177 - INFO - [Node] -> decision_node
+2026-02-10 22:07:46,177 - INFO - [DecisionNode] Final intent: functional | Confidence: {'institutional': 0.05, 'functional': 0.90, 'ambiguous': 0.03, 'conversation': 0.02}
+2026-02-10 22:07:46,178 - INFO - [Router] decide_query_intention: functional -> rag_node
+2026-02-10 22:07:46,178 - INFO - [Node] -> rag_node
+2026-02-10 22:07:46,178 - INFO - [rag_node] Starting document retrieval...
+2026-02-10 22:07:46,301 - INFO - [rag_node] Retrieved 1 docs | Query: "Please take me to his office."
+2026-02-10 22:07:46,301 - INFO - [rag_node] Invoking RAG LLM for structured output...
+2026-02-10 22:07:47,912 - INFO - [rag_node] Action required: True | Confidence: 0.95 | Location: Room 3.251 | Person: Joachim Grimstad
+2026-02-10 22:07:47,913 - INFO - [Node] -> action_classifier_node
+2026-02-10 22:07:47,913 - INFO - [action_classifier] Threshold check: confidence=0.95 vs 0.70 | Requires action: True
+2026-02-10 22:07:47,914 - INFO - [action_classifier] Action type: navigation | Intent: navigate_to_Room 3.251
+2026-02-10 22:07:47,914 - INFO - [Router] decide_tool_call_execution: action needed -> llm_tools_node
+2026-02-10 22:07:47,915 - INFO - [Node] -> llm_tools_node
+2026-02-10 22:07:47,915 - INFO - [llm_tools_node] Invoking LLM with tools...
+2026-02-10 22:07:48,384 - INFO - [llm_tools_node] LLM decided tools: ['navigate']
+2026-02-10 22:07:48,385 - INFO - Navigate to (Room 3.251) requested.
+2026-02-10 22:07:48,386 - INFO - [HITL] Requesting user approval for navigation to Room 3.251...
+2026-02-10 22:07:52,117 - INFO - [HITL] User approved navigation to Room 3.251. Executing navigation.
+
+# --- Turn 3: Door traversal coordination during navigation (perception + HITL) ---
+2026-02-10 22:08:10,442 - INFO - [door_coordinator] Global plan active. Monitoring for doors on path...
+2026-02-10 22:08:11,120 - INFO - [door_coordinator] Door detected by YOLO | conf=0.88 | bbox=(...)
+2026-02-10 22:08:11,351 - INFO - [door_coordinator] Estimating door pose from RGB-D + RANSAC plane fitting...
+2026-02-10 22:08:11,982 - INFO - [door_coordinator] Door on global path: True | Computing pre-pose waypoint...
+2026-02-10 22:08:12,214 - INFO - [door_coordinator] Reached pre-pose. Running door state estimation...
+2026-02-10 22:08:12,553 - INFO - [door_coordinator] Door state: closed | confidence=0.72 | VLM fallback: not needed
+2026-02-10 22:08:12,554 - INFO - [HITL] Please open the door. Waiting for human assistance...
+2026-02-10 22:08:22,903 - INFO - [door_coordinator] Door state updated: open | confidence=0.81
+2026-02-10 22:08:22,904 - INFO - [door_coordinator] Traversing door and resuming navigation...
+
+# --- Completion ---
+2026-02-10 22:08:45,771 - INFO - [navigation] Goal reached: Room 3.251
+2026-02-10 22:08:45,772 - INFO - [Node] -> speak_to_human_node
+2026-02-10 22:08:45,772 - INFO - [speak_to_human] Speaking out: "We arrived at Room 3.251. You can meet Joachim here."
+2026-02-10 22:08:45,773 - INFO - Your RobotDog session has ended. Thank you!

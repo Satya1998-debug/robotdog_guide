@@ -12,6 +12,9 @@ from urllib.parse import urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 from requests.adapters import HTTPAdapter, Retry
 
+from src.rag_server.databaseHandler import DatabaseHandler
+from src.rag_server.documentProcessor import DocumentProcessor
+
 class TextScraper:
     """Scrapes text data from URLs"""
     def __init__(self, base_url, output_dir="scraped_data", max_pages=1000):
@@ -294,15 +297,12 @@ def save_to_chromadb(config, logger=None):
     logger.info(f"Stored {len(text_chunks)} chunks in ChromaDB")
 
 if __name__ == "__main__":
-    
-    from databaseHandler import DatabaseHandler
-    from documentProcessor import DocumentProcessor
     import os, sys
-    
+
     # go up one folder
     parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     sys.path.append(parent_dir)
-    
+
     from rag_server import config
     from logger import set_logger
     

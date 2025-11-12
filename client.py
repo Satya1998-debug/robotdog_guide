@@ -8,7 +8,7 @@ import asyncio
 import re
 from langchain_ollama import ChatOllama
 from src.rag_server import config
-from src.rag_module import call_RAG_generate_context_query
+from src.mcp_servers.rag_module import call_RAG_generate_context_query
 from src.rag_server.src.logger import set_logger
 from src.rag_server.src.voiceAssistant import VoiceAssistant
 

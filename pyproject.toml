@@ -107,4 +107,5 @@ dependencies = [
     "sentence-transformers>=0.2.5.1",
     "simpleaudio>=1.0.4",
     "typing-extensions>=4.15.0",
+    "vosk>=0.3.45",
 ]

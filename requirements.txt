@@ -118,6 +118,6 @@ pytz
 # Text / Audio / Assistant Features
 # ================================
 
-sentence-transformers
+sentence-transformers>=3.0.0
 gtts
 simpleaudio

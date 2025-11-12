@@ -41,7 +41,7 @@ class RAGTools:
         Returns:
             str: The generated answer.
         """
-        return self.components["ans_generator"].generate_ollama(query, use_mcp=False)
+        return self.components["ans_generator"].generate_ollama(query)
 
 def call_RAG_generate_context_query(query: str) -> str:
     rag_server = RAGTools()

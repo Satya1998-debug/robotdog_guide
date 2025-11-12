@@ -15,7 +15,7 @@ class AnswerGenerator:
         self.db_handler = db_handler
         self.logger = logger
 
-    def generate_ollama(self, query, memory=None, use_mcp=False):
+    def generate_ollama(self, query, memory=None, use_mcp=True):
         """Generates a response for a given query and optionally uses memory for continuous conversation.
 
         Args:
@@ -42,24 +42,11 @@ class AnswerGenerator:
             ]
 
             rag_llm = ChatOllama(
-                model="qwen3:8b",
+                model="qwen3:4B",
                 base_url="http://localhost:11434",
                 validate_model_on_init=True,
                 temperature=0.2,
             )
             response = rag_llm.invoke(messages).content
-            
-        else:
-            self.logger.info("Ollama API is used.")
-            userPrompt = f"{systemPrompt}\nKeep your answers short and to the point. Context:\n{context}\n\nQuestion: {query}\n\nAnswer:"
-            response = requests.post(
-                "http://localhost:11434/api/generate",
-                json={
-                    "model": "llama3:8b",
-                    "prompt": userPrompt,
-                    "stream": False
-                }
-            )
-            response = response.json()["response"]
 
         return response

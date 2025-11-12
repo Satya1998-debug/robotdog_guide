@@ -1,7 +1,8 @@
+import asyncio
 from .memory import SimpleMemory, SummarizedMemory
 import pyttsx3
-from vosk import Model, KaldiRecognizer
-import pyaudio
+# from vosk import Model, KaldiRecognizer
+# import pyaudio
 import wave
 import json
 import os
@@ -21,26 +22,26 @@ class VoiceAssistant:
         self.output_dir = self.config.OUTPUT_DIR
         self.memory = SimpleMemory(max_memory_size=10) if self.config.MEMORY_TYPE == "Simple Memory" else SummarizedMemory(max_memory_size=10, summary_prompt="Summarize this conversation")
         os.makedirs(self.output_dir, exist_ok=True)
-        self.tts_engine = pyttsx3.init()
+        # self.tts_engine = pyttsx3.init()
         
-        speech_to_text_model_path = self.config.SPEECH_RECOGNITION_MODEL_PATH + self.config.SPEECH_RECOGNITION_MODEL
-        if not os.path.exists(speech_to_text_model_path): # path: 
-            raise FileNotFoundError("Please download the Vosk model and place it in the working directory.")
+        # speech_to_text_model_path = self.config.SPEECH_RECOGNITION_MODEL_PATH + self.config.SPEECH_RECOGNITION_MODEL
+        # if not os.path.exists(speech_to_text_model_path): # path: 
+        #     raise FileNotFoundError("Please download the Vosk model and place it in the working directory.")
 
-        self.vosk_model = Model(speech_to_text_model_path)
-        self.recognizer = KaldiRecognizer(self.vosk_model, 16000)
+        # self.vosk_model = Model(speech_to_text_model_path)
+        # self.recognizer = KaldiRecognizer(self.vosk_model, 16000)
 
-        self.audio_interface = pyaudio.PyAudio()
-        self.stream = self.audio_interface.open(
-            format=pyaudio.paInt16,
-            channels=1,
-            rate=16000,
-            input=True,
-            input_device_index=self.config.MIC_DEVICE_INDEX,  # Add this
-            frames_per_buffer=8192
-        )
-        self.stream.start_stream()
-        self.logger.info("Voice Assistant initialized successfully.")
+        # self.audio_interface = pyaudio.PyAudio()
+        # self.stream = self.audio_interface.open(
+        #     format=pyaudio.paInt16,
+        #     channels=1,
+        #     rate=16000,
+        #     input=True,
+        #     input_device_index=self.config.MIC_DEVICE_INDEX,  # Add this
+        #     frames_per_buffer=8192
+        # )
+        # self.stream.start_stream()
+        # self.logger.info("Voice Assistant initialized successfully.")
 
     def speak(self, text=""):
         
@@ -167,17 +168,20 @@ class VoiceAssistant:
                 text = result.get("text", "")
                 if text:
                     return text.lower()
-
-    def get_text_input(self):
-        
-        """Captures text input from the user.
-
-        Returns:
-            str: Text input from the user.
-        """
+                
+    async def get_speech_input(self):
+        """async voice recognition."""
+        print(" Listening for speech...")
+        await asyncio.sleep(1)
+        return "Hi"
+    
+    async def get_text_input(self):
+        """captures text input asynchronously."""
+        # loop = asyncio.get_running_loop()
+        # text = await loop.run_in_executor(None, input, "Type your query: ")
         text = input("Type your query: ")
         return text.strip().lower()
-
+    
     def close(self):
         
         """Close open audio streams and terminate the audio interface."""

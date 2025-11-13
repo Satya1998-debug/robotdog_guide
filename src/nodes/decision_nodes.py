@@ -1,21 +1,22 @@
+from langgraph.graph import END
 from src.graph.state import RobotDogState
 from typing import Literal
 
 def context_processor(state: RobotDogState) -> RobotDogState:
     # use LLM-1
-    text = state["input_text"]
+    text = state.get("original_query", "")
     print(f"[ContextProcessor] Received text: {text}")
-    return {"query": text, "context_tags": []}
+    return {"original_query": text}
 
 def exit_check(state: RobotDogState) -> RobotDogState:
-    query = state["query"].lower()
+    query = state.get("original_query", "").lower()
     if any(x in query for x in ["exit", "quit", "stop"]):
         print("[ExitCheck] Exit command detected.")
-        return {"exit": True}
-    return {"exit": False}
+        return {"chat_history": ["exit command detected"]}
+    return {}
 
 def decision_node(state: RobotDogState) -> RobotDogState:
-    query = state["query"].lower()
+    query = state.get("original_query", "").lower()
     if any(x in query for x in ["where", "info", "course", "university"]):
         intent = "institutional"
     elif any(x in query for x in ["walk", "move", "go", "turn"]):
@@ -23,23 +24,22 @@ def decision_node(state: RobotDogState) -> RobotDogState:
     else:
         intent = "conversation"
     print(f"[DecisionNode] Intent detected: {intent}")
-    return {"intent": intent}
+    return {"node_sequence": ["decision_node"]}
 
 def conversation_node(state: RobotDogState) -> RobotDogState:
     # use LLM-2
-    q = state["query"]
+    q = state.get("original_query", "")
     print(f"[ConversationNode] Handling conversation: {q}")
-    return {"response": f"Conversational reply to '{q}'"}
+    response = f"Conversational reply to '{q}'"
+    return {"final_response": response, "chat_history": [response]}
 
 def clarification_node(state: RobotDogState) -> RobotDogState:
-    q = state["query"]
+    q = state.get("original_query", "")
     print(f"[ClarificationNode] Asking for clarification on: {q}")
-    return {"response": "Could you please clarify your request?"}
+    response = "Could you please clarify your request?"
+    return {"final_response": response, "chat_history": [response]}
 
-
-def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", 
-                                                            "conversation_node", "clarification_node"]:
-    
+def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", "conversation_node", "clarification_node"]:
     intent = state["intent"]
     if intent == "institutional":
         return "rag_node"
@@ -49,3 +49,13 @@ def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_
         return "clarification_node"
     else:  # general conversation
         return "conversation_node"
+    
+    
+def should_continue(state: RobotDogState) -> Literal["listen_to_human_node", END]:
+    """Decide if we should continue the loop or stop based upon whether human said to quit."""
+
+    if state.get("exit", False):
+        print("[ShouldContinue] Exit signal received. Ending interaction.")
+        return END
+    # Otherwise, we continue listening to the human
+    return "listen_to_human_node"

@@ -10,13 +10,13 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     q = state["original_query"]
     print(f"[ActionPlanner] Creating action plan for: {q}")
     plan = {"action": "move_forward"}  # simple placeholder
-    return {"plan": plan}
+    return {"action_sequence": [plan["action"]]}
 
 def action_classifier(state: RobotDogState) -> RobotDogState:
-    response = state["response"]
+    response = state.get("final_response", "")
     print(f"[ActionClassifier] Classifying response: {response}")
     if "move" in response:
         action_type = "navigation"
     else:
         action_type = "other_tools"
-    return {"action_type": action_type}
+    return {"node_sequence": ["action_classifier"]}

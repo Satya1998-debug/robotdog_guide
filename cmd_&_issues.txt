@@ -1,0 +1,8 @@
+### ============= This text file is the issues and commands that I found during setup ============ ####
+
+>>>----------- simplesaudio issue ---------------
+sudo apt install -y build-essential pkg-config libasound2-dev libsndfile1-dev portaudio19-dev libpulse-dev
+cc --version
+uv sync
+-------------------------------------------------
+

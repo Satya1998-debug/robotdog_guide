@@ -1,0 +1,7 @@
+### ======= this will contain the model reviewsfor the models I have used so far ======= ####
+
+>>>------------ Ollama- qwen2.5-coder:1.5b ------------------
+    - CPU friendly, 
+    - supports tool calling using MCP
+
+-------------------------------------------------------------

@@ -16,53 +16,50 @@ class TextToSpeechOutput(BaseModel):
 
 
 class ContextProcessorOutput(BaseModel):
-    normalized_query: str = Field(..., description="Normalized or clean query by the context processor")
-    original_query: str = Field(..., description="Raw user input")
-    context_tags: Dict[str, str] = Field(default_factory=dict, description="Extracted context tags like location, time, etc.")
+    """Combined output from context processor that includes BOTH context extraction AND intent classification"""
+    context_tags: Dict[str, str] = Field(default_factory=dict, description="Extracted context tags like location, time, person names, etc.")
+    # Intent classification fields (computed in same LLM call)
+    intent: Literal["conversation", "functional", "institutional", "ambiguous"] = Field(..., description="Detected intent type")
+    confidence: Dict[str, float] = Field(..., description="Confidence score for each intent type")
+    intent_reasoning: str = Field(..., description="Explanation of intent classification and context extraction")
 
 
 class DecisionNodeOutput(BaseModel):
+    """Output from decision node - this is now derived from ContextProcessorOutput without additional LLM calls"""
     intent: Literal["conversation", "functional", "institutional", "ambiguous"] = Field(..., description="Detected intent type")
     confidence: Dict[str, float] = Field(..., description="Confidence score for each of the intent")
     intent_reasoning: Optional[str] = Field(default=None, description="Explanation of intent classification")
 
 
 class ConversationNodeOutput(BaseModel):
-    response_conversation: str = Field(..., description="Generated conversational response")
+    conversation_reply: str = Field(..., description="Generated conversational response")
+
 
 class ClarificationNodeOutput(BaseModel):
-    clarification_question: str = Field(..., description="Clarification question to ask user")
-    clarification_type: str = Field(..., description="Type of clarification needed")
-    original_query: str = Field(..., description="The query that needs clarification")
+    question: str = Field(..., description="Clarification question to ask user")
+    clarify_type: str = Field(..., description="Type of clarification needed")
 
 
 class RAGNodeOutput(BaseModel):
-    retrieved_docs: List[str] = Field(..., description="Retrieved document snippets from vector DB")
-    rag_result: str = Field(..., description="Generated response using RAG")
-    sources: Optional[List[str]] = Field(default=None, description="Source identifiers for retrieved docs")
-    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Confidence in RAG result")
+    retrieved_context: str = Field(..., description="Retrieved and summarized context from knowledge base")
+    rag_modified_query: str = Field(..., description="Modified query with specific details (full names, room numbers, locations)")
+    requires_robot_action: bool = Field(..., description="Whether the query requires physical robot action (navigation, manipulation)")
+    action_confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence that robot action is needed")
+    target_location: Optional[str] = Field(default=None, description="Specific location/destination extracted from context (e.g., 'Room 305', 'Building A')")
+    target_person: Optional[str] = Field(default=None, description="Full name of person from context if applicable")
+    probable_actions: List[str] = Field(default_factory=list, description="List of probable robot actions based on the query, such as navigation etc.")
+    informational_response: str = Field(default="", description="Direct answer to user if no action needed, or context summary if action needed")
 
-#-------------------------------------------------------------------------------------- schema edited till here -------
-class ActionClassifierOutput(BaseModel):
+
+class ActionInputToMCP(BaseModel):
+    rag_modified_query: str = Field(default="", description="Modified query with specific details (full names, room numbers, locations)")
     action_intent: str = Field(..., description="High-level action intent (navigation, manipulation, etc.)")
     action_type: Literal["navigation", "manipulation", "perception", "other_tools"] = Field(..., description="Classified action type")
-    confidence: float = Field(..., ge=0.0, le=1.0, description="Classification confidence")
-
-
-class ActionPlannerOutput(BaseModel):
-    action_intent: str = Field(..., description="High-level action description")
-    plan: Dict[str, str] = Field(..., description="Structured action plan")
-    action_sequence: List[str] = Field(..., description="Ordered list of robot actions to execute")
-    estimated_duration: Optional[float] = Field(default=None, description="Estimated execution time in seconds")
-    requires_confirmation: bool = Field(default=False, description="Whether action needs user confirmation")
-
-
-class MCPToolOutput(BaseModel):
-    tool_called: str = Field(..., description="Name of the MCP tool invoked")
-    tool_result: Dict[str, str] = Field(..., description="Result from MCP tool execution")
-    robot_status: str = Field(..., description="Current robot status after tool execution")
-    execution_success: bool = Field(..., description="Whether tool execution succeeded")
-    error_message: Optional[str] = Field(default=None, description="Error message if execution failed")
+    requires_robot_action: bool = Field(default=False, description="Whether the query requires physical robot action (navigation, manipulation)")
+    action_confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence that robot action is needed")
+    target_location: Optional[str] = Field(default=None, description="Specific location/destination extracted from context (e.g., 'Room 305', 'Building A')")
+    target_person: Optional[str] = Field(default=None, description="Full name of person from context if applicable")
+    probable_actions: List[str] = Field(default_factory=list, description="List of probable robot actions based on the query, such as navigation etc.")
 
 
 class PerceptionFeedbackOutput(BaseModel):

@@ -1,107 +1,221 @@
 from src.graph.state import RobotDogState
-from src.graph.schemas import ActionClassifierOutput, ActionPlannerOutput, MCPToolOutput
+from src.graph.schemas import ActionInputToMCP
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+from src.config import ollama_base_url, action_planner_LLM_model, ACTION_CONFIDENCE_THRESHOLD
 
 def action_classifier(state: RobotDogState) -> RobotDogState:
     """
-    Classify action type with structured output.
+    Classify action type based on RAG output and determine if MCP execution is needed.
+    Checks action threshold from RAG node to decide on robot action.
     """
-    response = state.get("final_response", "")
-    query = state.get("original_query", "")
-    print(f"[ActionClassifier] Classifying response: {response}")
+    rag_node_output = state.get("rag_node_output", {})
     
-    # Classification logic
-    if "move" in response.lower() or "go" in response.lower():
-        action_type = "navigation"
-        action_intent = "navigate_to_location"
-        confidence = 0.90
-    elif "pick" in response.lower() or "grab" in response.lower():
-        action_type = "manipulation"
-        action_intent = "manipulate_object"
-        confidence = 0.85
-    elif "look" in response.lower() or "see" in response.lower():
-        action_type = "perception"
-        action_intent = "perceive_environment"
-        confidence = 0.80
+    # Extract action decision from RAG
+    requires_robot_action = rag_node_output.get("requires_robot_action", False)
+    action_confidence = rag_node_output.get("action_confidence", 0.0)
+    target_location = rag_node_output.get("target_location", None)
+    target_person = rag_node_output.get("target_person", None)
+    probable_actions = rag_node_output.get("probable_actions", [])
+    
+    # if no acton needed, then route to tts node
+    if not requires_robot_action or action_confidence < ACTION_CONFIDENCE_THRESHOLD:
+        # no robot action needed - just informational response to the converation node
+        action_input_to_mcp = ActionInputToMCP(
+            rag_modified_query=query_lower,
+            action_intent="no_action_needed",
+            action_type="",
+            requires_robot_action=False,
+            action_confidence=action_confidence,
+            target_location=target_location,
+            target_person=target_person,
+            probable_actions=[]
+        )
+        return {"informational_response": rag_node_output.get("informational_response", ""),
+                "action_input_to_mcp": action_input_to_mcp}
+    
     else:
-        action_type = "other_tools"
-        action_intent = "use_tool"
-        confidence = 0.70
     
-    # Create structured output
-    classifier_output = ActionClassifierOutput(
-        action_intent=action_intent,
-        action_type=action_type,
-        confidence=confidence
-    )
-    
-    return {
-        "action_intent": classifier_output.action_intent,
-        "action_classifier_output": classifier_output
-    }
+        # Robot action is needed - classify action type
+        
+        # Classify based on query and extracted targets
+        query_lower = rag_node_output.get("rag_modified_query", "").lower()
+        
+        # fallback filters for action type classification
+        if target_location or "navigation" in probable_actions or \
+            any(keyword in query_lower for keyword in ["take me", "go to", "navigate", "find room", "bring me"]):
+            action_type = "navigation"
+            action_intent = f"navigate_to_{target_location or 'location'}"
+            
+        elif target_person or "navigation" in probable_actions or \
+            any(keyword in query_lower for keyword in ["find person", "locate", "where is", "follow"]):
+            action_type = "navigation"
+            action_intent = f"find_person_{target_person or 'unknown'}"
+            
+        else:  # default to other tools
+            action_type = "other_tools"
+            action_intent = "execute_basic_tools"
+                
+        # Create ActionInput with all RAG data
+        action_input_to_mcp = ActionInputToMCP(
+            rag_modified_query=query_lower,
+            action_intent=action_intent,
+            action_type=action_type,
+            requires_robot_action=True,
+            action_confidence=action_confidence,
+            target_location=target_location,
+            target_person=target_person,
+            probable_actions=probable_actions
+        )
+        
+        return {"action_input_to_mcp": action_input_to_mcp}
 
 def action_planner(state: RobotDogState) -> RobotDogState:
     """
-    Create detailed action plan with structured output.
-    Uses LLM-3 for action planning.
+    Create detailed action plan with structured output using LLM.
+    This node is for direct 'functional' intent queries (bypasses RAG and action_classifier).
+    Uses LLM-4 for action planning and outputs ActionInput for MCP.
     """
-    q = state.get("original_query", "")
-    print(f"[ActionPlanner] Creating action plan for: {q}")
+    query = state.get("original_query", "")
+    context_output = state.get("context_proc_node_output", {})
+    context_tags = context_output.get("context_tags", {})
+    intent_reasoning = state.get("decision_node_output", {}).get("intent_reasoning", "")
     
-    # Simple placeholder plan
-    plan = {
-        "action": "move_forward",
-        "target": "destination",
-        "method": "autonomous_navigation"
-    }
-    action_sequence = ["initialize", plan["action"], "verify_completion"]
+    print(f"[ActionPlanner] Planning action for: {query}")
     
-    # Create structured output
-    planner_output = ActionPlannerOutput(
-        action_intent="navigate_forward",
-        plan=plan,
-        action_sequence=action_sequence,
-        estimated_duration=5.0,
-        requires_confirmation=False
-    )
-    
-    return {
-        "action_intent": planner_output.action_intent,
-        "plan": planner_output.plan,
-        "action_sequence": planner_output.action_sequence,
-        "needs_confirmation": planner_output.requires_confirmation,
-        "action_planner_output": planner_output
-    }
+    # Use LLM to generate action input with structured output
+    system_prompt = """You are a robot action planner that analyzes user commands and creates action inputs for robot execution.
 
-def mcp_client(state: RobotDogState) -> RobotDogState:
-    """
-    Execute MCP tool calls with structured output.
-    """
-    action_intent = state.get("action_intent", "unknown")
-    action_sequence = state.get("action_sequence", [])
-    
-    print(f"[MCPClient] Executing tool for: {action_intent}")
-    print(f"[MCPClient] Action sequence: {action_sequence}")
-    
-    # Mock tool execution
-    tool_name = "robot_control_tool"
-    result = {
-        "status": "success",
-        "message": f"Executed {action_intent}",
-        "actions_completed": str(len(action_sequence))
-    }
-    
-    # Create structured output
-    mcp_output = MCPToolOutput(
-        tool_called=tool_name,
-        tool_result=result,
-        robot_status="idle",
-        execution_success=True,
-        error_message=None
+        Your role is to:
+        1. Analyze the user's direct command/request
+        2. Determine the high-level action intent (e.g., "follow_human", "navigate_to_location")
+        3. Classify the action type: navigation, manipulation, perception, or other_tools
+        4. Extract target location or person if mentioned
+        5. Generate list of probable robot actions needed
+        6. Provide a brief informational response summarizing the action
+        7. Set action confidence (0.0-1.0) based on clarity of command
+
+        For functional/direct commands, always set requires_robot_action=True and action_confidence >= 0.8
+
+        Action type categories:
+        - navigation: moving, following, going to locations
+        - manipulation: picking, placing, grabbing, holding objects  
+        - perception: scanning, looking, inspecting, observing
+        - other_tools: speaking, displaying, communication
+
+        Be specific and decisive for direct robot commands."""
+
+    user_prompt = f"""User command: "{query}"
+        Context tags: {context_tags}
+        Intent reasoning: {intent_reasoning}
+
+        Analyze this direct robot command and provide:
+        1. action_intent: High-level intent (e.g., "follow_human", "navigate_to_kitchen")
+        2. action_type: Category from [navigation, manipulation, perception, other_tools]
+        3. requires_robot_action: True (this is a direct command)
+        4. action_confidence: 0.8-1.0 (high confidence for direct commands)
+        5. target_location: Extract location if mentioned (or null)
+        6. target_person: Extract person name if mentioned (or null)
+        7. informational_response: Brief summary of what robot will do
+        8. List probable robot actions based on the query: (keep the list empty if no action needed)
+           - "navigation", "manipulation", "perception", etc. 
+           - "other tools" like stand, sit, crawl, speak, etc.
+        """
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt),
+    ]
+
+    # Use LLM-4 (action planning model) to generate ActionInputToMCP
+    action_llm = ChatOllama(
+        model=state.get("action_planner_LLM_model", action_planner_LLM_model),  # LLM-4
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.3,  # Moderate temperature for creative but reliable planning
     )
+
+    structured_llm = action_llm.with_structured_output(ActionInputToMCP)
+    action_input_to_mcp = structured_llm.invoke(messages)
     
-    return {
-        "tool_called": mcp_output.tool_called,
-        "tool_result": mcp_output.tool_result,
-        "robot_status": mcp_output.robot_status,
-        "mcp_output": mcp_output
-    }
+    return {"action_input_to_mcp": action_input_to_mcp}
+
+def call_mcp_model(state: RobotDogState) -> RobotDogState:
+    """
+    MCP model node following LangGraph documentation pattern.
+    
+    Pattern:
+    1. Get MCP tools from global cache (initialized in workflow)
+    2. Bind tools to LLM using bind_tools()
+    3. Build context-rich messages from action_input_to_mcp
+    4. LLM decides which tools to call (or none)
+    5. Returns with tool calls in messages
+    6. tools_condition router will direct to ToolNode if tools needed
+    7. ToolNode executes tools and returns here for next iteration
+    
+    This is the LangGraph recommended pattern for MCP integration.
+    """
+    from src.graph.workflow import get_mcp_tools
+    
+    # Get MCP tools (cached, no async needed here)
+    mcp_tools = get_mcp_tools()
+    
+    # Get action context
+    action_input_data = state.get("action_input_to_mcp", {})
+    original_query = state.get("original_query", "")
+    
+    # Extract action details
+    action_intent = action_input_data.get("action_intent", "")
+    action_type = action_input_data.get("action_type", "")
+    target_location = action_input_data.get("target_location")
+    target_person = action_input_data.get("target_person")
+    probable_actions = action_input_data.get("probable_actions", [])
+    rag_modified_query = action_input_data.get("rag_modified_query", original_query)
+
+    
+    # Create LLM with tools bound (LangGraph pattern)
+    llm = ChatOllama(
+        model="qwen2.5-coder:1.5b",
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.2,
+    )
+    llm_with_tools = llm.bind_tools(mcp_tools)
+    
+    # Build context-rich system message
+    system_msg = f"""You are a RobotDog assistant executing physical robot actions.
+        Current Action Context:
+        - Action Intent: {action_intent}
+        - Action Type: {action_type}
+        - Target Location: {target_location or 'Not specified'}
+        - Target Person: {target_person or 'Not specified'}
+        - Probable Actions: {', '.join(probable_actions) if probable_actions else 'None'}
+
+        Execute the appropriate MCP tools to complete this action. Guidelines:
+        - For navigation: call stand_up() first, then navigate_to(x, y), then get_sensor_data()
+        - For sit/stand commands: call the respective tool directly
+        - For emergency: call emergency_stop() immediately
+        - Always be sequential - one tool at a time
+
+        Available MCP tools: stand_up, sit_down, navigate_to, emergency_stop, get_sensor_data"""
+    
+    # Build user message
+    user_msg = f"""Execute this robot action: {rag_modified_query}
+        Action Details:
+        - Original query: {original_query}
+        - Action intent: {action_intent}
+        - Target: {target_location or target_person or 'Not specified'}
+
+        Use the available MCP tools to complete this action step by step."""
+    
+    messages = [
+        SystemMessage(content=system_msg),
+        HumanMessage(content=user_msg),
+    ]
+    
+    # Invoke LLM with tools already bound, LLM will decide which tools to call
+    response = llm_with_tools.invoke(messages)
+    
+    # Return response with messages
+    # tools_condition will check if there are tool_calls and route accordingly
+    return {"messages": [response]}

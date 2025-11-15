@@ -3,25 +3,43 @@ from langchain_ollama import ChatOllama
 from src.graph.state import RobotDogState
 from langchain_core.messages import HumanMessage, SystemMessage
 from typing import Literal
-from src.config import context_LLM_model, ollama_base_url
+from src.config import context_LLM_model, conversation_LLM_model, ollama_base_url
 from src.graph.schemas import ContextProcessorOutput, DecisionNodeOutput, ConversationNodeOutput, ClarificationNodeOutput
 
 def context_processor(state: RobotDogState) -> RobotDogState:
     """
     Process and normalize user input with structured output.
-    Uses LLM-1 for context extraction.
+    Makes LLM-1 call to extract both context and intent classification.
     """
-    chat = state.get("stt_node_output", {}).get("original_query", "")
-    context_proc_node_output = state.get("context_proc_node_output")
+    query = state.get("original_query", "")
 
-    # LLM message prompt, each LLM may have different system instructions
+    # Combined prompt that extracts context AND classifies intent in ONE LLM call
+    system_prompt = """You are an expert assistant that performs comprehensive query analysis:
+        1. Extract context tags (keywords related to university services, robot functions, location info, person names, etc.)
+        2. Classify the intent into one of: institutional, functional, ambiguous, or conversation
+        3. Provide confidence scores for each intent type (must sum to ~1.0)
+        4. Explain your reasoning for both context extraction and intent classification
+
+        Intent definitions:
+        - 'institutional': Query involves a person/entity that requires authentication/verification (e.g., "Is Dr. Smith available?")
+        - 'functional': Query is a direct action command for the robot (e.g., "Take me to room 305", "Follow me", "Sit", "Stand", etc.)
+        - 'ambiguous': Query is confusing, unclear, or lacks sufficient context
+        - 'conversation': General conversational query or small talk (e.g., "How are you?", "What's your name?", "Tell me a joke", "what is the weather like?")"""
+
+    user_prompt = f"""Analyze this user query: "{query}"
+
+        Extract and provide:
+        1. Context tags as a dictionary (e.g., {{"person": "Dr. Smith", "action": "navigation", "location": "room 305"}})
+        2. Primary intent classification
+        3. Confidence scores for all 4 intent types
+        4. Reasoning explaining both your context extraction and intent classification"""
+
     messages = [
-        SystemMessage(content="You are an expert assistant that extracts context from user queries, normalize the query, derive context tags."),
-        HumanMessage(content=f"User query: {chat}\nExtract the main intent and relevant context tags. Provide a normalized version of the query. \
-                     Context tags means keywords related to university services, robot functions, location info, person names, etc."),
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt),
     ]
 
-    # call LLM-1 to process text and extract context
+    # single LLM call that returns context + intent together
     llm = ChatOllama(
         model=state.get("context_LLM_model", context_LLM_model),
         base_url=ollama_base_url,
@@ -31,6 +49,9 @@ def context_processor(state: RobotDogState) -> RobotDogState:
 
     structured_llm = llm.with_structured_output(ContextProcessorOutput)
     res = structured_llm.invoke(messages)
+
+    # update node sequence 
+
     return {"context_proc_node_output": dict(res)}
 
 def exit_check(state: RobotDogState) -> RobotDogState:
@@ -42,90 +63,173 @@ def exit_check(state: RobotDogState) -> RobotDogState:
 
 def decision_node(state: RobotDogState) -> RobotDogState:
     """
-    Classify user intent with structured output and confidence scoring.
+    Extract decision from context processor output, just reads from context_proc_node_output.
+    Performs additional rule-based logic or filtering if needed.
     """
-    normalized_query = state.get("context_proc_node_output", {}).get("normalized_query", "")
-    context_tags = state.get("context_proc_node_output", {}).get("context_tags", {})
-
-    decision_node_output = state.get("decision_node_output")
-
-    # LLM message prompt, each LLM may have different system instructions
-    messages = [
-        SystemMessage(content="You are an expert assistant that extracts intent (e.g., institutional, functional, ambiguous, conversation) from normalized queries and context tags. \
-                      Provide confidence scores for each intent. If unsure, classify as ambiguous. Also do reasoning for your classification."),
-        HumanMessage(content=f"Normalized User query: {normalized_query}\nExtract the main intent and relevant context tags. \
-                     Context tags: {context_tags}. Context tags means keywords related to university, robot functions, location info, person names, etc. \
-                        \n NOTE: \n intent is 'institutional' if its a person, so that we can check its authenticity, 'functional' if the query is a direct action only, 'ambiguous' if the query is confusion and unclear, 'conversation' if its a general talk."),
-    ]
-
-    # call LLM-1 to process text and extract context
-    llm = ChatOllama(
-        model=state.get("context_LLM_model", context_LLM_model),
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.3,
-    )
-
-    structured_llm = llm.with_structured_output(DecisionNodeOutput)
-    res = structured_llm.invoke(messages)
-    return {"decision_node_output": dict(res)}
+    context_output = state.get("context_proc_node_output", {})
+    
+    # Extract intent-related fields from context processor output
+    intent = context_output.get("intent", "ambiguous")
+    confidence = context_output.get("confidence", {})
+    intent_reasoning = context_output.get("intent_reasoning", "")
+    
+    # Optional: Add rule-based overrides or validation logic here
+    # For example, if confidence is too low, override to ambiguous
+    max_confidence = confidence.get(intent, 0.0)
+    if max_confidence < 0.5:
+        print(f"[DecisionNode] Low confidence ({max_confidence:.2f}), overriding to ambiguous")
+        intent = "ambiguous"
+        intent_reasoning += " | Overridden to ambiguous due to low confidence."
+    
+    # Optional: Add exit detection logic
+    original_query = state.get("original_query", "").lower()
+    if any(keyword in original_query for keyword in ["exit", "quit", "stop", "goodbye", "bye"]):
+        print("[DecisionNode] Exit keyword detected in query")
+        state["exit"] = True
+    
+    print(f"[DecisionNode] Final intent: {intent} | Confidence: {confidence}")
+    
+    # decision node output
+    decision_output = DecisionNodeOutput(intent=intent, 
+                                         confidence=confidence, 
+                                         intent_reasoning=intent_reasoning)
+    
+    return {"decision_node_output": dict(decision_output)}
 
 def conversation_node(state: RobotDogState) -> RobotDogState:
     """
     Generate conversational response with structured output.
     Uses LLM-2 for natural conversation.
     """
-    q = state.get("original_query", "")
-    print(f"[ConversationNode] Handling conversation: {q}")
+    query = state.get("original_query", "")
+    context = state.get("context_proc_node_output", {})
+    context_tags = context.get("context_tags", {})
+    chat_history = state.get("chat_history", [])  # TODO
     
-    response = f"Conversational reply to '{q}'"
+    print(f"[ConversationNode] Generating conversational response for: {query}")
     
-    # Create structured output
-    conversation_output = ConversationNodeOutput(
-        final_response=response,
-        chat_history_entry=f"User: {q}\nBot: {response}",
-        metadata={"timestamp": "now", "node": "conversation"}
+    # Use LLM-2 to generate natural conversational response
+    system_prompt = """You are a friendly, helpful robot assistant that engages in natural conversation.
+        You can discuss various topics, answer general questions, make small talk, and be personable.
+
+        Your personality:
+        - Friendly and approachable
+        - Professional but warm
+        - Helpful and informative
+        - Can handle casual conversation, jokes, weather talk, greetings, etc.
+
+        Keep responses concise but engaging. If the user asks about your capabilities, mention you can help with navigation, finding people, and institutional information."""
+
+    # Include recent chat history for context
+    # history_context = "\n".join(chat_history[-3:]) if chat_history else "No previous conversation"
+    history_context = "\n".join(chat_history[-3:]) if chat_history else "No previous conversation"
+    
+    user_prompt = f"""Previous conversation context:
+        {history_context}
+
+        User just said: "{query}"
+        Context tags: {context_tags}
+
+        Generate a natural, conversational response. Be friendly and engaging."""
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt),
+    ]
+
+    # Use LLM-2 (conversation model) to generate response
+    llm = ChatOllama(
+        model=state.get("conversation_LLM_model", "qwen2.5-coder:1.5b"),
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.7,  # higher temperature for more natural conversation
     )
+
+    structured_llm = llm.with_structured_output(ConversationNodeOutput)
+    conversation_output = structured_llm.invoke(messages)
     
-    return {
-        "final_response": conversation_output.final_response,
-        "chat_history": [conversation_output.chat_history_entry],
-        "conversation_output": conversation_output
-    }
+    print(f"[ConversationNode] Generated response: {conversation_output.conversation_reply}")
+    
+    return {"conversation_node_output": dict(conversation_output)}
 
 def clarification_node(state: RobotDogState) -> RobotDogState:
     """
-    Ask for clarification with structured output.
+    Ask for clarification with structured output to the user. Formulate the question using LLM-1. 
+    This node is called when the intent is "ambiguous".
     """
-    q = state.get("original_query", "")
-    print(f"[ClarificationNode] Asking for clarification on: {q}")
+    query = state.get("original_query", "")
+    context = state.get("context_proc_node_output", {})
+    context_tags = context.get("context_tags", {})
+    intent_reasoning = context.get("intent_reasoning", "")
     
-    response = "Could you please clarify your request?"
+    print(f"[ClarificationNode] Generating clarification question for: {query}")
     
-    # Create structured output
-    clarification_output = ClarificationNodeOutput(
-        final_response=response,
-        clarification_type="ambiguous_intent",
-        original_query=q
+    # Use LLM to generate a clarification question
+    system_prompt = """You are a helpful robot assistant that generates clarification questions.
+        When a user's query is ambiguous or unclear, you need to ask a specific, helpful question to understand their intent better.
+
+        Your task is to:
+        1. Generate a polite, specific clarification question
+        2. Identify the type of clarification needed (e.g., "missing_location", "unclear_intent", "ambiguous_person", "multiple_possible_actions")
+
+        Be conversational and helpful in your clarification question."""
+
+    user_prompt = f"""The user said: "{query}"
+
+        Context extracted: {context_tags}
+        Why it's ambiguous: {intent_reasoning}
+
+        Generate:
+        1. A clarification question that will help me understand what the user wants
+        2. The type of clarification needed (e.g., "missing_location", "unclear_intent", "ambiguous_person", etc.)
+
+        Be specific and helpful."""
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt),
+    ]
+
+    # Use same LLM (LLM-1) to generate clarification question
+    llm = ChatOllama(
+        model=state.get("context_LLM_model", context_LLM_model),
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.3,  # slightly more creative than context processing
     )
+
+    structured_llm = llm.with_structured_output(ClarificationNodeOutput)
+    clarification_output = structured_llm.invoke(messages)
     
-    return {
-        "final_response": clarification_output.final_response,
-        "chat_history": [response],
-        "clarification_output": clarification_output
-    }
+    print(f"[ClarificationNode] Generated question: {clarification_output.question}")
+    print(f"[ClarificationNode] Clarification type: {clarification_output.clarify_type}")
+    
+    return {"clarification_node_output": dict(clarification_output)}
 
 def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", "conversation_node", "clarification_node"]:
     intent = state.get("decision_node_output", {}).get("intent", "")
-    if intent == "institutional":
+    if intent == "institutional":  # will have RAG
         return "rag_node"
-    elif intent == "functional":
+    elif intent == "functional":  # will have MCP
         return "action_planner_node"
     elif intent == "ambiguous":
-        return "clarification_node"
+        return "clarification_node"  # will call LLM then TTS module (with clarify question)
     else:  # general conversation
-        return "conversation_node"
+        return "conversation_node"  # will call LLM then TTS module (with conversational reply)
+
+def decide_mcp_execution(state: RobotDogState) -> Literal["mcp_llm_node", "speak_to_human_node"]:
+    """
+    Decide whether to execute MCP based on action_input from action_classifier.
+    If action is not needed (requires_robot_action=False), skip MCP and go directly to speaking.
+    """
+    action_input_data_mcp = state.get("action_input_to_mcp", {}) # most of this is empty if the robot action is not needed
+    requires_action = action_input_data_mcp.get("requires_robot_action", False)
+    action_intent = action_input_data_mcp.get("action_intent", "no_action_needed")
     
+    if not requires_action or action_intent == "no_action_needed":
+        return "speak_to_human_node"
+    else:
+        return "mcp_llm_node"
     
 def should_continue(state: RobotDogState) -> Literal["listen_to_human_node", END]:
     """Decide if we should continue the loop or stop based upon whether human said to quit."""

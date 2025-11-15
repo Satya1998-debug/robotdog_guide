@@ -4,12 +4,15 @@ Dummy methods that will be exposed as MCP tools for controlling and interacting 
 """
 
 import json
+import logging
 from typing import Dict, List, Tuple, Optional
 from mcp.server.fastmcp import FastMCP
-from rag_server.src.logger import set_logger
 
 mcp = FastMCP("robot_dog_tools_server")
-logger = set_logger("robot_dog_tools_server")
+
+# Setup logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("robot_dog_tools_server")
 
 """Collection of tools for RobotDog indoor navigation via MCP"""
 
@@ -139,19 +142,6 @@ def get_sensor_data() -> Dict:
             "battery": 85,
             "message": "Sensor data retrieved"
         }
-    
-# @mcp.tool()
-# def final_response(message: str) -> str:
-#     """Final response to the user (summary). This tool is called at the end of the conversation after all tools are called before returning to the user.
-    
-#     Note: Always called at the end of the interaction to provide a summary response to the user based on the actions taken and information gathered during the interaction.
-    
-#     Returns:
-#         Dict: 'Status': 'success' or 'failure' indicating the communication state,
-#               'message': A message indicating the result of the action.
-#     """
-#     logger.info(f"Final response executed with answer")
-#     return message
 
 # Example usage
 if __name__ == "__main__":

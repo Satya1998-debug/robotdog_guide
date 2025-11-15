@@ -2,6 +2,8 @@ import chromadb
 from importlib_metadata import metadata
 from sentence_transformers import SentenceTransformer
 import os
+
+
 class DatabaseHandler:
     
     """Handles storage and retrieval of documents from a database."""
@@ -45,7 +47,7 @@ class DatabaseHandler:
 
         Args:
             query_text (str): The query or question to match.
-            k (int): Number of top documents to retrieve.
+            top_k (int): Number of top documents to retrieve.
 
         Returns:
             List[str]: List of relevant document texts.

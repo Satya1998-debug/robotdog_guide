@@ -29,7 +29,9 @@ def listen_to_human(state: RobotDogState) -> RobotDogState:
     # Create structured output
     text_input_from_speech = SpeechToTextOutput(original_query=converted_text)
     
-    return {"stt_node_output": dict(text_input_from_speech)}
+    # Set both the structured output AND the parent state variable
+    return {"stt_node_output": dict(text_input_from_speech),
+            "original_query": converted_text}
 
 def speak_to_human(state: RobotDogState) -> RobotDogState:
     """

@@ -2,6 +2,8 @@ import openai
 import os
 import requests
 from langchain_ollama import ChatOllama
+
+
 class AnswerGenerator:
     """Generates answers based on input prompts using a language model."""
 

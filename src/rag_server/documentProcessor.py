@@ -1,5 +1,5 @@
 import pandas as pd
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import ast
 from itertools import zip_longest
 from typing import List, Dict, Tuple

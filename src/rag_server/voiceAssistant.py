@@ -21,7 +21,6 @@ class VoiceAssistant:
         self.config = config
         self.output_dir = self.config.OUTPUT_DIR
         self.memory = SimpleMemory(max_memory_size=10) if self.config.MEMORY_TYPE == "Simple Memory" else SummarizedMemory(max_memory_size=10, summary_prompt="Summarize this conversation")
-        os.makedirs(self.output_dir, exist_ok=True)
         # self.tts_engine = pyttsx3.init()
         
         # speech_to_text_model_path = self.config.SPEECH_RECOGNITION_MODEL_PATH + self.config.SPEECH_RECOGNITION_MODEL

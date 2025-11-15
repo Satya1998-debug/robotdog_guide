@@ -1,4 +1,4 @@
-from typing import Literal, TypedDict, List, Dict, Optional, Annotated
+from typing import Any, TypedDict, List, Dict, Optional, Annotated
 from operator import add
 from src.graph.schemas import (
     SpeechToTextOutput,
@@ -7,9 +7,7 @@ from src.graph.schemas import (
     ConversationNodeOutput,
     ClarificationNodeOutput,
     RAGNodeOutput,
-    ActionClassifierOutput,
-    ActionPlannerOutput,
-    MCPToolOutput,
+    ActionInputToMCP,
     PerceptionFeedbackOutput,
     SummarizerNodeOutput,
     MemoryUpdate,
@@ -23,7 +21,8 @@ class RobotDogState(TypedDict):
     """
 
     start_conversation: bool  # true if starting new conversation, of pursuit existing
-    
+    original_query: str       # raw user input query
+
     # Speech Processing 
     stt_node_output: Optional[SpeechToTextOutput]         # structured ASR output, has original_query
     
@@ -40,22 +39,21 @@ class RobotDogState(TypedDict):
     clarification_node_output: Optional[ClarificationNodeOutput]   # structured clarification output
     
     # RAG 
+    rag_LLM_model: str                               # LLM-3 model used for RAG
     rag_node_output: Optional[RAGNodeOutput]                 # structured RAG output
-
-    #-------------------------------------------------- edited till here --------------------------------
     
     # Action Planning & Execution 
-    action_classifier_output: Optional[ActionClassifierOutput]  # structured action classification
-    action_planner_output: Optional[ActionPlannerOutput]        # structured action plan
-    mcp_output: Optional[MCPToolOutput]                         # structured MCP tool result
+    action_planner_LLM_model: str                    # LLM-4 model used for action planning
     
-    action_intent: str                                  # high-level action intent
-    plan: Dict[str, str]                               # structured plan
-    action_sequence: List[str]                         # sequence of planned robot actions
-    tool_called: str                                    # name of tool invoked
-    tool_result: Dict[str, str]                        # response from MCP tool
-    robot_status: str                                   # "running" | "idle" | "error"
+    # action input to MCP
+    action_input_to_mcp: Optional[ActionInputToMCP]                      # structured action classification
+    informational_response: Optional[str]                     # direct response if no action needed
     
+    # MCP execution (LangGraph pattern with messages)
+    messages: Annotated[List[Any], add]                      # Messages for LangGraph MCP pattern
+    mcp_output: str                       # structured MCP tool result
+        
+    ###----------------------------- edited till here ----------------------------    
     # Feedback & Perception 
     perception_output: Optional[PerceptionFeedbackOutput]       # structured perception feedback
     summarizer_output: Optional[SummarizerNodeOutput]           # structured summary

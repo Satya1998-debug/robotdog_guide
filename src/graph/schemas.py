@@ -61,27 +61,6 @@ class ActionInputToMCP(BaseModel):
     target_person: Optional[str] = Field(default=None, description="Full name of person from context if applicable")
     probable_actions: List[str] = Field(default_factory=list, description="List of probable robot actions based on the query, such as navigation etc.")
 
-
-class PerceptionFeedbackOutput(BaseModel):
-    feedback: str = Field(..., description="Processed sensor/perception feedback")
-    sensor_data: Optional[Dict[str, str]] = Field(default=None, description="Raw or processed sensor readings")
-    anomalies_detected: bool = Field(default=False, description="Whether any anomalies were detected")
-
-
-class SummarizerNodeOutput(BaseModel):
-    final_response: str = Field(..., description="Summarized status for TTS output")
-    summary: str = Field(..., description="Detailed summary of action execution and feedback")
-    success: bool = Field(..., description="Whether overall action was successful")
-    metadata: Optional[Dict[str, str]] = Field(default=None, description="Additional summary metadata")
-
-
-class MemoryUpdate(BaseModel):
-    key: str = Field(..., description="Memory key")
-    value: str = Field(..., description="Memory value")
-    timestamp: Optional[str] = Field(default=None, description="Timestamp of memory update")
-
-
-class NodeSequenceEntry(BaseModel):
-    node_name: str = Field(..., description="Name of the executed node")
-    timestamp: Optional[str] = Field(default=None, description="Execution timestamp")
-    status: Literal["success", "error", "skipped"] = Field(default="success", description="Execution status")
+class MCPToolCallOutput(BaseModel):
+    mcp_response: str = Field(..., description="Raw response from MCP model")
+    tools_called: List[str] = Field(default_factory=list, description="List of tools that were called during MCP execution")

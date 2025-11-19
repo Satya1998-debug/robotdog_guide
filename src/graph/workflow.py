@@ -4,8 +4,8 @@ from src.nodes.decision_nodes import context_processor, decision_node, conversat
     clarification_node, decide_query_intention, should_continue, decide_mcp_execution
 from src.nodes.rag_nodes import rag_pipeline
 from src.nodes.action_nodes import action_planner, action_classifier, call_mcp_model
-from src.nodes.feedback_nodes import summarizer_node, perception_feedback
 from src.nodes.speech_process_nodes import speak_to_human, listen_to_human
+from langgraph.checkpoint.memory import MemorySaver
 
 import os
 import asyncio
@@ -51,13 +51,6 @@ def get_mcp_tools():
 async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     """
     Build LangGraph workflow with MCP tool integration.
-    
-    MCP Pattern (from LangGraph docs):
-    1. Get MCP tools at graph build time
-    2. Create ToolNode with MCP tools
-    3. call_mcp_model node uses model.bind_tools(tools)
-    4. tools_condition routes to ToolNode if tools needed
-    5. ToolNode executes tools and returns to call_mcp_model
     """
     
     # Get MCP tools once at graph build time (async)
@@ -99,7 +92,7 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
 
     # Conversation path
     graph.add_edge("conversation_node", "speak_to_human_node")
-    graph.add_edge("clarification_node", "conversation_node")
+    graph.add_edge("clarification_node", "speak_to_human_node")
     
     # RAG path
     graph.add_edge("rag_node", "action_classifier_node")
@@ -127,6 +120,8 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     # graph.add_edge("perception_feedback_node", "summarizer_node")
     # graph.add_edge("summarizer_node", "speak_to_human_node")
 
+    # for history tracking
+    checkpointer = MemorySaver()
 
-    return graph.compile()
 
+    return graph.compile(checkpointer=checkpointer)

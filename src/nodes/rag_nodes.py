@@ -2,7 +2,7 @@ from multiprocessing import context
 from src.graph.state import RobotDogState
 from src.graph.schemas import RAGNodeOutput
 from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from src.config import ollama_base_url
 
 # rag related imports
@@ -31,6 +31,8 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     retrieved_docs = get_rag_output(query)
     retrieved_context = "\n\n".join([doc["content"] if isinstance(doc, dict) else str(doc) for doc in retrieved_docs]) if retrieved_docs else "No relevant documents found."
     
+    messages = state.get("chat_history", [])
+
     # Use LLM-3 to generate RAG-based response with structured output
     system_prompt = """You are a helpful robot assistant that answers questions based on retrieved institutional information.
         Your role is to:
@@ -74,10 +76,10 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
 
         Be precise about action requirements."""
 
-    messages = [
+    messages.extend([
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
-    ]
+    ])
 
     # Use LLM-3 (RAG model) to generate response
     rag_llm = ChatOllama(
@@ -89,8 +91,21 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
 
     structured_llm = rag_llm.with_structured_output(RAGNodeOutput)
     rag_output = structured_llm.invoke(messages)
+
+    response_content = f"""RAG Retrieved Context: {rag_output.retrieved_context}\n\
+        Modified Query: {rag_output.rag_modified_query}\n\
+        Requires Robot Action: {rag_output.requires_robot_action}\n\
+        Action Confidence: {rag_output.action_confidence}\n\
+        Target Location: {rag_output.target_location}\n\
+        Target Person: {rag_output.target_person}\n\
+        Probable Actions: {', '.join(rag_output.probable_actions)}\n\
+        Informational Response: {rag_output.informational_response}"""
     
-    return {"rag_node_output": dict(rag_output), "informational_response": rag_output.informational_response}
+    return {"rag_node_output": dict(rag_output), 
+            "informational_response": rag_output.informational_response,
+            "chat_history": [SystemMessage(content=system_prompt),
+                             HumanMessage(content=user_prompt), 
+                             AIMessage(content=response_content)]}
 
 def get_rag_output(query):
     """

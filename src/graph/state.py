@@ -1,5 +1,9 @@
 from typing import Any, TypedDict, List, Dict, Optional, Annotated
 from operator import add
+from langchain_core.messages import BaseMessage
+from langgraph.graph.message import add_messages
+
+
 from src.graph.schemas import (
     SpeechToTextOutput,
     ContextProcessorOutput,
@@ -8,10 +12,7 @@ from src.graph.schemas import (
     ClarificationNodeOutput,
     RAGNodeOutput,
     ActionInputToMCP,
-    PerceptionFeedbackOutput,
-    SummarizerNodeOutput,
-    MemoryUpdate,
-    NodeSequenceEntry
+    MCPToolCallOutput,
 )
 
 
@@ -31,8 +32,6 @@ class RobotDogState(TypedDict):
     context_proc_node_output: Optional[ContextProcessorOutput]    # has normalized query, context tags
     decision_node_output: Optional[DecisionNodeOutput]       # has intent, confidence, intent_reasoning
     
-    nodewise_chat_history: List[str]          # intermediate chat history per node, need to add redce logic
-
     # Conversation
     conversation_LLM_model: str                      # LLM-2 model used for conversation 
     conversation_node_output: Optional[ConversationNodeOutput]     # structured conversation response
@@ -47,28 +46,18 @@ class RobotDogState(TypedDict):
     
     # action input to MCP
     action_input_to_mcp: Optional[ActionInputToMCP]                      # structured action classification
-    informational_response: Optional[str]                     # direct response if no action needed
+    informational_response: Optional[str]  # direct response if no action needed
     
     # MCP execution (LangGraph pattern with messages)
-    messages: Annotated[List[Any], add]                      # Messages for LangGraph MCP pattern
-    mcp_output: str                       # structured MCP tool result
-        
-    ###----------------------------- edited till here ----------------------------    
-    # Feedback & Perception 
-    perception_output: Optional[PerceptionFeedbackOutput]       # structured perception feedback
-    summarizer_output: Optional[SummarizerNodeOutput]           # structured summary
-    
-    feedback: str                                       # processed feedback text
-    summary: str                                        # summarized status for TTS
-    sensor_feedback: str                                # raw robot feedback
-    
-    # Memory & History 
-    memory_state: Dict[str, str]                       # persistent short-term memory
-    memory_updates: Annotated[List[MemoryUpdate], add] # accumulated memory updates
-    chat_history: Annotated[List[str], add]            # conversation history (accumulated)
-    node_sequence: Annotated[List[NodeSequenceEntry], add]  # sequence of visited nodes (accumulated)
+    mcp_output: Optional[MCPToolCallOutput]  # Raw MCP output
+
+    # Memory & History for all chats fro all nodes
+    chat_history: Annotated[List[BaseMessage], add_messages]  # conversation history (accumulated)
     
     # Control Flags 
-    needs_confirmation: bool                            # true if action requires human input
-    exit_flag: bool                                    # true if user said bye/exit
-    exit: bool                                          # alternative exit flag
+    needs_confirmation: bool # true if action requires human input
+    exit_flag: bool  # true if user said bye/exit
+    exit: bool  # alternative exit flag
+
+    # final response
+    final_response: str  # structured final response output

@@ -1,7 +1,7 @@
 from langgraph.graph import END
 from langchain_ollama import ChatOllama
 from src.graph.state import RobotDogState
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from typing import Literal
 from src.config import context_LLM_model, conversation_LLM_model, ollama_base_url
 from src.graph.schemas import ContextProcessorOutput, DecisionNodeOutput, ConversationNodeOutput, ClarificationNodeOutput
@@ -11,7 +11,10 @@ def context_processor(state: RobotDogState) -> RobotDogState:
     Process and normalize user input with structured output.
     Makes LLM-1 call to extract both context and intent classification.
     """
+
     query = state.get("original_query", "")
+
+    messages = state.get("chat_history", []) # this messages is a local variable that stores the chat history for LLM calls
 
     # Combined prompt that extracts context AND classifies intent in ONE LLM call
     system_prompt = """You are an expert assistant that performs comprehensive query analysis:
@@ -34,11 +37,10 @@ def context_processor(state: RobotDogState) -> RobotDogState:
         3. Confidence scores for all 4 intent types
         4. Reasoning explaining both your context extraction and intent classification"""
 
-    messages = [
+    messages.extend([
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
-    ]
-
+    ])
     # single LLM call that returns context + intent together
     llm = ChatOllama(
         model=state.get("context_LLM_model", context_LLM_model),
@@ -50,9 +52,13 @@ def context_processor(state: RobotDogState) -> RobotDogState:
     structured_llm = llm.with_structured_output(ContextProcessorOutput)
     res = structured_llm.invoke(messages)
 
-    # update node sequence 
+    # context data to the chat history
+    response_content = f"""Context Tags: {res.context_tags}\nIntent: {res.intent}\nReasoning: {res.intent_reasoning}"""
 
-    return {"context_proc_node_output": dict(res)}
+    return {"context_proc_node_output": dict(res), 
+            "chat_history": [SystemMessage(content=system_prompt), 
+                             HumanMessage(content=user_prompt), 
+                             AIMessage(content=response_content)]}
 
 def exit_check(state: RobotDogState) -> RobotDogState:
     query = state.get("original_query", "").lower()
@@ -104,9 +110,7 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     query = state.get("original_query", "")
     context = state.get("context_proc_node_output", {})
     context_tags = context.get("context_tags", {})
-    chat_history = state.get("chat_history", [])  # TODO
-    
-    print(f"[ConversationNode] Generating conversational response for: {query}")
+    messages = state.get("chat_history", []) # this messages is a local variable that stores the chat history for LLM calls
     
     # Use LLM-2 to generate natural conversational response
     system_prompt = """You are a friendly, helpful robot assistant that engages in natural conversation.
@@ -120,22 +124,15 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
 
         Keep responses concise but engaging. If the user asks about your capabilities, mention you can help with navigation, finding people, and institutional information."""
 
-    # Include recent chat history for context
-    # history_context = "\n".join(chat_history[-3:]) if chat_history else "No previous conversation"
-    history_context = "\n".join(chat_history[-3:]) if chat_history else "No previous conversation"
     
-    user_prompt = f"""Previous conversation context:
-        {history_context}
-
-        User just said: "{query}"
+    user_prompt = f"""User just said: "{query}"
         Context tags: {context_tags}
+        Generate a natural, conversational response. Be friendly and engaging. Follow history for context."""
 
-        Generate a natural, conversational response. Be friendly and engaging."""
-
-    messages = [
+    messages.extend([
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
-    ]
+    ])
 
     # Use LLM-2 (conversation model) to generate response
     llm = ChatOllama(
@@ -148,9 +145,13 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     structured_llm = llm.with_structured_output(ConversationNodeOutput)
     conversation_output = structured_llm.invoke(messages)
     
-    print(f"[ConversationNode] Generated response: {conversation_output.conversation_reply}")
-    
-    return {"conversation_node_output": dict(conversation_output)}
+    # add response to history
+    response_content = conversation_output.conversation_reply
+
+    return {"conversation_node_output": dict(conversation_output),
+            "chat_history": [SystemMessage(content=system_prompt),
+                             HumanMessage(content=user_prompt), 
+                             AIMessage(content=response_content)]}
 
 def clarification_node(state: RobotDogState) -> RobotDogState:
     """
@@ -162,8 +163,7 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
     context_tags = context.get("context_tags", {})
     intent_reasoning = context.get("intent_reasoning", "")
     
-    print(f"[ClarificationNode] Generating clarification question for: {query}")
-    
+    messages = state.get("chat_history", [])
     # Use LLM to generate a clarification question
     system_prompt = """You are a helpful robot assistant that generates clarification questions.
         When a user's query is ambiguous or unclear, you need to ask a specific, helpful question to understand their intent better.
@@ -185,10 +185,10 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
 
         Be specific and helpful."""
 
-    messages = [
+    messages.extend([
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
-    ]
+    ])
 
     # Use same LLM (LLM-1) to generate clarification question
     llm = ChatOllama(
@@ -200,11 +200,14 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
 
     structured_llm = llm.with_structured_output(ClarificationNodeOutput)
     clarification_output = structured_llm.invoke(messages)
+
+    response_content = f"""Clarification Question: {clarification_output.question}\nType: {clarification_output.clarify_type}"""
+
     
-    print(f"[ClarificationNode] Generated question: {clarification_output.question}")
-    print(f"[ClarificationNode] Clarification type: {clarification_output.clarify_type}")
-    
-    return {"clarification_node_output": dict(clarification_output)}
+    return {"clarification_node_output": dict(clarification_output),
+            "chat_history": [SystemMessage(content=system_prompt),
+                             HumanMessage(content=user_prompt), 
+                             AIMessage(content=response_content)]}
 
 def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", "conversation_node", "clarification_node"]:
     intent = state.get("decision_node_output", {}).get("intent", "")
@@ -235,7 +238,6 @@ def should_continue(state: RobotDogState) -> Literal["listen_to_human_node", END
     """Decide if we should continue the loop or stop based upon whether human said to quit."""
 
     if state.get("exit", False):
-        print("[ShouldContinue] Exit signal received. Ending interaction.")
         return END
     # Otherwise, we continue listening to the human
     return "listen_to_human_node"

@@ -1,5 +1,6 @@
 from src.graph.state import RobotDogState
 from src.graph.schemas import SpeechToTextOutput, TextToSpeechOutput
+from langchain_core.messages import HumanMessage, AIMessage
 
 def speech_to_text(audio_data: str) -> str:
     """
@@ -31,7 +32,8 @@ def listen_to_human(state: RobotDogState) -> RobotDogState:
     
     # Set both the structured output AND the parent state variable
     return {"stt_node_output": dict(text_input_from_speech),
-            "original_query": converted_text}
+            "original_query": converted_text,
+            "chat_history": HumanMessage(content=converted_text)}
 
 def speak_to_human(state: RobotDogState) -> RobotDogState:
     """
@@ -52,4 +54,5 @@ def speak_to_human(state: RobotDogState) -> RobotDogState:
         }
     )
     
-    return {}
+    return {"final_response": response_text, 
+            "chat_history": AIMessage(content=response_text)}

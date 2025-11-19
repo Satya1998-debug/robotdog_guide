@@ -1,7 +1,7 @@
 from src.graph.state import RobotDogState
-from src.graph.schemas import ActionInputToMCP
+from src.graph.schemas import ActionInputToMCP, MCPToolCallOutput
 from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from src.config import ollama_base_url, action_planner_LLM_model, ACTION_CONFIDENCE_THRESHOLD
 
 def action_classifier(state: RobotDogState) -> RobotDogState:
@@ -81,7 +81,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     context_tags = context_output.get("context_tags", {})
     intent_reasoning = state.get("decision_node_output", {}).get("intent_reasoning", "")
     
-    print(f"[ActionPlanner] Planning action for: {query}")
+    messages = state.get("chat_history", [])
     
     # Use LLM to generate action input with structured output
     system_prompt = """You are a robot action planner that analyzes user commands and creates action inputs for robot execution.
@@ -122,10 +122,10 @@ def action_planner(state: RobotDogState) -> RobotDogState:
            - "other tools" like stand, sit, crawl, speak, etc.
         """
 
-    messages = [
+    messages.extend([
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
-    ]
+    ])
 
     # Use LLM-4 (action planning model) to generate ActionInputToMCP
     action_llm = ChatOllama(
@@ -137,8 +137,14 @@ def action_planner(state: RobotDogState) -> RobotDogState:
 
     structured_llm = action_llm.with_structured_output(ActionInputToMCP)
     action_input_to_mcp = structured_llm.invoke(messages)
+
+    response_content = f"""action inetnt: {action_input_to_mcp.action_intent}\n\
+        action type: {action_input_to_mcp.action_type}\n"""
     
-    return {"action_input_to_mcp": action_input_to_mcp}
+    return {"action_input_to_mcp": action_input_to_mcp, 
+            "chat_history": [SystemMessage(content=system_prompt),
+                             HumanMessage(content=user_prompt), 
+                             AIMessage(content=response_content)]}  
 
 def call_mcp_model(state: RobotDogState) -> RobotDogState:
     """
@@ -172,6 +178,7 @@ def call_mcp_model(state: RobotDogState) -> RobotDogState:
     probable_actions = action_input_data.get("probable_actions", [])
     rag_modified_query = action_input_data.get("rag_modified_query", original_query)
 
+    messages = state.get("chat_history", [])
     
     # Create LLM with tools bound (LangGraph pattern)
     llm = ChatOllama(
@@ -208,14 +215,20 @@ def call_mcp_model(state: RobotDogState) -> RobotDogState:
 
         Use the available MCP tools to complete this action step by step."""
     
-    messages = [
+    messages.extend([
         SystemMessage(content=system_msg),
         HumanMessage(content=user_msg),
-    ]
+    ])
     
     # Invoke LLM with tools already bound, LLM will decide which tools to call
-    response = llm_with_tools.invoke(messages)
+    llm_with_tools_structured = llm_with_tools.with_structured_output(MCPToolCallOutput)
+    response = llm_with_tools_structured.invoke(messages)
+
+    response_content = f"""MCP response: {response.mcp_response}\nMCP tools called: {response.tools_called}"""
     
     # Return response with messages
     # tools_condition will check if there are tool_calls and route accordingly
-    return {"messages": [response]}
+    return {"mcp_output": response,
+            "chat_history": [SystemMessage(content=system_msg),
+                             HumanMessage(content=user_msg), 
+                             AIMessage(content=response_content)]}

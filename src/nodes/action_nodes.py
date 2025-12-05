@@ -4,6 +4,7 @@ from src.tools_servers.tools import get_all_tools
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from src.config import ollama_base_url, action_planner_LLM_model, tool_LLM_model, ACTION_CONFIDENCE_THRESHOLD
+from src.logger import logger
 
 # LLM with tools
 # Create LLM with tools bound (LangGraph pattern) once here
@@ -21,6 +22,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
     Classify action type based on RAG output and determine if MCP execution is needed.
     Checks action threshold from RAG node to decide on robot action.
     """
+    logger.info("[Node] -> action_classifier_node")
     rag_node_output = state.get("rag_node_output", {})
     
     # Extract action decision from RAG
@@ -29,6 +31,8 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
     target_location = rag_node_output.get("target_location", None)
     target_person = rag_node_output.get("target_person", None)
     probable_actions = rag_node_output.get("probable_actions", [])
+    
+    logger.info(f"[action_classifier] Threshold check: confidence={action_confidence:.2f} vs {ACTION_CONFIDENCE_THRESHOLD} | Requires action: {requires_robot_action}")
     
     # if no acton needed, then route to tts node
     if not requires_robot_action or action_confidence < ACTION_CONFIDENCE_THRESHOLD:
@@ -67,6 +71,8 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
         else:  # default to other tools
             action_type = "other_tools"
             action_intent = "execute_basic_tools"
+        
+        logger.info(f"[action_classifier] Action type: {action_type} | Intent: {action_intent} | Location: {target_location} | Person: {target_person}")
                 
         # Create ActionInput with all RAG data
         action_input_to_mcp = ActionInputToMCP(
@@ -88,6 +94,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     This node is for direct 'functional' intent queries (bypasses RAG and action_classifier).
     Uses LLM-4 for action planning and outputs ActionInput for tools node.
     """
+    logger.info("[Node] -> action_planner_node")
     query = state.get("original_query", "")
     context_output = state.get("context_proc_node_output", {})
     context_tags = context_output.get("context_tags", {})
@@ -179,6 +186,7 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     
     This is the LangGraph recommended pattern for MCP integration.
     """
+    logger.info("[Node] -> llm_tools_node")
     from src.graph.workflow import get_mcp_tools
         
     # Get action context
@@ -228,6 +236,13 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     
     # Invoke LLM with tools already bound, LLM will decide which tools to call
     response = llm_with_tools.invoke(messages)
+    
+    # Check what tools LLM decided to call
+    if hasattr(response, 'tool_calls') and response.tool_calls:
+        tool_names = [tc.name for tc in response.tool_calls]
+        logger.info(f"[llm_tools_node] LLM decided tools: {tool_names}")
+    else:
+        logger.info(f"[llm_tools_node] LLM decided: NO TOOLS (end of loop)")
 
     # response_content = f"""Tool response: {response.toolcall_response}\nTools called: {response.tools_called}"""
     

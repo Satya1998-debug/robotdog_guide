@@ -18,3 +18,5 @@ def set_logger(logger_name: str, level=logging.INFO):
     logger.addHandler(logging.StreamHandler(sys.stdout)) # Also log to console
     logger.setLevel(level)
     return logger
+
+logger = set_logger("robotdog_logger")

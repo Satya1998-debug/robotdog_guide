@@ -5,13 +5,15 @@ from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from typing import Literal
 from src.config import context_LLM_model, conversation_LLM_model, ollama_base_url
 from src.graph.schemas import ContextProcessorOutput, DecisionNodeOutput, ConversationNodeOutput, ClarificationNodeOutput
+from src.logger import logger
+
 
 def context_processor(state: RobotDogState) -> RobotDogState:
     """
     Process and normalize user input with structured output.
     Makes LLM-1 call to extract both context and intent classification.
     """
-
+    logger.info("[Node] -> context_processor_node")
     query = state.get("original_query", "")
 
     # Combined prompt that extracts context AND classifies intent in ONE LLM call
@@ -68,7 +70,7 @@ def context_processor(state: RobotDogState) -> RobotDogState:
 def exit_check(state: RobotDogState) -> RobotDogState:
     query = state.get("original_query", "").lower()
     if any(x in query for x in ["exit", "quit", "stop"]):
-        print("[ExitCheck] Exit command detected.")
+        logger.info("[ExitCheck] Exit command detected.")
         return {"chat_history": ["exit command detected"]}
     return {}
 
@@ -77,6 +79,7 @@ def decision_node(state: RobotDogState) -> RobotDogState:
     Extract decision from context processor output, just reads from context_proc_node_output.
     Performs additional rule-based logic or filtering if needed.
     """
+    logger.info("[Node] -> decision_node")
     context_output = state.get("context_proc_node_output", {})
     
     # Extract intent-related fields from context processor output
@@ -88,17 +91,17 @@ def decision_node(state: RobotDogState) -> RobotDogState:
     # For example, if confidence is too low, override to ambiguous
     max_confidence = confidence.get(intent, 0.0)
     if max_confidence < 0.5:
-        print(f"[DecisionNode] Low confidence ({max_confidence:.2f}), overriding to ambiguous")
+        logger.warning(f"[DecisionNode] Low confidence ({max_confidence:.2f}), overriding to ambiguous")
         intent = "ambiguous"
         intent_reasoning += " | Overridden to ambiguous due to low confidence."
     
     # Optional: Add exit detection logic
     original_query = state.get("original_query", "").lower()
     if any(keyword in original_query for keyword in ["exit", "quit", "stop", "goodbye", "bye"]):
-        print("[DecisionNode] Exit keyword detected in query")
+        logger.info("[DecisionNode] Exit keyword detected in query")
         state["exit"] = True
     
-    print(f"[DecisionNode] Final intent: {intent} | Confidence: {confidence}")
+    logger.info(f"[DecisionNode] Final intent: {intent} | Confidence: {confidence}")
     
     # decision node output
     decision_output = DecisionNodeOutput(intent=intent, 
@@ -112,6 +115,7 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     Generate conversational response with structured output.
     Uses LLM-2 for natural conversation.
     """
+    logger.info("[Node] -> conversation_node")
     query = state.get("original_query", "")
     context = state.get("context_proc_node_output", {})
     context_tags = context.get("context_tags", {})
@@ -171,6 +175,7 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
     Ask for clarification with structured output to the user. Formulate the question using LLM-1. 
     This node is called when the intent is "ambiguous".
     """
+    logger.info("[Node] -> clarification_node")
     query = state.get("original_query", "")
     context = state.get("context_proc_node_output", {})
     context_tags = context.get("context_tags", {})
@@ -232,12 +237,16 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
 def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", "conversation_node", "clarification_node"]:
     intent = state.get("decision_node_output", {}).get("intent", "")
     if intent == "institutional":  # will have RAG
+        logger.info(f"[Router] decide_query_intention: {intent} -> rag_node")
         return "rag_node"
     elif intent == "functional":  # will have MCP
+        logger.info(f"[Router] decide_query_intention: {intent} -> action_planner_node")
         return "action_planner_node"
     elif intent == "ambiguous":
+        logger.info(f"[Router] decide_query_intention: {intent} -> clarification_node")
         return "clarification_node"  # will call LLM then TTS module (with clarify question)
     else:  # general conversation
+        logger.info(f"[Router] decide_query_intention: {intent} -> conversation_node")
         return "conversation_node"  # will call LLM then TTS module (with conversational reply)
 
 def decide_tool_call_execution(state: RobotDogState) -> Literal["llm_tools_node", "speak_to_human_node"]:
@@ -250,14 +259,18 @@ def decide_tool_call_execution(state: RobotDogState) -> Literal["llm_tools_node"
     action_intent = action_input_data_mcp.get("action_intent", "no_action_needed")
     
     if not requires_action or action_intent == "no_action_needed":
+        logger.info(f"[Router] decide_tool_call_execution: no action needed -> speak_to_human_node")
         return "speak_to_human_node"
     else:
+        logger.info(f"[Router] decide_tool_call_execution: action needed ({action_intent}) -> llm_tools_node")
         return "llm_tools_node"
     
 def should_continue(state: RobotDogState) -> Literal["listen_to_human_node", END]:
     """Decide if we should continue the loop or stop based upon whether human said to quit."""
 
     if state.get("exit", False):
+        logger.info(f"[Router] should_continue: exit flag set -> END")
         return END
     # Otherwise, we continue listening to the human
+    logger.debug(f"[Router] should_continue: continuing -> listen_to_human_node")
     return "listen_to_human_node"

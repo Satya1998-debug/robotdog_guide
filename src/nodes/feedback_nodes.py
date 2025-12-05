@@ -2,13 +2,13 @@ from src.graph.state import RobotDogState
 from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage, HumanMessage, RemoveMessage
 from src.config import summarizer_LLM_model, ollama_base_url
-
+from src.logger import logger
 
 def summarizer_node(state: RobotDogState) -> RobotDogState:
     """
     Summarize the chat history at the start of the conversation with structured output.
     """
-
+    logger.info("[Node] -> summarizer_node")
     if state.get("chat_history", ""):
         messages = []
 

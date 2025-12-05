@@ -14,6 +14,8 @@ import asyncio
 
 from langgraph.prebuilt import ToolNode, tools_condition
 
+from src.logger import logger
+
 # Initialize MCP client globally
 # _mcp_client = None
 # _mcp_tools = None
@@ -121,5 +123,15 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
 
     # for history tracking
     checkpointer = MemorySaver() # save in ram
+    
+    # Debug: Print graph structure
+    logger.info("\n[Graph] Structure:")
+    logger.info(f"[Graph] Nodes: {list(graph.nodes.keys())}")
+    logger.info(f"[Graph] Edges: {sorted(graph.edges)}")
+    logger.info("[Graph] Conditional edges (routers):")
+    logger.info("  - decision_node -> (rag_node | action_planner_node | conversation_node | clarification_node)")
+    logger.info("  - action_classifier_node -> (llm_tools_node | speak_to_human_node)")
+    logger.info("  - llm_tools_node -> (tools | summarizer_node)")
+    logger.info("  - speak_to_human_node -> (listen_to_human_node | END)\n")
 
     return graph.compile(checkpointer=checkpointer)

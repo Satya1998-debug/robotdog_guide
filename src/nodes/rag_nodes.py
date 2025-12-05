@@ -4,6 +4,7 @@ from src.graph.schemas import RAGNodeOutput
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from src.config import ollama_base_url
+from src.logger import logger
 
 # rag related imports
 from src.rag_server.text_scraper import TextScraper
@@ -12,16 +13,15 @@ from src.rag_server.databaseHandler import DatabaseHandler
 from src.rag_server.documentProcessor import DocumentProcessor
 from src.rag_server.answerGenerator import AnswerGenerator
 import src.rag_server.config as rag_config
-from src.rag_server.logger import set_logger
 import os
 
-logger = set_logger("RAG_nodes")
 
 def rag_pipeline(state: RobotDogState) -> RobotDogState:
     """
     Retrieve and generate response using RAG with structured output.
     Uses LLM-3 for RAG-based answer generation.
     """
+    logger.info("[Node] -> rag_node")
     query = state.get("original_query", "")
     context_output = state.get("context_proc_node_output", {})
     context_tags = context_output.get("context_tags", {})
@@ -30,6 +30,7 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     # Retrieve relevant documents from vector database
     retrieved_docs = get_rag_output(query)
     retrieved_context = "\n\n".join([doc["content"] if isinstance(doc, dict) else str(doc) for doc in retrieved_docs]) if retrieved_docs else "No relevant documents found."
+    logger.info(f"[rag_node] Retrieved {len(retrieved_docs) if retrieved_docs else 0} docs | Query: {query[:50]}...")
     
     messages = []
     if state.get("summary", ""):  # insert the summary first
@@ -106,6 +107,8 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
         Probable Actions: {', '.join(rag_output.probable_actions)}\n\
         Informational Response: {rag_output.informational_response}"""
     
+    logger.info(f"[rag_node] Action required: {rag_output.requires_robot_action} | Confidence: {rag_output.action_confidence:.2f} | Location: {rag_output.target_location} | Person: {rag_output.target_person}")
+    
     return {"rag_node_output": dict(rag_output), 
             "informational_response": rag_output.informational_response,
             "chat_history": [SystemMessage(content="RAG node: You are a helpful assistant that retrieves and analyzes context using RAG for robot actions."),
@@ -126,15 +129,15 @@ def get_rag_output(query):
     if rag_config.SCRAPE['need_scraping']: # if scrapping needed, as specified in config
         data_processor = DocumentProcessor(rag_config.CSV_FILE_PATH)  # needed for processing scraped data
         scraper = TextScraper(rag_config.SCRAPE["base_url"], rag_config.SCRAPE["data_dir"], rag_config.SCRAPE["max_pages"])
-        print("Starting web scraping...")
+        logger.info("Starting web scraping...")
         scraper.scrape()
         scraper.save_to_csv()
-        print("Web scraping completed.")
+        logger.info("Web scraping completed.")
         
         # normal docs chunks and room info chunks are combined
         text_chunks, metadatas = data_processor.get_combined_chunks_with_rooms(rag_config.ROOMS_CSV_PATH)
         vector_db_handler.store_documents(text_chunks, metadatas)
-        print(f"Stored {len(text_chunks)} chunks in ChromaDB")
+        logger.info(f"Stored {len(text_chunks)} chunks in ChromaDB")
         retrieved_docs = vector_db_handler.query(query) # get context from updated documents
 
     return retrieved_docs

@@ -31,7 +31,12 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     retrieved_docs = get_rag_output(query)
     retrieved_context = "\n\n".join([doc["content"] if isinstance(doc, dict) else str(doc) for doc in retrieved_docs]) if retrieved_docs else "No relevant documents found."
     
-    messages = state.get("chat_history", [])
+    messages = []
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
+
+    messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
 
     # Use LLM-3 to generate RAG-based response with structured output
     system_prompt = """You are a helpful robot assistant that answers questions based on retrieved institutional information.
@@ -76,7 +81,7 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
 
         Be precise about action requirements."""
 
-    messages.extend([
+    messages.extend([ # include current node's msgs
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
@@ -103,8 +108,8 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     
     return {"rag_node_output": dict(rag_output), 
             "informational_response": rag_output.informational_response,
-            "chat_history": [SystemMessage(content=system_prompt),
-                             HumanMessage(content=user_prompt), 
+            "chat_history": [SystemMessage(content="RAG node: You are a helpful assistant that retrieves and analyzes context using RAG for robot actions."),
+                             HumanMessage(content="Extract context and analyze the user query accordingly."), 
                              AIMessage(content=response_content)]}
 
 def get_rag_output(query):

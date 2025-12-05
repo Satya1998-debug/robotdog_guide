@@ -1,8 +1,20 @@
 from src.graph.state import RobotDogState
-from src.graph.schemas import ActionInputToMCP, MCPToolCallOutput
+from src.graph.schemas import ActionInputToMCP
+from src.tools_servers.tools import get_all_tools
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from src.config import ollama_base_url, action_planner_LLM_model, ACTION_CONFIDENCE_THRESHOLD
+from src.config import ollama_base_url, action_planner_LLM_model, tool_LLM_model, ACTION_CONFIDENCE_THRESHOLD
+
+# LLM with tools
+# Create LLM with tools bound (LangGraph pattern) once here
+llm = ChatOllama(
+        model=tool_LLM_model,  # LLM-5
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.2,
+    )
+llm_with_tools = llm.bind_tools(get_all_tools())
+
 
 def action_classifier(state: RobotDogState) -> RobotDogState:
     """
@@ -74,14 +86,20 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     """
     Create detailed action plan with structured output using LLM.
     This node is for direct 'functional' intent queries (bypasses RAG and action_classifier).
-    Uses LLM-4 for action planning and outputs ActionInput for MCP.
+    Uses LLM-4 for action planning and outputs ActionInput for tools node.
     """
     query = state.get("original_query", "")
     context_output = state.get("context_proc_node_output", {})
     context_tags = context_output.get("context_tags", {})
     intent_reasoning = state.get("decision_node_output", {}).get("intent_reasoning", "")
+
+    messages = []
+
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
     
-    messages = state.get("chat_history", [])
+    messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
     
     # Use LLM to generate action input with structured output
     system_prompt = """You are a robot action planner that analyzes user commands and creates action inputs for robot execution.
@@ -118,11 +136,11 @@ def action_planner(state: RobotDogState) -> RobotDogState:
         6. target_person: Extract person name if mentioned (or null)
         7. informational_response: Brief summary of what robot will do
         8. List probable robot actions based on the query: (keep the list empty if no action needed)
-           - "navigation", "manipulation", "perception", etc. 
+           - "navigation", or "others" etc. 
            - "other tools" like stand, sit, crawl, speak, etc.
         """
 
-    messages.extend([
+    messages.extend([  # include current node's msgs
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
@@ -141,12 +159,12 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     response_content = f"""action inetnt: {action_input_to_mcp.action_intent}\n\
         action type: {action_input_to_mcp.action_type}\n"""
     
-    return {"action_input_to_mcp": action_input_to_mcp, 
-            "chat_history": [SystemMessage(content=system_prompt),
-                             HumanMessage(content=user_prompt), 
+    return {"action_input_to_mcp": dict(action_input_to_mcp), 
+            "chat_history": [SystemMessage(content="Action planner node: You are a helpful assistant that plans robot actions."),
+                             HumanMessage(content="Analyze the user command and plan the robot actions accordingly."), 
                              AIMessage(content=response_content)]}  
 
-def call_mcp_model(state: RobotDogState) -> RobotDogState:
+def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     """
     MCP model node following LangGraph documentation pattern.
     
@@ -162,10 +180,7 @@ def call_mcp_model(state: RobotDogState) -> RobotDogState:
     This is the LangGraph recommended pattern for MCP integration.
     """
     from src.graph.workflow import get_mcp_tools
-    
-    # Get MCP tools (cached, no async needed here)
-    mcp_tools = get_mcp_tools()
-    
+        
     # Get action context
     action_input_data = state.get("action_input_to_mcp", {})
     original_query = state.get("original_query", "")
@@ -179,15 +194,6 @@ def call_mcp_model(state: RobotDogState) -> RobotDogState:
     rag_modified_query = action_input_data.get("rag_modified_query", original_query)
 
     messages = state.get("chat_history", [])
-    
-    # Create LLM with tools bound (LangGraph pattern)
-    llm = ChatOllama(
-        model="qwen2.5-coder:1.5b",
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.2,
-    )
-    llm_with_tools = llm.bind_tools(mcp_tools)
     
     # Build context-rich system message
     system_msg = f"""You are a RobotDog assistant executing physical robot actions.
@@ -221,14 +227,13 @@ def call_mcp_model(state: RobotDogState) -> RobotDogState:
     ])
     
     # Invoke LLM with tools already bound, LLM will decide which tools to call
-    llm_with_tools_structured = llm_with_tools.with_structured_output(MCPToolCallOutput)
-    response = llm_with_tools_structured.invoke(messages)
+    response = llm_with_tools.invoke(messages)
 
-    response_content = f"""MCP response: {response.mcp_response}\nMCP tools called: {response.tools_called}"""
+    # response_content = f"""Tool response: {response.toolcall_response}\nTools called: {response.tools_called}"""
     
     # Return response with messages
     # tools_condition will check if there are tool_calls and route accordingly
-    return {"mcp_output": response,
-            "chat_history": [SystemMessage(content=system_msg),
-                             HumanMessage(content=user_msg), 
-                             AIMessage(content=response_content)]}
+    return {"messages": response,  # this message field is only the tool node to check the last message and execute tools if any call is made
+            "chat_history": [SystemMessage(content="You are a helpful assistant that calls tools for robot actions."),
+                             HumanMessage(content="Do the tool calls accordingly."), 
+                             response]}  # chat history will already have all previous messages and will add the tool call response

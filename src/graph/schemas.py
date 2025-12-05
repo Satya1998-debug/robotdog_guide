@@ -4,6 +4,8 @@ Each node should return a properly typed output that matches these schemas.
 """
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Literal
+from langchain_core.messages import BaseMessage
+
 
 # this indicates the object/state variabe within each node's output
 
@@ -61,6 +63,8 @@ class ActionInputToMCP(BaseModel):
     target_person: Optional[str] = Field(default=None, description="Full name of person from context if applicable")
     probable_actions: List[str] = Field(default_factory=list, description="List of probable robot actions based on the query, such as navigation etc.")
 
-class MCPToolCallOutput(BaseModel):
-    mcp_response: str = Field(..., description="Raw response from MCP model")
-    tools_called: List[str] = Field(default_factory=list, description="List of tools that were called during MCP execution")
+
+# class ToolCallOutput(BaseModel):
+#     messages: List[BaseMessage] = Field(default_factory=list, description="Messages for LLM with tools (accumulated)")
+#     toolcall_response: str = Field(..., description="Raw response from tool model")
+#     tools_called: List[str] = Field(default_factory=list, description="List of tools that were called during tool execution")    

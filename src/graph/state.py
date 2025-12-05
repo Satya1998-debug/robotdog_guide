@@ -12,7 +12,6 @@ from src.graph.schemas import (
     ClarificationNodeOutput,
     RAGNodeOutput,
     ActionInputToMCP,
-    MCPToolCallOutput,
 )
 
 
@@ -49,7 +48,9 @@ class RobotDogState(TypedDict):
     informational_response: Optional[str]  # direct response if no action needed
     
     # MCP execution (LangGraph pattern with messages)
-    mcp_output: Optional[MCPToolCallOutput]  # Raw MCP output
+    # toolcall_output: Optional[ToolCallOutput]
+    # for tool calling with llm_tools_node (it needs a specific format)
+    # messages: Annotated[List[BaseMessage], add_messages]  # messages for LLM with tools (accumulated)
 
     # Memory & History for all chats fro all nodes
     chat_history: Annotated[List[BaseMessage], add_messages]  # conversation history (accumulated)
@@ -61,3 +62,6 @@ class RobotDogState(TypedDict):
 
     # final response
     final_response: str  # structured final response output
+
+    # summary,  this is compted once at the end of one loop of conversation just before speaking to human
+    summary: str  # conversation summary of previous interactions,

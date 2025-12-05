@@ -14,8 +14,6 @@ def context_processor(state: RobotDogState) -> RobotDogState:
 
     query = state.get("original_query", "")
 
-    messages = state.get("chat_history", []) # this messages is a local variable that stores the chat history for LLM calls
-
     # Combined prompt that extracts context AND classifies intent in ONE LLM call
     system_prompt = """You are an expert assistant that performs comprehensive query analysis:
         1. Extract context tags (keywords related to university services, robot functions, location info, person names, etc.)
@@ -24,10 +22,10 @@ def context_processor(state: RobotDogState) -> RobotDogState:
         4. Explain your reasoning for both context extraction and intent classification
 
         Intent definitions:
-        - 'institutional': Query involves a person/entity that requires authentication/verification (e.g., "Is Dr. Smith available?")
-        - 'functional': Query is a direct action command for the robot (e.g., "Take me to room 305", "Follow me", "Sit", "Stand", etc.)
+        - 'institutional': Query involves a person (or a person + a robot navigation action) that requires authentication/verification (e.g., "Is Dr. Smith available?")
+        - 'functional': Query is a direct action command for the robot (actions commands like sit, move, stand, go, come etc.)
         - 'ambiguous': Query is confusing, unclear, or lacks sufficient context
-        - 'conversation': General conversational query or small talk (e.g., "How are you?", "What's your name?", "Tell me a joke", "what is the weather like?")"""
+        - 'conversation': General conversational query or small talk (e.g., "How are you?", How is the weather?, "What's your name?", "Tell me a joke", "what is the weather like?")"""
 
     user_prompt = f"""Analyze this user query: "{query}"
 
@@ -37,10 +35,17 @@ def context_processor(state: RobotDogState) -> RobotDogState:
         3. Confidence scores for all 4 intent types
         4. Reasoning explaining both your context extraction and intent classification"""
 
-    messages.extend([
+    messages = [] # this messages is a local variable that stores the chat history for LLM calls
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
+
+    messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
+    messages.extend([  # include current node's msgs
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
+
     # single LLM call that returns context + intent together
     llm = ChatOllama(
         model=state.get("context_LLM_model", context_LLM_model),
@@ -56,8 +61,8 @@ def context_processor(state: RobotDogState) -> RobotDogState:
     response_content = f"""Context Tags: {res.context_tags}\nIntent: {res.intent}\nReasoning: {res.intent_reasoning}"""
 
     return {"context_proc_node_output": dict(res), 
-            "chat_history": [SystemMessage(content=system_prompt), 
-                             HumanMessage(content=user_prompt), 
+            "chat_history": [SystemMessage(content="Context extractor node: You are expert query analyser and context extractor."), 
+                             HumanMessage(content="Extract context, and classify intent from user query."), 
                              AIMessage(content=response_content)]}
 
 def exit_check(state: RobotDogState) -> RobotDogState:
@@ -110,7 +115,14 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     query = state.get("original_query", "")
     context = state.get("context_proc_node_output", {})
     context_tags = context.get("context_tags", {})
-    messages = state.get("chat_history", []) # this messages is a local variable that stores the chat history for LLM calls
+
+    messages = []
+
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
+
+    messages.extend(state.get("chat_history", [])) # include recent chat history after previous session's summary
     
     # Use LLM-2 to generate natural conversational response
     system_prompt = """You are a friendly, helpful robot assistant that engages in natural conversation.
@@ -129,7 +141,7 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
         Context tags: {context_tags}
         Generate a natural, conversational response. Be friendly and engaging. Follow history for context."""
 
-    messages.extend([
+    messages.extend([  # inclue current node's messages
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
@@ -149,8 +161,9 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     response_content = conversation_output.conversation_reply
 
     return {"conversation_node_output": dict(conversation_output),
-            "chat_history": [SystemMessage(content=system_prompt),
-                             HumanMessage(content=user_prompt), 
+            "final_response": conversation_output.conversation_reply,
+            "chat_history": [SystemMessage(content="Conversation node: You are a friendly, helpful assistant for natural conversation."),
+                             HumanMessage(content="Generate a natural conversational response to the user query."), 
                              AIMessage(content=response_content)]}
 
 def clarification_node(state: RobotDogState) -> RobotDogState:
@@ -162,8 +175,14 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
     context = state.get("context_proc_node_output", {})
     context_tags = context.get("context_tags", {})
     intent_reasoning = context.get("intent_reasoning", "")
+
+    messages = []
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
     
-    messages = state.get("chat_history", [])
+    messages.extend(state.get("chat_history", [])) # include recent chat history after previous session's summary
+
     # Use LLM to generate a clarification question
     system_prompt = """You are a helpful robot assistant that generates clarification questions.
         When a user's query is ambiguous or unclear, you need to ask a specific, helpful question to understand their intent better.
@@ -185,7 +204,7 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
 
         Be specific and helpful."""
 
-    messages.extend([
+    messages.extend([  # inclue current node's messages
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
@@ -205,8 +224,9 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
 
     
     return {"clarification_node_output": dict(clarification_output),
-            "chat_history": [SystemMessage(content=system_prompt),
-                             HumanMessage(content=user_prompt), 
+            "final_response": clarification_output.question,
+            "chat_history": [SystemMessage(content="Clarification node: You are a helpful assistant that generates clarification questions."),
+                             HumanMessage(content="Generate a specific, helpful clarification question to understand the user's intent better."), 
                              AIMessage(content=response_content)]}
 
 def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_planner_node", "conversation_node", "clarification_node"]:
@@ -220,7 +240,7 @@ def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "action_
     else:  # general conversation
         return "conversation_node"  # will call LLM then TTS module (with conversational reply)
 
-def decide_mcp_execution(state: RobotDogState) -> Literal["mcp_llm_node", "speak_to_human_node"]:
+def decide_tool_call_execution(state: RobotDogState) -> Literal["llm_tools_node", "speak_to_human_node"]:
     """
     Decide whether to execute MCP based on action_input from action_classifier.
     If action is not needed (requires_robot_action=False), skip MCP and go directly to speaking.
@@ -232,7 +252,7 @@ def decide_mcp_execution(state: RobotDogState) -> Literal["mcp_llm_node", "speak
     if not requires_action or action_intent == "no_action_needed":
         return "speak_to_human_node"
     else:
-        return "mcp_llm_node"
+        return "llm_tools_node"
     
 def should_continue(state: RobotDogState) -> Literal["listen_to_human_node", END]:
     """Decide if we should continue the loop or stop based upon whether human said to quit."""

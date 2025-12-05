@@ -1,0 +1,20 @@
+(robotdog-guide) satya@ias1233:~/MT/robotdog_guide$  cd /home/satya/MT/robotdog_guide ; /usr/bin/env /home/satya/MT/robotdog_guide/.venv/bin/python /home/satya/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy/adapter/../../debugpy/launcher 48091 -- /home/satya/MT/robotdog_guide/main.py 
+Hello from robotdog-guide!
+[11/20/25 22:21:35] INFO     Processing request of type ListToolsRequest                                                                                                                          server.py:674
+[Workflow] MCP tools initialized: 5 tools available
+Starting robotdog conversation ...
+You (type your query): hey, what is your name?
+[DecisionNode] Final intent: conversation | Confidence: {'institutional': 0.1, 'functional': 0.05, 'ambiguous': 0.2, 'conversation': 0.65}
+[SpeakToHuman] Speaking out: Hi there! It's nice to meet you. How can I assist you today? (stub for audio data: this is audio data generated from text)
+You (type your query): Hi, i am good. Do you know Joachim Grimstad?
+[DecisionNode] Final intent: conversation | Confidence: {'institutional': 0.1, 'functional': 0.05, 'ambiguous': 0.2, 'conversation': 0.65}
+[SpeakToHuman] Speaking out: Hi there! How can I assist you today? What's up with Joachim Grimstad? (stub for audio data: this is audio data generated from text)
+You (type your query): I want to meet him, do you know how can I reach him?
+[DecisionNode] Low confidence (0.05), overriding to ambiguous
+[DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.05, 'ambiguous': 0.8, 'conversation': 0.05}
+[SpeakToHuman] Speaking out: I'd like to help you connect with Joachim Grimstad, but I need a bit more information first. Could you tell me if there is an email or phone number associated with him? Or perhaps the context in which this meeting would occur (e.g., academic setting)? (stub for audio data: this is audio data generated from text)
+You (type your query): take me to him now
+[DecisionNode] Final intent: functional | Confidence: {'institutional': 0.1, 'functional': 0.85, 'ambiguous': 0.04, 'conversation': 0.01}
+
+
+========================================================================================================================================

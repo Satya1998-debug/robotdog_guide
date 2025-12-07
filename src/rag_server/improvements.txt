@@ -1,0 +1,10 @@
+
+
+Improvements done from previous RAG:
+
+1. Textspiltter chunking is impoved with size=800, and overlap, separartors added to help in senantic chunking.
+chunks are shot (<300 tokens), unless technical.
+
+2. Improved model for embedding.
+3. using embedding normalization for better similarity calculation.
+4. Interleaving things .....

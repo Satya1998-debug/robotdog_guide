@@ -32,7 +32,7 @@ class DatabaseHandler:
         """
         
         for idx, chunk in enumerate(chunks):
-            embedding = self.model.encode(chunk).tolist()
+            embedding = self.model.encode(chunk, normalize_embeddings=True).tolist() # using normalize for better results
             self.collection.add(
                 ids=[f"doc_{idx}"],
                 documents=[chunk],
@@ -53,7 +53,32 @@ class DatabaseHandler:
             List[str]: List of relevant document texts.
         """
         self.logger.info(f"Executing query: {query_text}")
-        query_embedding = self.model.encode([query_text]).tolist()
+        query_embedding = self.model.encode([query_text], normalize_embeddings=True).tolist()
         results = self.collection.query(query_embeddings=query_embedding, n_results=top_k)
         self.logger.info(f"Query Retrieval successful.")
         return results["documents"]
+
+
+
+def get_embedding_dim():
+    from chromadb import PersistentClient
+
+    # Load your DB
+    client = PersistentClient(path="./src/rag_server/chroma_db")
+
+    collection = client.get_collection("ias_documents_store")
+    print("Collection name:", collection.name)
+    print("Number of items in collection:", collection.count())
+    print(client.list_collections())
+
+
+    # Peek one item to get the embedding
+    sample = collection.peek(1)
+
+    # Print embedding vector length
+    embedding_dim = len(sample['embeddings'][0])
+    print("Embedding dimension:", embedding_dim)
+    
+      
+if __name__ == "__main__":
+    get_embedding_dim()

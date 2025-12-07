@@ -1,7 +1,51 @@
 ### ======= this will contain the model reviewsfor the models I have used so far ======= ####
 
->>>------------ Ollama- qwen2.5-coder:1.5b ------------------
+>>>------------ Ollama - qwen2.5-coder:1.5b ------------------
     - CPU friendly, 
     - supports tool calling using MCP
 
 -------------------------------------------------------------
+>>>------------ Ollama - phi3:mini ------------------
+    - better than qwen, cpu and gpu support
+    - supports tool calling using langGrpaph
+
+-------------------------------------------------------------
+
+
+
+
+>>>>ollama pull qwen2.5:72b-instruct
+#1 structured-output model today
+🔥 Built-in multi-tool calling
+🔥 Extremely accurate function call extraction
+🔥 Excellent reasoning
+On dual 4090s, Qwen 72B runs at ~20–40 tokens/secs
+
+
+>>>> Llama 3.1 70B / Llama 3.2 90B....better for RAG, Llama 3.2-11B or Llama 3.1/3.2-8B
+Meta’s latest Llama models are extremely fast and good at:
+tool calling
+JSON mode
+multi-round agents
+RAG + planning
+70B fits on a single 4090 with 4-bit quantization.
+90B fits across both GPUs (tensor parallelism).
+Speed on dual GPUs: ~30–55 t/s.
+
+>>>> Mistral NeMo 12B / 70B
+These are extremely fast and tool-call friendly.
+Advantages:
+high speed
+strong JSON reliability
+low hallucinations
+optimized kernels for NVIDIA GPUs
+Best “balanced” full-stack agent model.
+
+
+
+>>>> Phi-4 14B (small but excellent tool caller) ... this also better for orin board it fast 
+Super efficient for:
+tool calling
+structured reasoning
+small-memory tasks
+If you want fast + accurate function calling without huge VRAM use.

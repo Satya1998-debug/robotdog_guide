@@ -1,3 +1,4 @@
+from typing import Literal
 from src.graph.state import RobotDogState
 from src.graph.schemas import SpeechToTextOutput, TextToSpeechOutput
 from langchain_core.messages import HumanMessage, AIMessage
@@ -26,8 +27,6 @@ def listen_to_human(state: RobotDogState) -> RobotDogState:
     logger.info("[Node] -> listen_to_human_node")
     audio_data = "audio data from human"  # TODO: integrate actual audio input
     converted_text = speech_to_text(audio_data)
-    # nodewise_chat_history = state.get("nodewise_chat_history", [])
-    # nodewise_chat_history.append(HumanMessage(content=converted_text))
     
     # Create structured output
     text_input_from_speech = SpeechToTextOutput(original_query=converted_text)
@@ -45,7 +44,7 @@ def speak_to_human(state: RobotDogState) -> RobotDogState:
     response_text = state.get("final_response", "No response to speak.")
     audio_data = text_to_speech(response_text)
     
-    logger.info(f"[SpeakToHuman] Speaking out: {response_text} (stub for audio data: {audio_data})")
+    logger.info(f"[SpeakToHuman] Speaking out: {response_text}")
     
     # Create structured output
     tts_output = TextToSpeechOutput(

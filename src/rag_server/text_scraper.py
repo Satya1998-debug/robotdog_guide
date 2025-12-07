@@ -280,14 +280,18 @@ def run_default_scraping():
     scraper.scrape()
     scraper.save_to_csv()
     
-def save_to_chromadb(config):
+def save_to_chromadb(config, logger=None):
     # save to chroma db
-    OUTPUT_DIR = config.OUTPUT_DIR
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    vector_db_handler = DatabaseHandler(path=config.CHROMA_PATH, model_name=config.EMBEDDING_MODEL_NAME)
+    # OUTPUT_DIR = config.OUTPUT_DIR
+    # os.makedirs(OUTPUT_DIR, exist_ok=True)
+    logger.info("Initializing DatabaseHandler...")
+    vector_db_handler = DatabaseHandler(path=config.CHROMA_PATH, model_name=config.EMBEDDING_MODEL_NAME, logger=logger)
+    logger.info("Initializing DocumentProcessor...")
     data_processor = DocumentProcessor(config.CSV_FILE_PATH)
     text_chunks, metadatas = data_processor.get_combined_chunks_with_rooms(config.ROOMS_CSV_PATH)
+    logger.info(f"Number of text chunks to store: {len(text_chunks)}")
     vector_db_handler.store_documents(text_chunks, metadatas)
+    logger.info(f"Stored {len(text_chunks)} chunks in ChromaDB")
 
 if __name__ == "__main__":
     
@@ -299,9 +303,10 @@ if __name__ == "__main__":
     parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     sys.path.append(parent_dir)
     
-    import config
+    from rag_server import config
+    from logger import set_logger
     
-    # scrape and save to JSON/CSV
+    # # scrape and save to JSON/CSV
     # start_time = time.time()
     # print("Starting scraping process...")
     # run_default_scraping()
@@ -309,10 +314,10 @@ if __name__ == "__main__":
     # end_time = time.time()
     # print(f"Total scraping time: {end_time - start_time:.2f} seconds")
     
-    # save to ChromaDB
+    # # save to ChromaDB
     start_time = time.time()
     print("Saving to ChromaDB...")
-    save_to_chromadb(config=config)
+    save_to_chromadb(config=config, logger=set_logger("RAG_Server"))
     print("Data saved to ChromaDB.")
     end_time = time.time()
     print(f"Total time to save to ChromaDB: {end_time - start_time:.2f} seconds")

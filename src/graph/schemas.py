@@ -53,10 +53,10 @@ class RAGNodeOutput(BaseModel):
     informational_response: str = Field(default="", description="Direct answer to user if no action needed, or context summary if action needed")
 
 
-class ActionInputToMCP(BaseModel):
+class ActionInputToToolsLLM(BaseModel):
     rag_modified_query: str = Field(default="", description="Modified query with specific details (full names, room numbers, locations)")
     action_intent: str = Field(..., description="High-level action intent (navigation, manipulation, etc.)")
-    action_type: Literal["navigation", "manipulation", "perception", "other_tools"] = Field(..., description="Classified action type")
+    action_type: Literal["navigation", "manipulation", "perception", "other_tools", ""] = Field(..., description="Classified action type")
     requires_robot_action: bool = Field(default=False, description="Whether the query requires physical robot action (navigation, manipulation)")
     action_confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence that robot action is needed")
     target_location: Optional[str] = Field(default=None, description="Specific location/destination extracted from context (e.g., 'Room 305', 'Building A')")

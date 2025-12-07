@@ -1,0 +1,1062 @@
+
+=========== GRAPH Initialized ===========
+
+2025-12-06 17:19:15,525 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:19:15,538 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 17:19:15,558 - INFO - Starting RobotDog conversation loop...
+2025-12-06 17:19:36,263 - INFO - [Node] -> listen_to_human_node
+2025-12-06 17:19:51,857 - INFO - [Node] -> context_processor_node
+2025-12-06 17:20:18,913 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:20:23,218 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 17:22:30,690 - INFO - [Node] -> decision_node
+2025-12-06 17:24:19,409 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:24:19,422 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 17:24:19,442 - INFO - Starting RobotDog conversation loop...
+2025-12-06 17:24:23,453 - INFO - [Node] -> listen_to_human_node
+2025-12-06 17:24:53,035 - INFO - [Node] -> context_processor_node
+2025-12-06 17:25:31,005 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:25:33,425 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 17:26:01,876 - INFO - [Node] -> decision_node
+2025-12-06 17:26:06,795 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 17:27:01,253 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 17:27:19,493 - INFO - [Node] -> rag_node
+2025-12-06 17:27:44,057 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 17:27:44,331 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 17:27:44,331 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 17:27:44,331 - INFO - Downloading sentence transformer model from https://public.ukp.informatik.tu-darmstadt.de/reimers/sentence-transformers/v0.2/all-MiniLM-L6-v2.zip and saving it at /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 17:27:46,018 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 17:31:49,764 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:31:49,783 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 17:31:49,803 - INFO - Starting RobotDog conversation loop...
+2025-12-06 17:31:53,987 - INFO - [Node] -> listen_to_human_node
+2025-12-06 17:32:22,724 - INFO - [Node] -> context_processor_node
+2025-12-06 17:32:24,244 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:32:26,682 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 17:32:48,062 - INFO - [Node] -> decision_node
+2025-12-06 17:32:48,949 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 17:32:59,451 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 17:33:13,842 - INFO - [Node] -> rag_node
+2025-12-06 17:33:21,061 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 17:33:21,225 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 17:33:21,225 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 17:33:21,225 - INFO - Downloading sentence transformer model from https://public.ukp.informatik.tu-darmstadt.de/reimers/sentence-transformers/v0.2/all-MiniLM-L6-v2.zip and saving it at /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 17:33:22,758 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 17:33:22,758 - ERROR - [RAG Pipeline] Error in retrieving RAG output: '__version__'
+2025-12-06 17:33:22,759 - INFO - [rag_node] Retrieved 0 docs | Query: do you know Joachim grimsen...
+2025-12-06 17:33:22,770 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:36:33,245 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:36:33,257 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 17:36:33,277 - INFO - Starting RobotDog conversation loop...
+2025-12-06 17:36:50,103 - INFO - [Node] -> listen_to_human_node
+2025-12-06 17:37:08,045 - INFO - [Node] -> context_processor_node
+2025-12-06 17:37:08,062 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:37:08,207 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 17:37:13,811 - INFO - [Node] -> decision_node
+2025-12-06 17:37:14,699 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 17:37:16,478 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 17:37:19,188 - INFO - [Node] -> rag_node
+2025-12-06 17:37:23,185 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 17:37:23,345 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 17:37:23,345 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 17:37:23,346 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 17:37:23,346 - ERROR - [RAG Pipeline] Error in retrieving RAG output: '__version__'
+2025-12-06 17:37:23,346 - INFO - [rag_node] Retrieved 0 docs | Query: do you know Joachim grimsen...
+2025-12-06 17:37:23,357 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 17:37:23,612 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 17:37:25,507 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: None | Person: Joachim Grimsen
+2025-12-06 17:37:25,509 - INFO - [Node] -> action_classifier_node
+2025-12-06 17:37:25,509 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 18:50:53,711 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 18:50:53,728 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 18:50:53,747 - INFO - Starting RobotDog conversation loop...
+2025-12-06 18:50:57,747 - INFO - [Node] -> listen_to_human_node
+2025-12-06 18:51:25,274 - INFO - [Node] -> context_processor_node
+2025-12-06 18:51:25,291 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 18:51:27,952 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 18:51:32,802 - INFO - [Node] -> decision_node
+2025-12-06 18:51:34,360 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 18:51:36,897 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 18:51:44,581 - INFO - [Node] -> rag_node
+2025-12-06 18:52:14,753 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 18:52:14,929 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 18:52:14,929 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 18:52:14,930 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 18:53:52,518 - ERROR - [RAG Pipeline] Error in retrieving RAG output: '__version__'
+2025-12-06 19:10:15,396 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 19:10:15,410 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 19:10:15,431 - INFO - Starting RobotDog conversation loop...
+2025-12-06 19:10:18,331 - INFO - [Node] -> listen_to_human_node
+2025-12-06 19:10:37,137 - INFO - [Node] -> context_processor_node
+2025-12-06 19:10:37,155 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 19:10:39,842 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 19:10:43,780 - INFO - [Node] -> decision_node
+2025-12-06 19:10:44,716 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.05, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-06 19:10:49,129 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 19:10:52,672 - INFO - [Node] -> rag_node
+2025-12-06 19:10:56,646 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 19:10:56,841 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 19:10:56,841 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 19:10:56,841 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 19:10:56,841 - ERROR - [RAG Pipeline] Error in retrieving RAG output: '__version__'
+2025-12-06 19:11:37,980 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 19:11:38,004 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 19:11:38,032 - INFO - Starting RobotDog conversation loop...
+2025-12-06 19:11:40,261 - INFO - [Node] -> listen_to_human_node
+2025-12-06 19:11:45,034 - INFO - [Node] -> context_processor_node
+2025-12-06 19:11:45,047 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 19:11:45,315 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 19:11:49,537 - INFO - [Node] -> decision_node
+2025-12-06 19:11:50,863 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.05, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-06 19:11:52,904 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 19:11:57,092 - INFO - [Node] -> rag_node
+2025-12-06 19:12:20,721 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 19:12:52,921 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 19:12:52,922 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 19:12:52,922 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 19:40:42,487 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 19:40:42,715 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 19:40:42,715 - INFO - Did not find a '/' or '\' in the name. Assume to download model from server.
+2025-12-06 19:40:42,715 - INFO - Load SentenceTransformer from folder: /home/RUS_CIP/st184744/.cache/torch/sentence_transformers/public.ukp.informatik.tu-darmstadt.de_reimers_sentence-transformers_v0.2_all-MiniLM-L6-v2.zip
+2025-12-06 19:43:08,847 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 19:43:08,967 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-12-06 19:43:12,942 - INFO - Use pytorch device_name: cuda
+2025-12-06 19:43:13,034 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 19:45:01,911 - INFO - Stored 1995 documents in the database.
+2025-12-06 20:06:37,937 - INFO - Initializing DatabaseHandler...
+2025-12-06 20:06:37,943 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 20:06:38,153 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 20:06:49,825 - INFO - Use pytorch device_name: cuda
+2025-12-06 20:06:50,114 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 20:06:50,115 - INFO - Initializing DocumentProcessor...
+2025-12-06 20:06:50,157 - INFO - Number of text chunks to store: 1283
+2025-12-06 20:08:04,909 - INFO - Stored 1283 documents in the database.
+2025-12-06 20:08:04,909 - INFO - Stored 1283 chunks in ChromaDB
+2025-12-06 21:52:14,523 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:52:14,537 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 21:52:14,558 - INFO - Starting RobotDog conversation loop...
+2025-12-06 21:52:21,412 - INFO - [Node] -> listen_to_human_node
+2025-12-06 21:52:39,869 - INFO - [Node] -> context_processor_node
+2025-12-06 21:52:39,886 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:52:42,394 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 21:52:52,237 - INFO - [Node] -> decision_node
+2025-12-06 21:52:52,915 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 21:52:54,878 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 21:52:58,249 - INFO - [Node] -> rag_node
+2025-12-06 21:53:11,343 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 21:53:13,187 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 21:53:16,029 - INFO - Use pytorch device_name: cuda
+2025-12-06 21:53:22,086 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 21:53:37,840 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 21:54:53,790 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:54:53,813 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 21:54:53,836 - INFO - Starting RobotDog conversation loop...
+2025-12-06 21:55:03,288 - INFO - [Node] -> listen_to_human_node
+2025-12-06 21:55:07,970 - INFO - [Node] -> context_processor_node
+2025-12-06 21:55:07,986 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:55:08,130 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 21:55:20,814 - INFO - [Node] -> decision_node
+2025-12-06 21:55:20,814 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.0, 'ambiguous': 0.15, 'conversation': 0.05}
+2025-12-06 21:55:21,711 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 21:55:26,665 - INFO - [Node] -> rag_node
+2025-12-06 21:55:32,447 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 21:55:32,630 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 21:55:35,386 - INFO - Use pytorch device_name: cuda
+2025-12-06 21:55:35,618 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 21:58:04,872 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 21:58:05,043 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 21:58:08,006 - INFO - Use pytorch device_name: cuda
+2025-12-06 21:58:08,290 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 21:58:08,325 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:58:08,343 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 21:58:08,363 - INFO - Starting RobotDog conversation loop...
+2025-12-06 21:58:25,292 - INFO - [Node] -> listen_to_human_node
+2025-12-06 21:58:41,584 - INFO - [Node] -> context_processor_node
+2025-12-06 21:58:41,598 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 21:58:41,726 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 21:58:46,118 - INFO - [Node] -> decision_node
+2025-12-06 21:58:46,119 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.7, 'functional': 0.1, 'ambiguous': 0.15, 'conversation': 0.05}
+2025-12-06 21:58:48,590 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 21:58:51,129 - INFO - [Node] -> rag_node
+2025-12-06 21:58:59,383 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 21:59:21,144 - INFO - Query Retrieval successful.
+2025-12-06 21:59:57,569 - INFO - [rag_node] Retrieved 1 docs | Query: do ypu know jaochim grimsen...
+2025-12-06 21:59:57,583 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:00:02,759 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:00:06,607 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Joachim Grimstad
+2025-12-06 22:02:32,923 - INFO - [Node] -> action_classifier_node
+2025-12-06 22:02:39,320 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 22:07:46,798 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:07:46,966 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:07:49,717 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:07:50,000 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:07:50,035 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:07:50,053 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 22:07:50,073 - INFO - Starting RobotDog conversation loop...
+2025-12-06 22:08:03,783 - INFO - [Node] -> listen_to_human_node
+2025-12-06 22:08:19,959 - INFO - [Node] -> context_processor_node
+2025-12-06 22:08:19,975 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:08:22,470 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:08:26,650 - INFO - [Node] -> decision_node
+2025-12-06 22:08:26,651 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.7, 'functional': 0.1, 'ambiguous': 0.2, 'conversation': 0.0}
+2025-12-06 22:08:27,352 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 22:08:28,918 - INFO - [Node] -> rag_node
+2025-12-06 22:08:30,471 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 22:08:32,489 - INFO - Query Retrieval successful.
+2025-12-06 22:08:38,882 - INFO - [rag_node] Retrieved 1 docs | Query: do ypu know jaochim grimsen...
+2025-12-06 22:08:38,898 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:08:40,495 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:08:43,320 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Joachim Grimstad
+2025-12-06 22:11:30,028 - INFO - [Node] -> action_classifier_node
+2025-12-06 22:11:35,338 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 22:17:06,128 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:17:06,290 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:17:08,978 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:17:09,250 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:17:09,286 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:17:09,303 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 22:17:09,323 - INFO - Starting RobotDog conversation loop...
+2025-12-06 22:17:14,430 - INFO - [Node] -> listen_to_human_node
+2025-12-06 22:17:38,084 - INFO - [Node] -> context_processor_node
+2025-12-06 22:17:38,099 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:17:40,663 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:17:46,324 - INFO - [Node] -> decision_node
+2025-12-06 22:17:46,324 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.0, 'ambiguous': 0.15, 'conversation': 0.05}
+2025-12-06 22:17:51,815 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 22:17:55,383 - INFO - [Node] -> rag_node
+2025-12-06 22:18:00,367 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 22:18:00,645 - INFO - Query Retrieval successful.
+2025-12-06 22:18:03,432 - INFO - [rag_node] Retrieved 1 docs | Query: do ypu know jaochim grimsen
+2025-12-06 22:18:03,447 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:18:07,677 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:18:10,331 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 22:18:17,372 - INFO - [Node] -> action_classifier_node
+2025-12-06 22:18:17,373 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 22:18:38,340 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 22:18:52,410 - INFO - [Node] -> conversation_node
+2025-12-06 22:19:03,139 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:19:05,836 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:20:26,155 - INFO - [Node] -> summarizer_node
+2025-12-06 22:23:08,035 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:23:08,220 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:23:10,985 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:23:11,293 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:23:11,328 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:23:11,342 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 22:23:11,362 - INFO - Starting RobotDog conversation loop...
+2025-12-06 22:24:48,772 - INFO - [Node] -> listen_to_human_node
+2025-12-06 22:24:56,573 - INFO - [Node] -> context_processor_node
+2025-12-06 22:24:56,590 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:24:59,138 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:25:03,684 - INFO - [Node] -> decision_node
+2025-12-06 22:25:03,684 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.7, 'functional': 0.1, 'ambiguous': 0.15, 'conversation': 0.05}
+2025-12-06 22:25:04,381 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 22:25:06,327 - INFO - [Node] -> rag_node
+2025-12-06 22:25:14,129 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 22:25:14,382 - INFO - Query Retrieval successful.
+2025-12-06 22:25:15,295 - INFO - [rag_node] Retrieved 1 docs | Query: do ypu know jaochim grimsen
+2025-12-06 22:25:15,312 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:25:16,937 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:25:19,269 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Room 3.251 | Person: Joachim Grimstad
+2025-12-06 22:25:28,014 - INFO - [Node] -> action_classifier_node
+2025-12-06 22:25:28,014 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 22:25:34,987 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 22:25:47,262 - INFO - [Node] -> conversation_node
+2025-12-06 22:25:47,283 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:25:49,753 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:25:58,447 - INFO - [Node] -> summarizer_node
+2025-12-06 22:26:05,160 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:32:32,091 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:32:32,259 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:32:35,281 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:32:35,548 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:32:35,585 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:32:35,599 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 22:32:35,619 - INFO - Starting RobotDog conversation loop...
+2025-12-06 22:32:47,587 - INFO - [Node] -> listen_to_human_node
+2025-12-06 22:32:51,599 - INFO - [Node] -> context_processor_node
+2025-12-06 22:32:51,610 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:32:54,070 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:32:58,179 - INFO - [Node] -> decision_node
+2025-12-06 22:32:58,179 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.05, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-06 22:32:58,857 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 22:33:00,845 - INFO - [Node] -> rag_node
+2025-12-06 22:33:01,536 - INFO - Executing query: do ypu know jaochim grimsen
+2025-12-06 22:33:01,803 - INFO - Query Retrieval successful.
+2025-12-06 22:33:02,274 - INFO - [rag_node] Retrieved 1 docs | Query: do ypu know jaochim grimsen
+2025-12-06 22:33:02,285 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:33:03,363 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:33:07,789 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 22:33:09,262 - INFO - [Node] -> action_classifier_node
+2025-12-06 22:33:09,262 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 22:33:14,435 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 22:33:15,286 - INFO - [Node] -> conversation_node
+2025-12-06 22:33:15,305 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:33:17,734 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:33:23,216 - INFO - [Node] -> summarizer_node
+2025-12-06 22:33:23,238 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:33:28,052 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 22:36:12,427 - INFO - [Node] -> speak_to_human_node
+2025-12-06 22:36:33,534 - INFO - [SpeakToHuman] Speaking out: It looks like you meant Joachim Grimstad! He's located at Office 3.251, Room 3.251. Is there anything specific you'd like to know about him or need help with? (stub for audio data: this is audio data generated from text)
+2025-12-06 22:57:46,098 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:57:46,219 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:57:48,720 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:57:49,015 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:57:49,036 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:59:03,302 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 22:59:03,426 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 22:59:06,104 - INFO - Use pytorch device_name: cuda
+2025-12-06 22:59:06,342 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 22:59:06,365 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 22:59:06,375 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:00:46,698 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:00:46,823 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:00:49,402 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:00:49,645 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:00:49,667 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:00:49,678 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:00:49,687 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:00:49,687 - INFO - A RobotDog session with thread ID: 352487 started.
+2025-12-06 23:00:49,689 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:01:00,081 - INFO - [Node] -> context_processor_node
+2025-12-06 23:01:00,096 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:02,564 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:04,407 - INFO - [Node] -> decision_node
+2025-12-06 23:01:04,407 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 23:01:04,408 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:01:04,408 - INFO - [Node] -> rag_node
+2025-12-06 23:01:04,408 - INFO - Executing query: do you know Jaochim grimsen
+2025-12-06 23:01:04,644 - INFO - Query Retrieval successful.
+2025-12-06 23:01:04,644 - INFO - [rag_node] Retrieved 1 docs | Query: do you know Jaochim grimsen
+2025-12-06 23:01:04,659 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:04,969 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:08,327 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Philipp Grimmeisen, Office: 1.111
+Joachim Grimstad, Office: 3.251
+2025-12-06 23:01:08,328 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:01:08,329 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:01:08,329 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:01:08,330 - INFO - [Node] -> conversation_node
+2025-12-06 23:01:08,343 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:10,707 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:12,094 - INFO - [Node] -> summarizer_node
+2025-12-06 23:01:12,105 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:12,244 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:15,695 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:01:15,695 - INFO - [SpeakToHuman] Speaking out: I found two individuals with similar names: Philipp Grimmeisen in Office 1.111 and Joachim Grimstad in Office 3.251. Could one of these be the person you're looking for? Let me know if I can help with more details or guide you to their office!
+2025-12-06 23:01:15,696 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:01:44,052 - INFO - [Node] -> context_processor_node
+2025-12-06 23:01:44,068 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:44,325 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:45,599 - INFO - [Node] -> decision_node
+2025-12-06 23:01:45,599 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 23:01:45,599 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:01:45,600 - INFO - [Node] -> rag_node
+2025-12-06 23:01:45,600 - INFO - Executing query: yes, i want to know about Joachim
+2025-12-06 23:01:45,611 - INFO - Query Retrieval successful.
+2025-12-06 23:01:45,611 - INFO - [rag_node] Retrieved 1 docs | Query: yes, i want to know about Joachim
+2025-12-06 23:01:45,620 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:45,941 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:48,195 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 23:01:48,197 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:01:48,198 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:01:48,198 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:01:48,198 - INFO - [Node] -> conversation_node
+2025-12-06 23:01:48,211 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:48,533 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:49,731 - INFO - [Node] -> summarizer_node
+2025-12-06 23:01:49,746 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:01:49,885 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:01:51,955 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:01:51,956 - INFO - [SpeakToHuman] Speaking out: Sure! It looks like you're interested in learning more about Joachim Grimstad. He's located at Office 3.251. If you have any specific questions or need further information, feel free to ask!
+2025-12-06 23:01:51,957 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:04:45,428 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:04:45,551 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:04:48,077 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:04:48,330 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:04:48,351 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:48,357 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:04:48,366 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:04:48,366 - INFO - A RobotDog session with thread ID: 984558 started.
+2025-12-06 23:04:48,367 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:04:48,367 - INFO - [Node] -> context_processor_node
+2025-12-06 23:04:48,377 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:48,576 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:49,569 - INFO - [Node] -> decision_node
+2025-12-06 23:04:49,569 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.0, 'functional': 0.0, 'ambiguous': 1.0, 'conversation': 0.0}
+2025-12-06 23:04:49,569 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-06 23:04:49,570 - INFO - [Node] -> clarification_node
+2025-12-06 23:04:49,582 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:49,763 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:50,233 - INFO - [Node] -> summarizer_node
+2025-12-06 23:04:50,248 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:50,366 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:52,286 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:04:52,287 - INFO - [SpeakToHuman] Speaking out: Could you please tell me more about what you're looking for or need help with?
+2025-12-06 23:04:52,287 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:04:52,288 - INFO - [Node] -> context_processor_node
+2025-12-06 23:04:52,301 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:52,491 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:53,611 - INFO - [Node] -> decision_node
+2025-12-06 23:04:53,612 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.0, 'functional': 0.0, 'ambiguous': 1.0, 'conversation': 0.0}
+2025-12-06 23:04:53,612 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-06 23:04:53,612 - INFO - [Node] -> clarification_node
+2025-12-06 23:04:53,625 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:53,806 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:54,257 - INFO - [Node] -> summarizer_node
+2025-12-06 23:04:54,271 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:04:54,387 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:04:57,112 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:04:57,112 - INFO - [SpeakToHuman] Speaking out: Could you please tell us more about what information or assistance you are looking for?
+2025-12-06 23:04:57,113 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:05:35,886 - INFO - [Node] -> context_processor_node
+2025-12-06 23:05:35,900 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:05:36,146 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:05:37,536 - INFO - [Node] -> decision_node
+2025-12-06 23:05:37,536 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.1, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-06 23:05:37,536 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:05:37,537 - INFO - [Node] -> rag_node
+2025-12-06 23:05:37,537 - INFO - Executing query: do yu know whoe is Joachim Grimsen
+2025-12-06 23:05:37,776 - INFO - Query Retrieval successful.
+2025-12-06 23:05:37,777 - INFO - [rag_node] Retrieved 1 docs | Query: do yu know whoe is Joachim Grimsen
+2025-12-06 23:05:37,788 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:05:38,115 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:05:40,149 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 23:05:40,150 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:05:40,150 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:05:40,150 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:05:40,151 - INFO - [Node] -> conversation_node
+2025-12-06 23:05:40,160 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:05:40,471 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:05:41,770 - INFO - [Node] -> summarizer_node
+2025-12-06 23:05:41,784 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:05:41,888 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:05:46,453 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:05:46,457 - INFO - [SpeakToHuman] Speaking out: I'm familiar with someone named Joachim Grimstad, whose office is located in Room 3.251. Could you mean him? If so, his research location is also there. Let me know if there's anything specific you'd like to know!
+2025-12-06 23:05:46,457 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:06:08,967 - INFO - [Node] -> context_processor_node
+2025-12-06 23:06:08,983 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:06:09,254 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:06:11,369 - INFO - [Node] -> decision_node
+2025-12-06 23:06:11,369 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 23:06:11,369 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:06:11,370 - INFO - [Node] -> rag_node
+2025-12-06 23:06:11,370 - INFO - Executing query: yes, i want to know all about him
+2025-12-06 23:06:11,383 - INFO - Query Retrieval successful.
+2025-12-06 23:06:11,383 - INFO - [rag_node] Retrieved 1 docs | Query: yes, i want to know all about him
+2025-12-06 23:06:11,398 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:06:11,717 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:06:13,748 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Joachim Grimstad
+2025-12-06 23:06:13,750 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:06:13,750 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:06:13,750 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:08:47,106 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:08:47,226 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:08:50,017 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:08:50,292 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:08:50,314 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:08:50,319 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:08:50,329 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:08:50,329 - INFO - A RobotDog session with thread ID: 802035 started.
+2025-12-06 23:08:50,331 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:09:10,354 - INFO - [Node] -> context_processor_node
+2025-12-06 23:09:10,365 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:10,560 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:12,338 - INFO - [Node] -> decision_node
+2025-12-06 23:09:12,339 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.05, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-06 23:09:12,339 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:09:12,339 - INFO - [Node] -> rag_node
+2025-12-06 23:09:12,339 - INFO - Executing query: do you know Joachim Grimsen
+2025-12-06 23:09:12,616 - INFO - Query Retrieval successful.
+2025-12-06 23:09:12,616 - INFO - [rag_node] Retrieved 1 docs | Query: do you know Joachim Grimsen
+2025-12-06 23:09:12,629 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:12,944 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:15,897 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 23:09:15,899 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:09:15,899 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:09:15,899 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:09:15,900 - INFO - [Node] -> conversation_node
+2025-12-06 23:09:15,914 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:16,193 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:17,535 - INFO - [Node] -> summarizer_node
+2025-12-06 23:09:17,548 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:17,680 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:22,848 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:09:22,849 - INFO - [SpeakToHuman] Speaking out: It seems like there might be a slight mix-up with the name—our records show someone named Joachim Grimstad who is associated with Room 3.251. Could it be possible you meant him? If not, feel free to provide more details or clarify, and I'll do my best to assist further!
+2025-12-06 23:09:22,850 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:09:38,051 - INFO - [Node] -> context_processor_node
+2025-12-06 23:09:38,066 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:38,334 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:40,269 - INFO - [Node] -> decision_node
+2025-12-06 23:09:40,269 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 1.0, 'functional': 0.0, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-06 23:09:40,269 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:09:40,270 - INFO - [Node] -> rag_node
+2025-12-06 23:09:40,270 - INFO - Executing query: yes, he is the one
+2025-12-06 23:09:40,286 - INFO - Query Retrieval successful.
+2025-12-06 23:09:40,286 - INFO - [rag_node] Retrieved 1 docs | Query: yes, he is the one
+2025-12-06 23:09:40,296 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:40,824 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:42,958 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Room 3.251 | Person: Joachim Grimstad
+2025-12-06 23:09:42,960 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:09:42,960 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-06 23:09:42,960 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-06 23:09:42,961 - INFO - [Node] -> conversation_node
+2025-12-06 23:09:42,975 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:43,298 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:44,349 - INFO - [Node] -> summarizer_node
+2025-12-06 23:09:44,364 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:09:44,463 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:09:47,678 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:09:47,678 - INFO - [SpeakToHuman] Speaking out: Great! It's good to know we're on the right track with Joachim Grimstad from Room 3.251. If you need any more details about him or assistance related to your visit, feel free to ask!
+2025-12-06 23:09:47,679 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:10:17,865 - INFO - [Node] -> context_processor_node
+2025-12-06 23:10:17,881 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:10:18,138 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:10:19,815 - INFO - [Node] -> decision_node
+2025-12-06 23:10:19,816 - INFO - [DecisionNode] Final intent: functional | Confidence: {'institutional': 0.1, 'functional': 0.9, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-06 23:10:19,816 - INFO - [Router] decide_query_intention: functional -> action_planner_node
+2025-12-06 23:10:19,816 - INFO - [Node] -> action_planner_node
+2025-12-06 23:10:19,825 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:21:37,268 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:21:37,388 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:21:40,498 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:21:40,757 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:21:40,779 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:21:40,785 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:21:40,794 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:21:40,794 - INFO - A RobotDog session with thread ID: 499493 started.
+2025-12-06 23:21:40,796 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:21:51,362 - INFO - [Node] -> context_processor_node
+2025-12-06 23:21:51,377 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:21:53,869 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:21:55,249 - INFO - [Node] -> decision_node
+2025-12-06 23:21:55,250 - INFO - [DecisionNode] Final intent: conversation | Confidence: {'institutional': 0.1, 'functional': 0.1, 'ambiguous': 0.2, 'conversation': 0.6}
+2025-12-06 23:21:55,250 - INFO - [Router] decide_query_intention: conversation -> conversation_node
+2025-12-06 23:21:55,250 - INFO - [Node] -> conversation_node
+2025-12-06 23:21:55,261 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:21:57,521 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:21:58,180 - INFO - [Node] -> summarizer_node
+2025-12-06 23:21:58,195 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:21:58,301 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:22:39,788 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:22:39,915 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:22:42,713 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:22:42,946 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:22:42,967 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:22:42,976 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:22:42,985 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:22:42,985 - INFO - A RobotDog session with thread ID: 348720 started.
+2025-12-06 23:22:42,987 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:22:48,251 - INFO - [Node] -> context_processor_node
+2025-12-06 23:22:48,266 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:22:48,414 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:22:49,921 - INFO - [Node] -> decision_node
+2025-12-06 23:22:49,921 - INFO - [DecisionNode] Final intent: conversation | Confidence: {'institutional': 0.1, 'functional': 0.1, 'ambiguous': 0.2, 'conversation': 0.6}
+2025-12-06 23:22:49,921 - INFO - [Router] decide_query_intention: conversation -> conversation_node
+2025-12-06 23:22:49,922 - INFO - [Node] -> conversation_node
+2025-12-06 23:22:49,931 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:22:50,040 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:22:51,242 - INFO - [Node] -> summarizer_node
+2025-12-06 23:22:51,252 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:22:51,384 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:22:54,737 - INFO - [Node] -> speak_to_human_node
+2025-12-06 23:22:54,737 - INFO - [SpeakToHuman] Speaking out: I'd love to help with that! Could you let me know which area or city's weather you're interested in? This way, I can provide the most accurate information. If there's anything else you'd like to know, feel free to ask!
+2025-12-06 23:24:47,854 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:24:47,978 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:24:50,753 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:24:50,972 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:24:50,993 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:24:51,002 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:24:51,012 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:24:51,012 - INFO - A RobotDog session with thread ID: 368206 started.
+2025-12-06 23:24:51,013 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:25:00,454 - INFO - [Node] -> context_processor_node
+2025-12-06 23:25:00,468 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:25:00,622 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:26:36,735 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:26:36,899 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:26:39,628 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:26:39,856 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:26:39,898 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:26:39,916 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:26:39,935 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:26:41,964 - INFO - A RobotDog session with thread ID: 461029 started.
+2025-12-06 23:26:42,986 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:27:12,321 - INFO - [Node] -> context_processor_node
+2025-12-06 23:27:12,337 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:27:12,488 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:28:05,344 - INFO - [Node] -> decision_node
+2025-12-06 23:28:17,621 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.15, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-06 23:28:20,320 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:28:23,241 - INFO - [Node] -> rag_node
+2025-12-06 23:28:24,543 - INFO - Executing query: take me Joachim Grimsen
+2025-12-06 23:28:24,804 - INFO - Query Retrieval successful.
+2025-12-06 23:28:25,892 - INFO - [rag_node] Retrieved 1 docs | Query: take me Joachim Grimsen
+2025-12-06 23:28:25,911 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:28:49,971 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:31:10,839 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:31:11,006 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:31:13,889 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:31:14,172 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:31:14,206 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:31:14,220 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:31:14,240 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:31:16,274 - INFO - A RobotDog session with thread ID: 470289 started.
+2025-12-06 23:31:16,990 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:31:29,330 - INFO - [Node] -> context_processor_node
+2025-12-06 23:31:29,346 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:31:29,540 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:31:32,852 - INFO - [Node] -> decision_node
+2025-12-06 23:31:33,948 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.9, 'functional': 0.1, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-06 23:31:34,681 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-06 23:31:38,847 - INFO - [Node] -> rag_node
+2025-12-06 23:31:40,328 - INFO - Executing query: take me to Jaochim Grimsen
+2025-12-06 23:31:40,609 - INFO - Query Retrieval successful.
+2025-12-06 23:31:53,502 - INFO - [rag_node] Retrieved 1 docs | Query: take me to Jaochim Grimsen
+2025-12-06 23:32:02,725 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:32:31,749 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:34:01,520 - INFO - [rag_node] Action required: True | Confidence: 0.98 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 23:34:08,598 - INFO - [Node] -> action_classifier_node
+2025-12-06 23:34:08,599 - INFO - [action_classifier] Threshold check: confidence=0.98 vs 0.7 | Requires action: True
+2025-12-06 23:34:43,377 - INFO - [action_classifier] Action type: navigation | Intent: navigate_to_Office 3.251 | Location: Office 3.251 | Person: Joachim Grimstad
+2025-12-06 23:37:11,782 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:37:11,948 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-06 23:37:14,634 - INFO - Use pytorch device_name: cuda
+2025-12-06 23:37:14,899 - INFO - DatabaseHandler initialized successfully.
+2025-12-06 23:37:14,935 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:37:14,952 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-06 23:37:14,972 - INFO - Starting RobotDog conversation loop...
+2025-12-06 23:37:20,799 - INFO - A RobotDog session with thread ID: 311059 started.
+2025-12-06 23:37:22,840 - INFO - [Node] -> listen_to_human_node
+2025-12-06 23:37:58,673 - INFO - [Node] -> context_processor_node
+2025-12-06 23:37:58,689 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:38:01,187 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-06 23:38:10,165 - INFO - [Node] -> decision_node
+2025-12-06 23:38:11,075 - INFO - [DecisionNode] Final intent: functional | Confidence: {'institutional': 0.1, 'functional': 0.8, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-06 23:38:11,581 - INFO - [Router] decide_query_intention: functional -> action_planner_node
+2025-12-06 23:38:12,655 - INFO - [Node] -> action_planner_node
+2025-12-06 23:38:12,669 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-06 23:53:49,470 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-06 23:53:49,639 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:09:21,938 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 00:09:22,108 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:09:24,966 - INFO - Use pytorch device_name: cuda
+2025-12-07 00:09:25,266 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 00:09:25,302 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:09:25,315 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 00:14:45,370 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 00:14:45,495 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:14:48,238 - INFO - Use pytorch device_name: cuda
+2025-12-07 00:14:48,487 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 00:14:48,509 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:14:48,515 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 00:16:52,397 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 00:16:52,559 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:16:55,601 - INFO - Use pytorch device_name: cuda
+2025-12-07 00:16:55,861 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 00:16:55,894 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:16:55,908 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 00:16:55,926 - INFO - Starting RobotDog conversation loop...
+2025-12-07 00:17:09,163 - INFO - A RobotDog session with thread ID: 219012 started.
+2025-12-07 00:17:14,866 - INFO - [Node] -> listen_to_human_node
+2025-12-07 00:17:26,851 - INFO - [Node] -> context_processor_node
+2025-12-07 00:17:26,866 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:17:29,328 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:17:35,487 - INFO - [Node] -> decision_node
+2025-12-07 00:17:36,611 - WARNING - [DecisionNode] Low confidence (0.10), overriding to ambiguous
+2025-12-07 00:17:38,738 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.85, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-07 00:17:39,818 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 00:18:20,382 - INFO - [Node] -> clarification_node
+2025-12-07 00:18:35,355 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:18:35,579 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:23:15,980 - INFO - [Node] -> summarizer_node
+2025-12-07 00:23:20,488 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:23:28,708 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:23:42,880 - INFO - [Node] -> speak_to_human_node
+2025-12-07 00:23:42,880 - INFO - [SpeakToHuman] Speaking out: Could you please clarify if you would like me to take you to Grimstad, or if there's a specific action you want to perform related to 'tame'?
+2025-12-07 00:43:49,482 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 00:43:49,645 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:43:52,233 - INFO - Use pytorch device_name: cuda
+2025-12-07 00:43:52,464 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 00:43:52,497 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:43:52,510 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 00:43:52,527 - INFO - Starting RobotDog conversation loop...
+2025-12-07 00:43:52,527 - INFO - A RobotDog session with thread ID: 374117 started.
+2025-12-07 00:43:58,632 - INFO - [Node] -> listen_to_human_node
+2025-12-07 00:44:15,330 - INFO - [Node] -> context_processor_node
+2025-12-07 00:44:15,344 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:44:17,893 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:44:23,429 - INFO - [Node] -> decision_node
+2025-12-07 00:44:24,320 - WARNING - [DecisionNode] Low confidence (0.10), overriding to ambiguous
+2025-12-07 00:44:27,430 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.85, 'ambiguous': 0.03, 'conversation': 0.02}
+2025-12-07 00:44:31,522 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 00:44:37,467 - INFO - [Node] -> clarification_node
+2025-12-07 00:45:25,282 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:45:27,637 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:45:37,782 - INFO - [Node] -> summarizer_node
+2025-12-07 00:45:37,783 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 00:45:44,695 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:45:44,806 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:45:56,438 - INFO - [Node] -> speak_to_human_node
+2025-12-07 00:45:56,438 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details about 'grimstand'? Is it a place name, an address, or something else? This will help me assist you better with your navigation request.
+2025-12-07 00:46:17,733 - INFO - [Node] -> listen_to_human_node
+2025-12-07 00:46:37,701 - INFO - [Node] -> context_processor_node
+2025-12-07 00:46:37,712 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:46:37,925 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:46:44,466 - INFO - [Node] -> decision_node
+2025-12-07 00:46:48,980 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.7, 'functional': 0.1, 'ambiguous': 0.15, 'conversation': 0.05}
+2025-12-07 00:46:52,866 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-07 00:46:55,018 - INFO - [Node] -> rag_node
+2025-12-07 00:46:56,108 - INFO - Executing query: he is a person working here
+2025-12-07 00:46:56,352 - INFO - Query Retrieval successful.
+2025-12-07 00:47:03,046 - INFO - [rag_node] Retrieved 1 docs | Query: he is a person working here
+2025-12-07 00:47:03,065 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:47:04,697 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:47:09,479 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: Office 1.112 | Person: Daniel Dittler
+2025-12-07 00:50:42,557 - INFO - [Node] -> action_classifier_node
+2025-12-07 00:50:49,144 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-07 00:52:56,542 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 00:52:56,710 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 00:52:59,456 - INFO - Use pytorch device_name: cuda
+2025-12-07 00:52:59,746 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 00:52:59,782 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:52:59,799 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 00:52:59,817 - INFO - Starting RobotDog conversation loop...
+2025-12-07 00:52:59,817 - INFO - A RobotDog session with thread ID: 173457 started.
+2025-12-07 00:53:02,502 - INFO - [Node] -> listen_to_human_node
+2025-12-07 00:53:12,248 - INFO - [Node] -> context_processor_node
+2025-12-07 00:53:12,265 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:53:14,857 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:53:29,755 - INFO - [Node] -> decision_node
+2025-12-07 00:53:31,846 - INFO - [DecisionNode] Final intent: functional | Confidence: {'institutional': 0.1, 'functional': 0.8, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-07 00:53:37,531 - INFO - [Router] decide_query_intention: functional -> rag_node
+2025-12-07 00:53:45,012 - INFO - [Node] -> rag_node
+2025-12-07 00:53:49,813 - INFO - Executing query: tame me to grimstand
+2025-12-07 00:53:50,074 - INFO - Query Retrieval successful.
+2025-12-07 00:53:58,699 - INFO - [rag_node] Retrieved 1 docs | Query: tame me to grimstand
+2025-12-07 00:54:10,833 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 00:54:12,226 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 00:54:18,815 - INFO - [rag_node] Action required: True | Confidence: 0.95 | Location:  | Person: 
+2025-12-07 00:54:25,597 - INFO - [Node] -> action_classifier_node
+2025-12-07 00:54:25,597 - INFO - [action_classifier] Threshold check: confidence=0.95 vs 0.7 | Requires action: True
+2025-12-07 01:01:40,818 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:01:40,988 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:01:43,789 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:01:44,059 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:01:44,093 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:01:44,106 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:01:44,124 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:01:44,125 - INFO - A RobotDog session with thread ID: 513933 started.
+2025-12-07 01:01:47,282 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:02:00,231 - INFO - [Node] -> context_processor_node
+2025-12-07 01:02:00,248 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:02:02,824 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:02:08,509 - INFO - [Node] -> decision_node
+2025-12-07 01:02:13,403 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.1, 'ambiguous': 0.7, 'conversation': 0.1}
+2025-12-07 01:02:31,343 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:02:34,714 - INFO - [Node] -> clarification_node
+2025-12-07 01:02:58,827 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:03:01,220 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:03:09,031 - INFO - [Node] -> summarizer_node
+2025-12-07 01:03:09,032 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:03:12,546 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:03:12,675 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:03:17,677 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:03:17,678 - INFO - [SpeakToHuman] Speaking out: Could you provide more details about 'grimstand'? Are you referring to a person, place, or something else?
+2025-12-07 01:03:29,117 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:03:41,443 - INFO - [Node] -> context_processor_node
+2025-12-07 01:03:43,144 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:03:43,380 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:05:01,701 - INFO - [Node] -> decision_node
+2025-12-07 01:05:03,001 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 1.0, 'functional': 0.0, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-07 01:05:08,468 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-07 01:05:11,188 - INFO - [Node] -> rag_node
+2025-12-07 01:26:44,927 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:26:45,095 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:26:47,816 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:26:48,110 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:26:48,146 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:26:48,159 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:26:48,178 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:26:48,178 - INFO - A RobotDog session with thread ID: 334727 started.
+2025-12-07 01:26:58,705 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:27:14,053 - INFO - [Node] -> context_processor_node
+2025-12-07 01:27:14,063 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:27:16,589 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:27:24,595 - INFO - [Node] -> decision_node
+2025-12-07 01:27:29,305 - INFO - [DecisionNode] Final intent: functional | Confidence: {'institutional': 0.1, 'functional': 0.8, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-07 01:27:38,825 - INFO - [Router] decide_query_intention: functional -> rag_node
+2025-12-07 01:27:49,608 - INFO - [Node] -> rag_node
+2025-12-07 01:27:56,100 - INFO - Executing query: 
+grimstand
+{'action': 'grimstand'}
+2025-12-07 01:27:56,356 - INFO - Query Retrieval successful.
+2025-12-07 01:28:02,730 - INFO - [rag_node] Retrieved 1 docs | Query: grimstand
+2025-12-07 01:28:02,741 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:28:03,051 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:29:24,320 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:29:24,484 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:29:27,150 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:29:27,413 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:29:27,449 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:29:27,463 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:29:27,481 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:29:27,481 - INFO - A RobotDog session with thread ID: 932475 started.
+2025-12-07 01:29:29,362 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:29:40,368 - INFO - [Node] -> context_processor_node
+2025-12-07 01:29:40,385 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:29:40,597 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:29:58,211 - INFO - [Node] -> decision_node
+2025-12-07 01:30:05,424 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.1, 'ambiguous': 0.7, 'conversation': 0.1}
+2025-12-07 01:30:13,346 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:30:17,071 - INFO - [Node] -> clarification_node
+2025-12-07 01:30:40,268 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:30:42,640 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:31:53,419 - INFO - [Node] -> summarizer_node
+2025-12-07 01:31:53,419 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:31:54,922 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:31:55,052 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:32:00,781 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:32:00,782 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details about 'Grim'? Are you referring to a person, a place, or something else?
+2025-12-07 01:32:07,985 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:32:28,447 - INFO - [Node] -> context_processor_node
+2025-12-07 01:32:36,352 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:32:36,609 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:32:51,240 - INFO - [Node] -> decision_node
+2025-12-07 01:33:13,486 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.8, 'functional': 0.1, 'ambiguous': 0.05, 'conversation': 0.05}
+2025-12-07 01:33:14,797 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-07 01:33:21,018 - INFO - [Node] -> rag_node
+2025-12-07 01:33:44,667 - INFO - Executing query: Summary:
+
+1. The user asked if RobotDog knows "grim," which was ambiguous due to lack of context.
+2. The assistant identified that 'Grim' could refer to a person or something else but couldn't determine the specific intent.
+3. A clarification question was suggested: "Could you please provide more details about 'Grim'? Are you referring to a person, a place, or something else?"
+4. The conversation focused on understanding whether 'grim' referred to a person, place, or concept, and how RobotDog might assist further.
+
+Relevant Information:
+- Context extraction identified 'grim' as potentially related to a person.
+- Intent was classified as ambiguous due to insufficient context.
+- Clarification question aimed at refining the user's intent for better assistance.
+he is a person working here
+{'person': 'Grim', 'location': 'here'}
+2025-12-07 01:33:44,845 - INFO - Query Retrieval successful.
+2025-12-07 01:34:28,290 - INFO - [rag_node] Retrieved 1 docs | Query: he is a person working here
+2025-12-07 01:34:30,781 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:34:31,231 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:36:01,596 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Grim
+2025-12-07 01:36:08,069 - INFO - [Node] -> action_classifier_node
+2025-12-07 01:36:08,071 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-07 01:39:11,714 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:39:11,834 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:39:14,673 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:39:14,905 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:39:14,926 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:39:14,932 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:39:14,940 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:39:14,940 - INFO - A RobotDog session with thread ID: 565686 started.
+2025-12-07 01:39:14,941 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:39:24,456 - INFO - [Node] -> context_processor_node
+2025-12-07 01:39:24,471 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:39:24,644 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:39:26,191 - INFO - [Node] -> decision_node
+2025-12-07 01:39:26,192 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.1, 'ambiguous': 0.7, 'conversation': 0.1}
+2025-12-07 01:39:26,192 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:39:26,192 - INFO - [Node] -> clarification_node
+2025-12-07 01:40:08,852 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:40:08,971 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:40:11,753 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:40:11,992 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:40:12,013 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:12,018 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:40:12,026 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:40:12,026 - INFO - A RobotDog session with thread ID: 807657 started.
+2025-12-07 01:40:12,028 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:40:12,028 - INFO - [Node] -> context_processor_node
+2025-12-07 01:40:12,038 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:12,180 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:13,435 - INFO - [Node] -> decision_node
+2025-12-07 01:40:13,436 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.0, 'functional': 0.0, 'ambiguous': 1.0, 'conversation': 0.0}
+2025-12-07 01:40:13,436 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:40:13,436 - INFO - [Node] -> clarification_node
+2025-12-07 01:40:13,448 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:15,491 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:15,968 - INFO - [Node] -> summarizer_node
+2025-12-07 01:40:15,968 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:40:15,978 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:16,072 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:17,732 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:40:17,732 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details about what you need assistance with? Are there any specific actions, locations, or people involved?
+2025-12-07 01:40:17,733 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:40:17,733 - INFO - [Node] -> context_processor_node
+2025-12-07 01:40:17,745 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:17,952 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:19,148 - INFO - [Node] -> decision_node
+2025-12-07 01:40:19,156 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.0, 'functional': 0.0, 'ambiguous': 1.0, 'conversation': 0.0}
+2025-12-07 01:40:19,156 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:40:19,156 - INFO - [Node] -> clarification_node
+2025-12-07 01:40:19,171 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:19,318 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:19,798 - INFO - [Node] -> summarizer_node
+2025-12-07 01:40:19,799 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:40:19,810 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:19,901 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:21,885 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:40:21,885 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details about your request? Are there any specific topics, actions, or areas you need assistance with?
+2025-12-07 01:40:21,886 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:40:32,390 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:40:32,511 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:40:35,101 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:40:35,316 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:40:35,335 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:35,340 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:40:35,348 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:40:35,348 - INFO - A RobotDog session with thread ID: 337781 started.
+2025-12-07 01:40:35,350 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:40:35,350 - INFO - [Node] -> context_processor_node
+2025-12-07 01:40:35,358 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:35,536 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:36,541 - INFO - [Node] -> decision_node
+2025-12-07 01:40:36,541 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.0, 'functional': 0.0, 'ambiguous': 1.0, 'conversation': 0.0}
+2025-12-07 01:40:36,541 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:40:36,542 - INFO - [Node] -> clarification_node
+2025-12-07 01:40:36,554 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:36,675 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:37,019 - INFO - [Node] -> summarizer_node
+2025-12-07 01:40:37,019 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:40:37,028 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:37,119 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:40:39,108 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:40:39,108 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details or specify what you need assistance with?
+2025-12-07 01:40:39,109 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:40:47,836 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-12-07 01:40:47,953 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-12-07 01:40:50,445 - INFO - Use pytorch device_name: cuda
+2025-12-07 01:40:50,664 - INFO - DatabaseHandler initialized successfully.
+2025-12-07 01:40:50,686 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:40:50,691 - INFO - 
+=========== GRAPH Initialized ===========
+
+2025-12-07 01:40:50,699 - INFO - Starting RobotDog conversation loop...
+2025-12-07 01:40:50,699 - INFO - A RobotDog session with thread ID: 495406 started.
+2025-12-07 01:40:50,701 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:41:07,180 - INFO - [Node] -> context_processor_node
+2025-12-07 01:41:07,193 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:07,336 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:09,290 - INFO - [Node] -> decision_node
+2025-12-07 01:41:09,290 - INFO - [DecisionNode] Final intent: ambiguous | Confidence: {'institutional': 0.1, 'functional': 0.05, 'ambiguous': 0.8, 'conversation': 0.05}
+2025-12-07 01:41:09,291 - INFO - [Router] decide_query_intention: ambiguous -> clarification_node
+2025-12-07 01:41:09,291 - INFO - [Node] -> clarification_node
+2025-12-07 01:41:09,303 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:09,450 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:09,904 - INFO - [Node] -> summarizer_node
+2025-12-07 01:41:09,904 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:41:09,918 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:10,014 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:11,618 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:41:11,618 - INFO - [SpeakToHuman] Speaking out: Could you please provide more details about 'grims'? Are you referring to a person, place, or something else?
+2025-12-07 01:41:11,619 - INFO - [Node] -> listen_to_human_node
+2025-12-07 01:41:37,619 - INFO - [Node] -> context_processor_node
+2025-12-07 01:41:37,634 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:37,870 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:39,430 - INFO - [Node] -> decision_node
+2025-12-07 01:41:39,431 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 1.0, 'functional': 0.0, 'ambiguous': 0.0, 'conversation': 0.0}
+2025-12-07 01:41:39,431 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2025-12-07 01:41:39,432 - INFO - [Node] -> rag_node
+2025-12-07 01:41:39,432 - INFO - Executing query: Summary:
+
+1. The user queried about "grims," seeking to know if RobotDog is familiar with it.
+2. Due to insufficient context, the intent was classified as ambiguous since "grims" could refer to a person, place, or concept without additional information.
+3. A clarification question was generated asking for more details: whether "grims" refers to a person, place, or something else.
+
+Relevant Information:
+- The conversation started with an ambiguous query about "grims."
+- Context extraction and intent classification identified the need for further clarification due to lack of specific context.
+- Execution sequence involved context tagging as 'unknown' and generating a clarification question to resolve ambiguity.
+he is person working at uni stuttgart ias department
+{'person': 'he', 'institution': 'uni stuttgart', 'department': 'ias'}
+2025-12-07 01:41:39,594 - INFO - Query Retrieval successful.
+2025-12-07 01:41:39,594 - INFO - [rag_node] Retrieved 1 docs | Query: he is person working at uni stuttgart ias departme
+2025-12-07 01:41:39,605 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:40,003 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:42,215 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Philipp Grimmeisen
+2025-12-07 01:41:42,216 - INFO - [Node] -> action_classifier_node
+2025-12-07 01:41:42,217 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2025-12-07 01:41:42,217 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2025-12-07 01:41:42,218 - INFO - [Node] -> conversation_node
+2025-12-07 01:41:42,231 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:42,427 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:43,214 - INFO - [Node] -> summarizer_node
+2025-12-07 01:41:43,214 - INFO - [summarizer_node] Summary node is enabled.
+2025-12-07 01:41:43,227 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2025-12-07 01:41:43,317 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-12-07 01:41:45,414 - INFO - [Node] -> speak_to_human_node
+2025-12-07 01:41:45,414 - INFO - [SpeakToHuman] Speaking out: Great! It sounds like you're referring to someone working at the Institute of Industrial Automation and Software Engineering (IAS) at the University of Stuttgart. If there's anything specific you'd like to know about their work or department, feel free to ask. I'm here to help!
+2025-12-07 01:41:45,415 - INFO - [Node] -> listen_to_human_node

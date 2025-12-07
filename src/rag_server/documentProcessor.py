@@ -68,8 +68,11 @@ class DocumentProcessor:
         df["headers"] = df["headers"].apply(self._parse_list_cell)
         df["room_numbers"] = df["room_numbers"].apply(self._parse_list_cell)
 
-        splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-
+        # splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50) # needs improvement
+        splitter = RecursiveCharacterTextSplitter(chunk_size=800,  # larger chunk size, improved overlap
+                                                  chunk_overlap=150,
+                                                  separators=["\n\n", "\n", " ", "", "."])
+        
         chunks: List[str] = []
         metadatas: List[Dict] = []
 

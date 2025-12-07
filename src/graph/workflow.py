@@ -76,7 +76,7 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     # RAG & Action nodes
     graph.add_node("rag_node", rag_pipeline) # use LLM-3
     graph.add_node("action_classifier_node", action_classifier)
-    graph.add_node("action_planner_node", action_planner) # use LLM-4
+    # graph.add_node("action_planner_node", action_planner) # use LLM-4
 
     # MCP nodes (LangGraph pattern with ToolNode)
     graph.add_node("llm_tools_node", call_llm_with_tools)  # Model decides which tools to call
@@ -89,7 +89,7 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
 
     # Edges - main flow
     graph.add_edge(START, "listen_to_human_node")
-    graph.add_edge("listen_to_human_node", "context_processor_node")
+    graph.add_conditional_edges("listen_to_human_node", should_continue)
     graph.add_edge("context_processor_node", "decision_node")  
 
     # Decision routing
@@ -104,7 +104,7 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     graph.add_conditional_edges("action_classifier_node", decide_tool_call_execution)
     
     # Action planner path (direct to MCP)
-    graph.add_edge("action_planner_node", "llm_tools_node")
+    # graph.add_edge("action_planner_node", "llm_tools_node")
     
     # llm_tools_node -> tools_condition -> either "tools" or "__end__"
     # tools -> llm_tools_node (loop until no more tools needed)
@@ -119,19 +119,12 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     graph.add_edge("summarizer_node", "speak_to_human_node")
     # graph.add_edge("tools", "mcp_llm_node")  # tools_condition will either go to "tools" or END by default
     
-    graph.add_conditional_edges("speak_to_human_node", should_continue)  # loop back to listening
+    graph.add_edge("speak_to_human_node", "listen_to_human_node")  # loop back to listening
 
     # for history tracking
     checkpointer = MemorySaver() # save in ram
     
     # Debug: Print graph structure
-    logger.info("\n[Graph] Structure:")
-    logger.info(f"[Graph] Nodes: {list(graph.nodes.keys())}")
-    logger.info(f"[Graph] Edges: {sorted(graph.edges)}")
-    logger.info("[Graph] Conditional edges (routers):")
-    logger.info("  - decision_node -> (rag_node | action_planner_node | conversation_node | clarification_node)")
-    logger.info("  - action_classifier_node -> (llm_tools_node | speak_to_human_node)")
-    logger.info("  - llm_tools_node -> (tools | summarizer_node)")
-    logger.info("  - speak_to_human_node -> (listen_to_human_node | END)\n")
+    logger.info("\n=========== GRAPH Initialized ===========\n")
 
     return graph.compile(checkpointer=checkpointer)

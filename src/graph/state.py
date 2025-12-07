@@ -5,13 +5,13 @@ from langgraph.graph.message import add_messages
 
 
 from src.graph.schemas import (
+    ActionInputToToolsLLM,
     SpeechToTextOutput,
     ContextProcessorOutput,
     DecisionNodeOutput,
     ConversationNodeOutput,
     ClarificationNodeOutput,
     RAGNodeOutput,
-    ActionInputToMCP,
 )
 
 
@@ -27,24 +27,24 @@ class RobotDogState(TypedDict):
     stt_node_output: Optional[SpeechToTextOutput]         # structured ASR output, has original_query
     
     # Context & Decision 
-    context_LLM_model: str                           # LLM-1 model used for context processing
+    # context_LLM_model: str                           # LLM-1 model used for context processing
     context_proc_node_output: Optional[ContextProcessorOutput]    # has normalized query, context tags
     decision_node_output: Optional[DecisionNodeOutput]       # has intent, confidence, intent_reasoning
     
     # Conversation
-    conversation_LLM_model: str                      # LLM-2 model used for conversation 
+    # conversation_LLM_model: str                      # LLM-2 model used for conversation 
     conversation_node_output: Optional[ConversationNodeOutput]     # structured conversation response
     clarification_node_output: Optional[ClarificationNodeOutput]   # structured clarification output
     
     # RAG 
-    rag_LLM_model: str                               # LLM-3 model used for RAG
+    # rag_LLM_model: str                               # LLM-3 model used for RAG
     rag_node_output: Optional[RAGNodeOutput]                 # structured RAG output
     
-    # Action Planning & Execution 
-    action_planner_LLM_model: str                    # LLM-4 model used for action planning
+    # # Action Planning & Execution 
+    # action_planner_LLM_model: str                    # LLM-4 model used for action planning
     
-    # action input to MCP
-    action_input_to_mcp: Optional[ActionInputToMCP]                      # structured action classification
+    # action input to tools
+    action_input_to_tools_llm: Optional[ActionInputToToolsLLM]                      # structured action classification
     informational_response: Optional[str]  # direct response if no action needed
     
     # MCP execution (LangGraph pattern with messages)

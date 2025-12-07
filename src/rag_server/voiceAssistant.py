@@ -8,7 +8,7 @@ import json
 import os
 from datetime import datetime
 from gtts import gTTS
-import simpleaudio as sa
+# import simpleaudio as sa
 
 class VoiceAssistant:
     

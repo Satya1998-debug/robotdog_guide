@@ -50,14 +50,14 @@ class RobotDogState(TypedDict):
     # MCP execution (LangGraph pattern with messages)
     # toolcall_output: Optional[ToolCallOutput]
     # for tool calling with llm_tools_node (it needs a specific format)
-    # messages: Annotated[List[BaseMessage], add_messages]  # messages for LLM with tools (accumulated)
-
+    messages: Annotated[List[BaseMessage], add_messages]  # messages for LLM with tools (accumulated)
+    llm_tool_call_once: bool  # flag to indicate if LLM tool call has been made in this session
+    
     # Memory & History for all chats fro all nodes
     chat_history: Annotated[List[BaseMessage], add_messages]  # conversation history (accumulated)
     
     # Control Flags 
     needs_confirmation: bool # true if action requires human input
-    exit_flag: bool  # true if user said bye/exit
     exit: bool  # alternative exit flag
 
     # final response

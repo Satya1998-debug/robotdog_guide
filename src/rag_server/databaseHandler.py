@@ -41,7 +41,7 @@ class DatabaseHandler:
             )
         self.logger.info(f"Stored {len(chunks)} documents in the database.")
 
-    def query(self, query_text, top_k=3):
+    def query(self, query_text, top_k=5):
         
         """Queries the database to retrieve relevant documents.
 
@@ -52,7 +52,7 @@ class DatabaseHandler:
         Returns:
             List[str]: List of relevant document texts.
         """
-        self.logger.info(f"Executing query: {query_text}")
+        self.logger.info(f"Executing Query Retrieval.")
         query_embedding = self.model.encode([query_text], normalize_embeddings=True).tolist()
         results = self.collection.query(query_embeddings=query_embedding, n_results=top_k)
         self.logger.info(f"Query Retrieval successful.")

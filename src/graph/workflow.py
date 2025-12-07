@@ -114,8 +114,10 @@ async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     graph.add_conditional_edges(
             "llm_tools_node",
             tools_condition,  # Routes to "tools" or "__end__"
-            {"tools": "llm_tools_node", "__end__": "summarizer_node"},
+            {"tools": "tools", "__end__": "conversation_node"},
         )
+    graph.add_edge("tools", "llm_tools_node")
+
     graph.add_edge("summarizer_node", "speak_to_human_node")
     # graph.add_edge("tools", "mcp_llm_node")  # tools_condition will either go to "tools" or END by default
     

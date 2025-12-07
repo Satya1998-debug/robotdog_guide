@@ -7,12 +7,7 @@ import json
 import logging
 from typing import Dict
 from langchain.tools import tool
-# from mcp.server.fastmcp import FastMCP
-
-
-# Setup logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("robot_dog_tools_server")
+from src.logger import logger
 
 @tool
 def stand_up() -> Dict:
@@ -26,7 +21,6 @@ def stand_up() -> Dict:
         'message': A message indicating the result of the action.
     """
     logger.info("Stand up executed.")
-    
     return {"status": "success", "message": "Robot dog is now standing"}
 
 @tool
@@ -60,23 +54,22 @@ def detect_door() -> Dict:
     }
 
 @tool
-def navigate_to(x: float, y: float) -> Dict:
+def navigate_to(person: str, location: str) -> Dict:
     """Navigate to a specific coordinate (x, y) (Action). 
 
     Note: This tool is called if there is direct command from user to navigate or modified query from RAG system indicates navigation action or any other context requiring navigation.
     This tool will need further confirmation from the user before executing the navigation action.
 
     Args:
-        x (float): X coordinate to navigate to, in the map.
-        y (float): Y coordinate to navigate to, in the map.
+        person (str): Name of the person to navigate to.
+        location (str): Location to navigate to.
     
     Returns:
         Dict: 'Status': 'success' or 'failure' indicating the navigation result,
               'message': A message indicating the result of the action,
               'current_position': The robot dog's current position as a dict with 'x', 'y' keys.
     """
-    current_position = {"x": 2.0, "y": 3.0, "z": 0.0}
-    logger.info(f"Navigate to ({x}, {y}) executed.")
+    logger.info(f"Navigate to ({person}, {location}) executed.")
     
     detect_door_result = detect_door()
     if detect_door_result.get("doors_detected", 0) == 0:
@@ -88,8 +81,7 @@ def navigate_to(x: float, y: float) -> Dict:
         
     return {
             "status": "success",
-            "message": f"Moving to {current_position['x']}, {current_position['y']})",
-            "current_position": current_position,
+            "message": f"Moving to {person} at {location}",
         }
 
 # helper functions for navigation tool

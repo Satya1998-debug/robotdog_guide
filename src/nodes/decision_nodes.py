@@ -8,6 +8,31 @@ from src.graph.schemas import ContextProcessorOutput, DecisionNodeOutput, Conver
 from src.logger import logger
 
 
+# single LLM call that returns context + intent together
+context_llm = ChatOllama(
+    model=context_LLM_model,
+    base_url=ollama_base_url,
+    validate_model_on_init=True,
+    temperature=0.2,
+)
+
+# Use LLM-2 (conversation model) to generate response
+conv_llm = ChatOllama(
+        model=conversation_LLM_model,
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.7,  # higher temperature for more natural conversation
+    )
+
+# Use same LLM (LLM-1) to generate clarification questionllm = ChatOllama(
+clar_llm = ChatOllama(
+        model=clarrification_LLM_model,
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.3,  # slightly more creative than context processing
+    )
+
+
 def context_processor(state: RobotDogState) -> RobotDogState:
     """
     Process and normalize user input with structured output.
@@ -48,16 +73,21 @@ def context_processor(state: RobotDogState) -> RobotDogState:
         HumanMessage(content=user_prompt),
     ])
 
-    # single LLM call that returns context + intent together
-    llm = ChatOllama(
-        model=state.get("context_LLM_model", context_LLM_model),
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.2,
-    )
-
-    structured_llm = llm.with_structured_output(ContextProcessorOutput)
-    res = structured_llm.invoke(messages)
+    # Invoke LLM with error handling
+    try:
+        logger.info("[context_processor] Invoking context LLM...")
+        structured_llm = context_llm.with_structured_output(ContextProcessorOutput)
+        res = structured_llm.invoke(messages)
+        logger.info(f"[context_processor] Context LLM completed. Intent: {res.intent}")
+    except Exception as e:
+        logger.error(f"[context_processor] Error invoking context LLM: {e}")
+        # Fallback to ambiguous intent if LLM fails
+        res = ContextProcessorOutput(
+            context_tags={},
+            intent="ambiguous",
+            confidence={"ambiguous": 1.0, "conversation": 0.0, "functional": 0.0, "institutional": 0.0},
+            intent_reasoning=f"Failed to process query due to error: {str(e)}"
+        )
 
     # context data to the chat history
     response_content = f"""Context Tags: {res.context_tags}\nIntent: {res.intent}\nReasoning: {res.intent_reasoning}"""
@@ -122,6 +152,11 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
 
     messages.extend(state.get("chat_history", [])) # include recent chat history after previous session's summary
     
+    # if we have informational response from RAG node-Action classifier, include that too
+    info_response_msg = ""
+    if state.get("informational_response", ""):
+        info_response_msg = f"Additional information from knowledge base: {state['informational_response']}"
+    
     # Use LLM-2 to generate natural conversational response
     system_prompt = """You are a friendly, helpful robot assistant that engages in natural conversation.
         You can discuss various topics, answer general questions, make small talk, and be personable.
@@ -137,23 +172,25 @@ def conversation_node(state: RobotDogState) -> RobotDogState:
     
     user_prompt = f"""User just said: "{query}"
         Context tags: {context_tags}
-        Generate a natural, conversational response. Be friendly and engaging. Follow history for context."""
+        {info_response_msg}
+        Generate a natural, conversational response. Be friendly and engaging. Follow history for context. Use additional info if provided."""
 
     messages.extend([  # inclue current node's messages
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ])
 
-    # Use LLM-2 (conversation model) to generate response
-    llm = ChatOllama(
-        model=conversation_LLM_model,
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.7,  # higher temperature for more natural conversation
-    )
-
-    structured_llm = llm.with_structured_output(ConversationNodeOutput)
-    conversation_output = structured_llm.invoke(messages)
+    # Invoke LLM with error handling
+    try:
+        logger.info("[conversation_node] Invoking conversation LLM...")
+        structured_llm = conv_llm.with_structured_output(ConversationNodeOutput)
+        conversation_output = structured_llm.invoke(messages)
+        logger.info("[conversation_node] Conversation LLM completed successfully")
+    except Exception as e:
+        logger.error(f"[conversation_node] Error invoking conversation LLM: {e}")
+        # Fallback: Use informational_response if available, otherwise generic message
+        fallback_reply = state.get("informational_response", "") or "I'm having trouble generating a response right now. Could you please try again?"
+        conversation_output = ConversationNodeOutput(conversation_reply=fallback_reply)
     
     # add response to history
     response_content = conversation_output.conversation_reply
@@ -208,16 +245,19 @@ def clarification_node(state: RobotDogState) -> RobotDogState:
         HumanMessage(content=user_prompt),
     ])
 
-    # Use same LLM (LLM-1) to generate clarification question
-    llm = ChatOllama(
-        model=clarrification_LLM_model,
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.3,  # slightly more creative than context processing
-    )
-
-    structured_llm = llm.with_structured_output(ClarificationNodeOutput)
-    clarification_output = structured_llm.invoke(messages)
+    # Invoke LLM with error handling
+    try:
+        logger.info("[clarification_node] Invoking clarification LLM...")
+        structured_llm = clar_llm.with_structured_output(ClarificationNodeOutput)
+        clarification_output = structured_llm.invoke(messages)
+        logger.info("[clarification_node] Clarification LLM completed successfully")
+    except Exception as e:
+        logger.error(f"[clarification_node] Error invoking clarification LLM: {e}")
+        # Fallback clarification question
+        clarification_output = ClarificationNodeOutput(
+            question="I didn't quite understand your request. Could you please provide more details about what you'd like me to help you with?",
+            clarify_type="general_unclear"
+        )
 
     response_content = f"""Clarification Question: {clarification_output.question}\nType: {clarification_output.clarify_type}"""
 
@@ -233,9 +273,6 @@ def decide_query_intention(state: RobotDogState) -> Literal["rag_node", "convers
     if intent == "institutional" or intent == "functional":  # will have RAG
         logger.info(f"[Router] decide_query_intention: {intent} -> rag_node")
         return "rag_node"
-    # elif intent == "functional":  # will have tool calls
-    #     logger.info(f"[Router] decide_query_intention: {intent} -> rag_node")
-    #     return "rag_node"
     elif intent == "ambiguous": # need clarification
         logger.info(f"[Router] decide_query_intention: {intent} -> clarification_node")
         return "clarification_node"  # will call LLM then TTS module (with clarify question)

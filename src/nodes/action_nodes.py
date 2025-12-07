@@ -1,5 +1,5 @@
 from src.graph.state import RobotDogState
-from src.graph.schemas import ActionInputToToolsLLM
+from src.graph.schemas import ActionInputToToolsLLM, ToolCallOutput
 from src.tools_servers.tools import get_all_tools
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
@@ -8,13 +8,13 @@ from src.logger import logger
 
 # LLM with tools
 # Create LLM with tools bound (LangGraph pattern) once here
-llm = ChatOllama(
+tools_llm = ChatOllama(
         model=tool_LLM_model,  # LLM-5
         base_url=ollama_base_url,
         validate_model_on_init=True,
         temperature=0.2,
     )
-llm_with_tools = llm.bind_tools(get_all_tools())
+llm_with_tools = tools_llm.bind_tools(get_all_tools())
 
 
 def action_classifier(state: RobotDogState) -> RobotDogState:
@@ -39,6 +39,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
     # if no acton needed, then route to tts node
     if not requires_robot_action or action_confidence < ACTION_CONFIDENCE_THRESHOLD:
         # no robot action needed - just informational response to the converation node
+        logger.info(f"[action_classifier] No robot action needed -> routing to conversation_node")
         action_input_to_tools_llm = ActionInputToToolsLLM(
             rag_modified_query=query_lower,
             action_intent="no_action_needed",
@@ -60,12 +61,10 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
         if target_location or "navigation" in probable_actions or \
             any(keyword in query_lower for keyword in ["take me", "go to", "navigate", "find room", "bring me"]):
             action_type = "navigation"
-            action_intent = f"navigate_to_{target_location or 'location'}"
-            
-        elif target_person or "navigation" in probable_actions or \
-            any(keyword in query_lower for keyword in ["find person", "locate", "where is", "follow"]):
-            action_type = "navigation"
-            action_intent = f"find_person_{target_person or 'unknown'}"
+            if target_location and "room" in target_location.lower():
+                action_intent = f"navigate_to_{target_location or ''}"
+            else:
+                action_intent = "navigate_to_location"
             
         else:  # default to other tools
             action_type = "other_tools"
@@ -85,7 +84,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
             probable_actions=probable_actions
         )
         
-        return {"action_input_to_tools_llm": action_input_to_tools_llm}
+        return {"action_input_to_tools_llm": dict(action_input_to_tools_llm)}
 
 def action_planner(state: RobotDogState) -> RobotDogState:
     """
@@ -158,8 +157,20 @@ def action_planner(state: RobotDogState) -> RobotDogState:
         temperature=0.3,  # Moderate temperature for creative but reliable planning
     )
 
-    structured_llm = action_llm.with_structured_output(ActionInputToMCP)
-    action_input_to_mcp = structured_llm.invoke(messages)
+    # Invoke LLM with error handling
+    try:
+        logger.info("[action_planner] Invoking action planner LLM...")
+        structured_llm = action_llm.with_structured_output(ActionInputToMCP)
+        action_input_to_mcp = structured_llm.invoke(messages)
+        logger.info(f"[action_planner] Action planner completed. Action type: {action_input_to_mcp.action_type}")
+    except Exception as e:
+        logger.error(f"[action_planner] Error invoking action planner LLM: {e}")
+        # Fallback - create basic action input
+        from src.graph.schemas import ActionInputToMCP
+        action_input_to_mcp = ActionInputToMCP(
+            action_intent="unknown",
+            action_type="other_tools"
+        )
 
     response_content = f"""action inetnt: {action_input_to_mcp.action_intent}\n\
         action type: {action_input_to_mcp.action_type}\n"""
@@ -187,7 +198,7 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     logger.info("[Node] -> llm_tools_node")
         
     # Get action context
-    action_input_data = state.get("action_input_to_mcp", {})
+    action_input_data = state.get("action_input_to_tools_llm", {})
     original_query = state.get("original_query", "")
     
     # Extract action details
@@ -198,7 +209,13 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     probable_actions = action_input_data.get("probable_actions", [])
     rag_modified_query = action_input_data.get("rag_modified_query", original_query)
 
-    messages = state.get("chat_history", [])
+    messages = []
+    
+    if state.get("summary", ""):  # insert the summary first
+        summary_system_msg = f"Previous conversation summary: {state['summary']}"
+        messages.append(SystemMessage(content=summary_system_msg))
+    
+    messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
     
     # Build context-rich system message
     system_msg = f"""You are a RobotDog assistant executing physical robot actions.
@@ -215,7 +232,9 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
         - For emergency: call emergency_stop() immediately
         - Always be sequential - one tool at a time
 
-        Available LangChain tools: stand_up, sit_down, navigate_to, emergency_stop, get_sensor_data"""
+        Available LangChain tools: stand_up, sit_down, navigate_to, emergency_stop, get_sensor_data.
+        
+        NOTE: After tool execution, generate a final response summarizing the action taken considering previous conversation."""
     
     # Build user message
     user_msg = f"""Execute this robot action: {rag_modified_query}
@@ -224,19 +243,33 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
         - Action intent: {action_intent}
         - Target: {target_location or target_person or 'Not specified'}
 
-        Use the available tools to complete this action step by step."""
+        Use the available tools to complete this action step by step.
+        NOTE: After tool execution, generate a final response summarizing the action taken considering previous conversation."""
     
     messages.extend([
         SystemMessage(content=system_msg),
         HumanMessage(content=user_msg),
     ])
     
+    # insert tool node response here if any from previous tool execution
+    if state.get("llm_tool_call_once"): # this will true from 2nd time onwards
+        toolnode_messages = state.get("messages", [])
+        messages.extend(toolnode_messages)
+    
     # Invoke LLM with tools already bound, LLM will decide which tools to call
-    response = llm_with_tools.invoke(messages)
+    try:
+        logger.info("[llm_tools_node] Invoking LLM with tools...")
+        response = llm_with_tools.invoke(messages)
+        logger.info("[llm_tools_node] LLM with tools completed successfully")
+    except Exception as e:
+        logger.error(f"[llm_tools_node] Error invoking LLM with tools: {e}")
+        # Create a fallback AIMessage with no tool calls (will exit loop)
+        from langchain_core.messages import AIMessage
+        response = AIMessage(content=f"I encountered an error while trying to execute the action: {str(e)}")
     
     # Check what tools LLM decided to call
     if hasattr(response, 'tool_calls') and response.tool_calls:
-        tool_names = [tc.name for tc in response.tool_calls]
+        tool_names = [tc.get("name") for tc in response.tool_calls]
         logger.info(f"[llm_tools_node] LLM decided tools: {tool_names}")
     else:
         logger.info(f"[llm_tools_node] LLM decided: NO TOOLS (end of loop)")
@@ -245,7 +278,8 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     
     # Return response with messages
     # tools_condition will check if there are tool_calls and route accordingly
-    return {"messages": response,  # this message field is only the tool node to check the last message and execute tools if any call is made
+    return {"messages": [response],  # this message field is only the tool node to check the last message and execute tools if any call is made
             "chat_history": [SystemMessage(content="You are a helpful assistant that calls tools for robot actions."),
                              HumanMessage(content="Do the tool calls accordingly."), 
-                             response]}  # chat history will already have all previous messages and will add the tool call response
+                             response],
+            "llm_tool_call_once": True}  # chat history will already have all previous messages and will add the tool call response

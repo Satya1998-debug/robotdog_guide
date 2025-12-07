@@ -13,10 +13,31 @@ from src.rag_server.documentProcessor import DocumentProcessor
 import src.rag_server.config as rag_config
 import os
 
-# initialize vector DB handler globally and initialize once
-vector_db_handler = DatabaseHandler(path=rag_config.CHROMA_PATH, 
-                                    model_name=rag_config.EMBEDDING_MODEL_NAME, 
-                                    logger=logger)
+# Lazy initialization - only create when first needed to avoid blocking on import
+_vector_db_handler = None
+
+def get_vector_db_handler():
+    """Lazy initialization of DatabaseHandler to avoid blocking import."""
+    global _vector_db_handler
+    if _vector_db_handler is None:
+        try:
+            logger.info("[RAG] Initializing DatabaseHandler...")
+            _vector_db_handler = DatabaseHandler(path=rag_config.CHROMA_PATH, 
+                                                model_name=rag_config.EMBEDDING_MODEL_NAME, 
+                                                logger=logger)
+            logger.info("[RAG] DatabaseHandler initialized successfully")
+        except Exception as e:
+            logger.error(f"[RAG] Failed to initialize DatabaseHandler: {e}")
+            raise
+    return _vector_db_handler
+
+# Use LLM-3 (RAG model) to generate response
+rag_llm = ChatOllama(
+        model=rag_LLM_model,  # LLM-3
+        base_url=ollama_base_url,
+        validate_model_on_init=True,
+        temperature=0.2,  # low temperature for factual accuracy
+    )
 
 
 def rag_pipeline(state: RobotDogState) -> RobotDogState:
@@ -33,10 +54,16 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     messages = []
     summary = state.get("summary", "")
     
-    # Retrieve relevant documents from vector database
-    retrieved_docs = get_rag_output(summary + "\n" + query + "\n" + str(context_tags))
-    retrieved_context = "\n\n".join([doc["content"] if isinstance(doc, dict) else str(doc) for doc in retrieved_docs]) if retrieved_docs else "No relevant documents found."
-    logger.info(f"[rag_node] Retrieved {len(retrieved_docs) if retrieved_docs else 0} docs | Query: {query[:50]}")
+    # Retrieve relevant documents from vector database with error handling
+    try:
+        logger.info("[rag_node] Starting document retrieval...")
+        retrieved_docs = get_rag_output(summary + "\n" + query + "\n" + str(context_tags))
+        retrieved_context = "\n\n".join([doc["content"] if isinstance(doc, dict) else str(doc) for doc in retrieved_docs]) if retrieved_docs else "No relevant documents found."
+        logger.info(f"[rag_node] Retrieved {len(retrieved_docs) if retrieved_docs else 0} docs | Query: {query[:50]}")
+    except Exception as e:
+        logger.error(f"[rag_node] Error retrieving documents: {e}")
+        retrieved_docs = []
+        retrieved_context = "Error retrieving documents from knowledge base."
 
     if summary:  # insert the summary first
         summary_system_msg = f"Previous conversation summary: {summary}"
@@ -92,8 +119,8 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
         3. Decide if robot action is required:
         - "yes" or "no"
         4. Provide a confidence score (0.0 - 1.0) for requiring robot action.
-        5. Extract target location (room number, office, building) if the context provides it.
-        6. Extract person name (full name and role) if applicable.
+        5. Extract target location (only room number) if the context provides it.
+        6. Extract person name (only full name of a person) if available.
         7. Generate the final informational response:
         - If NO action needed → answer using retrieved context.
         - If action IS needed → describe clearly what the robot should do.
@@ -109,16 +136,25 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
         HumanMessage(content=user_prompt),
     ])
 
-    # Use LLM-3 (RAG model) to generate response
-    rag_llm = ChatOllama(
-        model=rag_LLM_model,  # LLM-3
-        base_url=ollama_base_url,
-        validate_model_on_init=True,
-        temperature=0.2,  # low temperature for factual accuracy
-    )
-
-    structured_llm = rag_llm.with_structured_output(RAGNodeOutput)
-    rag_output = structured_llm.invoke(messages)
+    # Invoke LLM with error handling
+    try:
+        logger.info("[rag_node] Invoking RAG LLM for structured output...")
+        structured_llm = rag_llm.with_structured_output(RAGNodeOutput)
+        rag_output = structured_llm.invoke(messages)
+        logger.info("[rag_node] RAG LLM invocation completed successfully")
+    except Exception as e:
+        logger.error(f"[rag_node] Error invoking RAG LLM: {e}")
+        # Fallback output if LLM fails
+        rag_output = RAGNodeOutput(
+            retrieved_context=retrieved_context[:500] if retrieved_context else "No context available",
+            rag_modified_query=query,
+            requires_robot_action=False,
+            action_confidence=0.0,
+            target_location=None,
+            target_person=None,
+            probable_actions=[],
+            informational_response=f"I encountered an error processing your request. Please try rephrasing your question."
+        )
 
     response_content = f"""RAG Retrieved Context: {rag_output.retrieved_context}\n\
         Modified Query: {rag_output.rag_modified_query}\n\
@@ -146,7 +182,13 @@ def get_rag_output(query):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         os.makedirs(rag_config.CHROMA_PATH, exist_ok=True)
 
+        # Get the handler (lazy initialization)
+        vector_db_handler = get_vector_db_handler()
+        
+        # Query with logging
+        logger.info(f"[RAG] Querying vector database...")
         retrieved_docs = vector_db_handler.query(query) # get context from documents
+        logger.info(f"[RAG] Query completed, retrieved {len(retrieved_docs) if retrieved_docs else 0} documents")
 
         if rag_config.SCRAPE['need_scraping']: # if scrapping needed, as specified in config
             data_processor = DocumentProcessor(rag_config.CSV_FILE_PATH)  # needed for processing scraped data

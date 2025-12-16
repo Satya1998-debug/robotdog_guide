@@ -13,3 +13,10 @@ uv.lock
 
 # chromaDB
 src/rag_server/chroma_db/*
+
+# door datasets
+object_detection/door_dataset/
+
+# runs
+runs/
+*.pt

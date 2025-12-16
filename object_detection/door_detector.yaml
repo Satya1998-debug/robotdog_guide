@@ -1,0 +1,34 @@
+# yaml for training door detector model
+
+train: door_dataset/images/train
+val: door_dataset/images/val
+test: door_dataset/images/test
+
+epochs: 100
+batch: 16
+imgsz: 640
+
+# geometric augmentations 
+flipud: 0.0  # default 0.0
+fliplr: 0.5  # default 0.5, 50% chance of horizontal flip
+degrees: 10.0  # for rotation
+translate: 0.1  # default 0.1
+scale: 0.5  # default 0.5
+shear: 2.0  # default 0.0
+perspective: 0.005  # default 0.0
+
+# mix and mosaic augmentations
+mosaic: 0.5  # combine 4 images with 50% chance
+mixup: 0.3  # default 0.0, mixup with 30% chance
+
+# color augmentations
+hsv_h: 0.015  # default 0.015
+hsv_s: 0.7  # for saturation adjustment, default 0.7
+hsv_v: 0.4 # for brightness adjustment, default 0.4
+
+nc: 4
+names:
+ 0: door
+ 1: handle
+ 2: cabinet door
+ 3: refrigerator door

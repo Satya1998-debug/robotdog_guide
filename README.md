@@ -24,7 +24,15 @@
    ```
    
 
-## Repository Structure
+## update requirements
+- after every new installation of any new package run the following command to update the requirements.txt file
+```bash
+   uv pip list --format=freeze | cut -d'=' -f1 > requirements_unified.txt
+```
+
+### get the door dataset
+- download the door dataset from https://github.com/MiguelARD/DoorDetect-Dataset.git
+- save it inside door_dataset folder in object_detection directory
 
 ## Contributing
 Contributions are welcome! Please open issues or submit pull requests for improvements.

@@ -16,6 +16,8 @@ src/rag_server/chroma_db/*
 
 # door datasets
 object_detection/door_dataset/
+object_detection/door_dataset_ias_lab/
+object_detection/door_dataset_ias_lab_org/
 
 # runs
 runs/

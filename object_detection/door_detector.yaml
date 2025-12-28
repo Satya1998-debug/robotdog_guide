@@ -1,10 +1,10 @@
 # yaml for training door detector model
 
-train: door_dataset/images/train
-val: door_dataset/images/val
-test: door_dataset/images/test
+train: door_dataset_ias_lab/images/train
+val: door_dataset_ias_lab/images/val
+test: door_dataset_ias_lab/images/test
 
-epochs: 100
+epochs: 300
 batch: 32
 imgsz: 640
 
@@ -18,7 +18,7 @@ shear: 2.0  # default 0.0
 perspective: 0.005  # default 0.0
 
 # mix and mosaic augmentations
-mosaic: 0.5  # combine 4 images with 50% chance
+mosaic: 0.4  # combine 4 images with 10% chance
 mixup: 0.3  # default 0.0, mixup with 30% chance
 
 # color augmentations

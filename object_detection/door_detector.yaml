@@ -5,7 +5,7 @@ val: door_dataset/images/val
 test: door_dataset/images/test
 
 epochs: 100
-batch: 16
+batch: 32
 imgsz: 640
 
 # geometric augmentations 

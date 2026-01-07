@@ -6,7 +6,7 @@ TRAIN_RATIO = 0.8
 TRAIN_DIR = 'train'
 VAL_DIR = 'val'
 TEST_DIR = 'test'
-SOURCE_DIR = '/home/RUS_CIP/st184744/codebase/robotdog_guide/object_detection/door_dataset_ias_lab'
+SOURCE_DIR = '/home/RUS_CIP/st184744/codebase/robotdog_guide/object_detection/doortypes_dataset_ias_lab'
 
 SEED = 42
 

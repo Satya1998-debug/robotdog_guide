@@ -9,3 +9,8 @@ uv sync
 >>>------------ API key LangSmith ---------------
 
 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
+
+>>>------------- TLS issue ----------------------
+export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
+export OMP_NUM_THREADS=1
+Degrade scikit-learn==1.3.2

@@ -6,8 +6,8 @@ CSV_FILE_PATH = "./src/rag_server/ias_scraped_data/scraped_data.csv"
 ROOMS_CSV_PATH = "./src/rag_server/ias_scraped_data/rooms.csv"
 
 # Embedding & API Config
-# EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2" # this is for ChromaDB embeddings while saving data to ChromaDB
-EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-base" # updated embedding model for better performance
+EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2" # (currently used) this is for ChromaDB embeddings while saving data to ChromaDB
+# EMBEDDING_MODEL_NAME = "intfloat/multilingual-e5-base" # updated embedding model for better performance
 
 # speech recognition model
 SPEECH_RECOGNITION_MODEL = "vosk-model-en-us-0.22"

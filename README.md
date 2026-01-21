@@ -1,11 +1,7 @@
 # RobotDog Guide
 
 
-
-## Available MCP Tools
-
-
-## Getting Started
+## Getting Started (dont use uv on Jetson with GPU)
 1. Clone the repository:
    ```bash
    git clone https://github.com/Satya1998-debug/robotdog_guide.git
@@ -23,19 +19,14 @@
    uv sync
    ```
    
-
-## update requirements
+## update requirements (need to used when only CPU is used, GPU in Jetson is not supported yet using uv)
 - after every new installation of any new package run the following command to update the requirements.txt file
 ```bash
    uv pip list --format=freeze | cut -d'=' -f1 > requirements_unified.txt
 ```
 
-### get the door dataset
-- download the door dataset from https://github.com/MiguelARD/DoorDetect-Dataset.git
-- save it inside door_dataset folder in object_detection directory
+## Jetson Setup
+- default Python 3.8 is installed on Jetson, so need to install python 3.10 using uv
 
-## Contributing
-Contributions are welcome! Please open issues or submit pull requests for improvements.
-
-## License
-This project is licensed under the MIT License.
+```
+- set python3.10 as default python version

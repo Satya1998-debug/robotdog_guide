@@ -5,11 +5,14 @@ Dummy methods that will be exposed as MCP tools for controlling and interacting 
 
 import json
 import logging
+import time
 from typing import Dict
 from langchain.tools import tool
 from src.logger import logger
+from src.tools_servers.ros_client import RosCommandClient
 
-@tool
+ros_client = RosCommandClient()
+
 def stand_up() -> Dict:
     """Method to make the robot dog stand up (Action). 
     
@@ -23,7 +26,6 @@ def stand_up() -> Dict:
     logger.info("Stand up executed.")
     return {"status": "success", "message": "Robot dog is now standing"}
 
-@tool
 def sit_down() -> Dict:
     """Method to make the robot dog sit down (Action). 
 
@@ -54,7 +56,7 @@ def detect_door() -> Dict:
     }
 
 @tool
-def navigate_to(person: str, location: str) -> Dict:
+def navigate(person: str, location: str) -> Dict:
     """Navigate to a specific coordinate (x, y) (Action). 
 
     Note: This tool is called if there is direct command from user to navigate or modified query from RAG system indicates navigation action or any other context requiring navigation.
@@ -67,22 +69,17 @@ def navigate_to(person: str, location: str) -> Dict:
     Returns:
         Dict: 'Status': 'success' or 'failure' indicating the navigation result,
               'message': A message indicating the result of the action,
-              'current_position': The robot dog's current position as a dict with 'x', 'y' keys.
-    """
-    logger.info(f"Navigate to ({person}, {location}) executed.")
-    
-    detect_door_result = detect_door()
-    if detect_door_result.get("doors_detected", 0) == 0:
-        return {"status": "failure", "message": "No doors detected, cannot navigate"}
+    """    
+    logger.info(f"Navigate to ({person}, {location}) requested.")
 
-    detect_obstacles_result = detect_obstacles()
-    if detect_obstacles_result.get("obstacles_detected", 0) > 0:
-        return {"status": "failure", "message": "Obstacles detected, cannot navigate"}
-        
-    return {
-            "status": "success",
-            "message": f"Moving to {person} at {location}",
-        }
+    # the person coordinates is mapped on Jetson side
+    goal = {"person": person, "room": location}
+
+    try:
+        result = ros_client.start_navigation(goal, timeout=900) # empty result dict is returned if using movebase action
+        return {"status": "success", "reason": result["reason"], "message": f"Robot arrived at {location}."}
+    except RuntimeError as e:
+        return {"status": "failure", "reason": str(e)}
 
 # helper functions for navigation tool
 def detect_obstacles() -> Dict:
@@ -100,7 +97,6 @@ def detect_obstacles() -> Dict:
             "message": "No obstacles found"
         }
 
-@tool
 def emergency_stop() -> Dict:
     """Emergency stop - halt all movement (Action). 
     
@@ -112,7 +108,6 @@ def emergency_stop() -> Dict:
     logger.info("Emergency stop executed.")
     return {"status": "success", "message": "Emergency stop activated"}
 
-@tool
 def get_sensor_data() -> Dict:
     """Get current sensor readings such as temperature, battery level, etc. (Action). 
 
@@ -134,9 +129,5 @@ def get_sensor_data() -> Dict:
         }
 
 tools = [
-    stand_up,
-    sit_down,
-    navigate_to,
-    emergency_stop,
-    get_sensor_data,
+    navigate,
 ]

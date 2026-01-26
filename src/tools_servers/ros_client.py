@@ -1,92 +1,98 @@
 import roslibpy
-import threading
 import time
 
 class RosCommandClient:
     def __init__(self, host="localhost", port=9090):
         self.host = host
         self.port = port
-        self._lock = threading.Lock() # to ensure thread safety
         self._connect()
-        
-        # navigation result state
-        self._nav_result = None
-        self._nav_error = None
 
     def _connect(self):
-        # initialize ros connection
+        # Initialize rosbridge connection
         self.ros = roslibpy.Ros(self.host, self.port)
         self.ros.run()
 
-        # initiate door coordinator service
-        self.door_coordinator_srv = roslibpy.Service(self.ros, "/agent/start_door_coordinator", "std_srvs/Trigger")  # roslibpy instance, service, type
+        # Door coordinator service
+        self.door_coordinator_srv = roslibpy.Service(
+            self.ros,
+            "/agent/start_door_coordinator",
+            "std_srvs/Trigger"
+        )
 
-        # initiate navigation action client
-        self.nav_action = roslibpy.ActionClient(self.ros, "/agent/start_navigation", "door_navigation/NavigateTaskAction")  # roslibpy instance, action, type
+        # Navigation service (CUSTOM)
+        self.navigation_srv = roslibpy.Service(
+            self.ros,
+            "/agent/start_navigation",
+            "door_navigation/StartNavigation"
+        )
 
     def _ensure_connection(self):
-        # ensure ros connection is active
         if not self.ros.is_connected:
             self._connect()
 
-    def start_navigation(self, timeout=900): # 15 minutes timeout
+    # -------------------------------------------------
+    # Navigation (Service)
+    # -------------------------------------------------
+
+    def start_navigation(self, target="door", timeout=900):
         """
-        Triggers navigation Action on Jetson.
-        This Action internally triggers UDP-based navigation.
-        Blocks until navigation completes or fails.
+        Triggers navigation on Jetson via Service.
+        Blocks until navigation completes.
         """
 
-        with self._lock:
-            self._ensure_connection()
+        self._ensure_connection()
 
-            self._nav_result = None
-            self._nav_error = None
+        # OPTIONAL: start door coordinator first (if that is your policy)
+        self.start_door_coordinator()
 
-            goal = {}  # empty goal = "navigate to door"
-
-            goal_id = self.nav_action.send_goal(
-                goal=goal,
-                resultback=self._on_nav_result,
-                feedback=self._on_nav_feedback, 
-                errback=self._on_nav_error
-            )
-
-            if goal_id is None:
-                raise RuntimeError("Failed to send navigation goal")
+        request = roslibpy.ServiceRequest({
+            "target": target
+        })
 
         try:
-            self.nav_action.wait_goal(goal_id, timeout) # blocks until goal completes or timeout
-        except Exception:
-            self.nav_action.cancel_goal(goal_id)
-            raise RuntimeError("Navigation timed out")
+            response = self.navigation_srv.call(request, timeout=timeout)
+        except Exception as e:
+            raise RuntimeError(f"Navigation service call failed: {e}")
 
-        if self._nav_error is not None:
-            raise RuntimeError(f"Navigation failed: {self._nav_error}")
-        
-        # explicit failure from result
-        if not self._nav_result.get("success", False):
+        # Response is explicit
+        if not response.get("success", False):
             raise RuntimeError(
-                f"Navigation failed: {self._nav_result.get('reason', 'unknown')}"
+                f"Navigation failed: {response.get('reason', 'unknown')}"
             )
 
-        return self._nav_result # {"success": True, "reason": "arrived"}
-    
-    def _on_nav_feedback(self, feedback):
-        # progress, pose, etc.
-        pass
+        return response  # {"success": True, "reason": "arrived"}
 
-    def _on_nav_result(self, result):
-        self._nav_result = result
-
-    def _on_nav_error(self, error):
-        self._nav_error = error
-
+    # -------------------------------------------------
+    # Door coordinator (Service)
+    # -------------------------------------------------
 
     def start_door_coordinator(self):
-        with self._lock:
-            self._ensure_connection()
-            req = roslibpy.ServiceRequest()
-            return self.door_coordinator_srv.call(req)
+        self._ensure_connection()
+
+        try:
+            request = roslibpy.ServiceRequest()
+            return self.door_coordinator_srv.call(request)
+        except Exception as e:
+            raise RuntimeError(f"Door coordinator failed: {e}")
 
     def close(self):
         self.ros.terminate()
+
+
+# -------------------------------------------------
+# Standalone test
+# -------------------------------------------------
+
+if __name__ == "__main__":
+    ros_client = RosCommandClient()
+    try:
+        s_time = time.time()
+        print("Starting door coordinator...")
+        result = ros_client.start_navigation(target="door", timeout=120)
+        print("Navigation Result:", result)
+        e_time = time.time()
+        print(f"Total time taken: {e_time - s_time:.2f} seconds")
+    except RuntimeError as e:
+        print("Navigation Error:", e)
+    finally:
+        ros_client.close()

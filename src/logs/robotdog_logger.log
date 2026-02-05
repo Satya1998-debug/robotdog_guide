@@ -2231,3 +2231,128 @@ take me to him
 2025-12-07 18:47:51,011 - INFO - 
 =========== GRAPH Initialized ===========
 
+2026-01-21 22:12:06,747 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 22:59:21,783 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 22:59:21,804 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 22:59:21,825 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:00:50,866 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:00:50,887 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:00:50,909 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:03:12,910 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:03:12,933 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:03:12,955 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:05:14,099 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:05:14,120 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:05:14,141 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:06,240 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:06,261 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:06,282 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:10,732 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:10,834 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:10,870 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:06:10,880 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-01-21 23:08:45,040 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:45,061 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:45,085 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:47,804 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:47,860 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:47,896 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:08:47,903 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-01-21 23:08:47,929 - INFO - Starting RobotDog conversation loop...
+2026-01-21 23:08:47,929 - INFO - A RobotDog session with thread ID: 346289 started.
+2026-01-21 23:08:47,933 - INFO - [Node] -> listen_to_human_node
+2026-01-21 23:09:08,034 - INFO - [Node] -> context_processor_node
+2026-01-21 23:09:08,035 - INFO - [context_processor] Invoking context LLM...
+2026-01-21 23:09:14,751 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:09:21,959 - INFO - [context_processor] Context LLM completed. Intent: institutional
+2026-01-21 23:09:21,960 - INFO - [Node] -> decision_node
+2026-01-21 23:09:21,961 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.95, 'functional': 0.02, 'ambiguous': 0.03, 'conversation': 0.0}
+2026-01-21 23:09:21,961 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2026-01-21 23:09:21,962 - INFO - [Node] -> rag_node
+2026-01-21 23:09:21,962 - INFO - [rag_node] Starting document retrieval...
+2026-01-21 23:09:21,962 - INFO - [RAG] Initializing DatabaseHandler...
+2026-01-21 23:09:22,055 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-21 23:09:22,211 - INFO - Use pytorch device_name: cpu
+2026-01-21 23:09:22,211 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2026-01-21 23:10:39,324 - INFO - DatabaseHandler initialized successfully.
+2026-01-21 23:10:39,324 - INFO - [RAG] DatabaseHandler initialized successfully
+2026-01-21 23:10:39,324 - INFO - [RAG] Querying vector database...
+2026-01-21 23:10:39,324 - INFO - Executing Query Retrieval.
+2026-01-21 23:10:39,565 - ERROR - [RAG Pipeline] Error in retrieving RAG output: Collection expecting embedding with dimension of 384, got 768
+2026-01-21 23:10:39,566 - INFO - [rag_node] Retrieved 0 docs | Query: do you know Joachim grimstand
+2026-01-21 23:10:39,566 - INFO - [rag_node] Invoking RAG LLM for structured output...
+2026-01-21 23:10:41,117 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:10:45,747 - INFO - [rag_node] RAG LLM invocation completed successfully
+2026-01-21 23:10:45,747 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location:  | Person: Joachim Grimstand
+2026-01-21 23:10:45,748 - INFO - [Node] -> action_classifier_node
+2026-01-21 23:10:45,749 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2026-01-21 23:10:45,749 - INFO - [action_classifier] No robot action needed -> routing to conversation_node
+2026-01-21 23:10:45,749 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2026-01-21 23:10:45,750 - INFO - [Node] -> conversation_node
+2026-01-21 23:10:45,750 - INFO - [conversation_node] Invoking conversation LLM...
+2026-01-21 23:10:46,675 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:10:48,298 - INFO - [conversation_node] Conversation LLM completed successfully
+2026-01-21 23:10:48,300 - INFO - [Node] -> summarizer_node
+2026-01-21 23:10:48,301 - INFO - [summarizer_node] Summary node is enabled.
+2026-01-21 23:10:48,301 - INFO - [summarizer_node] Invoking summary LLM...
+2026-01-21 23:10:52,255 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:10:54,631 - INFO - [summarizer_node] Summary LLM completed successfully
+2026-01-21 23:10:54,634 - INFO - [Node] -> speak_to_human_node
+2026-01-21 23:10:54,635 - INFO - [speak_to_human] Speaking out: Sure! Joachim Grimstand is a name I recognize. Is there something specific you wanted to know about him?
+2026-01-21 23:10:54,637 - INFO - [Node] -> listen_to_human_node
+2026-01-21 23:16:22,186 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:22,207 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:22,230 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:24,936 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:24,990 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:25,026 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-01-21 23:16:25,032 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-01-21 23:16:25,058 - INFO - Starting RobotDog conversation loop...
+2026-01-21 23:16:25,058 - INFO - A RobotDog session with thread ID: 652240 started.
+2026-01-21 23:16:25,062 - INFO - [Node] -> listen_to_human_node
+2026-01-21 23:16:35,962 - INFO - [Node] -> context_processor_node
+2026-01-21 23:16:35,963 - INFO - [context_processor] Invoking context LLM...
+2026-01-21 23:16:42,434 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:16:50,218 - INFO - [context_processor] Context LLM completed. Intent: institutional
+2026-01-21 23:16:50,221 - INFO - [Node] -> decision_node
+2026-01-21 23:16:50,222 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.95, 'functional': 0.02, 'ambiguous': 0.03, 'conversation': 0.0}
+2026-01-21 23:16:50,222 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2026-01-21 23:16:50,223 - INFO - [Node] -> rag_node
+2026-01-21 23:16:50,223 - INFO - [rag_node] Starting document retrieval...
+2026-01-21 23:16:50,224 - INFO - [RAG] Initializing DatabaseHandler...
+2026-01-21 23:16:50,260 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-21 23:16:50,449 - INFO - Use pytorch device_name: cpu
+2026-01-21 23:16:50,449 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-21 23:16:52,928 - INFO - DatabaseHandler initialized successfully.
+2026-01-21 23:16:52,929 - INFO - [RAG] DatabaseHandler initialized successfully
+2026-01-21 23:16:52,929 - INFO - [RAG] Querying vector database...
+2026-01-21 23:16:52,929 - INFO - Executing Query Retrieval.
+2026-01-21 23:16:53,145 - INFO - Query Retrieval successful.
+2026-01-21 23:16:53,145 - INFO - [RAG] Query completed, retrieved 1 documents
+2026-01-21 23:16:53,145 - INFO - [rag_node] Retrieved 1 docs | Query: do you know Joachim grimstand
+2026-01-21 23:16:53,146 - INFO - [rag_node] Invoking RAG LLM for structured output...
+2026-01-21 23:16:54,897 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:17:02,582 - INFO - [rag_node] RAG LLM invocation completed successfully
+2026-01-21 23:17:02,582 - INFO - [rag_node] Action required: False | Confidence: 0.00 | Location: 3.251 | Person: Joachim Grimstad
+2026-01-21 23:17:02,584 - INFO - [Node] -> action_classifier_node
+2026-01-21 23:17:02,585 - INFO - [action_classifier] Threshold check: confidence=0.00 vs 0.7 | Requires action: False
+2026-01-21 23:17:02,585 - INFO - [action_classifier] No robot action needed -> routing to conversation_node
+2026-01-21 23:17:02,586 - INFO - [Router] decide_tool_call_execution: no action needed -> conversation_node
+2026-01-21 23:17:02,588 - INFO - [Node] -> conversation_node
+2026-01-21 23:17:02,588 - INFO - [conversation_node] Invoking conversation LLM...
+2026-01-21 23:17:03,636 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:17:05,542 - INFO - [conversation_node] Conversation LLM completed successfully
+2026-01-21 23:17:05,545 - INFO - [Node] -> summarizer_node
+2026-01-21 23:17:05,546 - INFO - [summarizer_node] Summary node is enabled.
+2026-01-21 23:17:05,546 - INFO - [summarizer_node] Invoking summary LLM...
+2026-01-21 23:17:09,623 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-21 23:17:11,182 - INFO - [summarizer_node] Summary LLM completed successfully
+2026-01-21 23:17:11,185 - INFO - [Node] -> speak_to_human_node
+2026-01-21 23:17:11,186 - INFO - [speak_to_human] Speaking out: Sure! I know Joachim Grimstand. He's located in Room 3.251 of Building 3. Is there anything specific you need to know about him or his office?
+2026-01-21 23:17:11,188 - INFO - [Node] -> listen_to_human_node

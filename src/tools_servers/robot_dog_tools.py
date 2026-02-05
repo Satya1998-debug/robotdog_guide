@@ -5,11 +5,12 @@ Dummy methods that will be exposed as MCP tools for controlling and interacting 
 
 import json
 import logging
+import time
 from typing import Dict
 from langchain.tools import tool
 from src.logger import logger
+from src.tools_servers.ros_client import RosCommandClient
 
-@tool
 def stand_up() -> Dict:
     """Method to make the robot dog stand up (Action). 
     
@@ -23,7 +24,6 @@ def stand_up() -> Dict:
     logger.info("Stand up executed.")
     return {"status": "success", "message": "Robot dog is now standing"}
 
-@tool
 def sit_down() -> Dict:
     """Method to make the robot dog sit down (Action). 
 
@@ -37,24 +37,8 @@ def sit_down() -> Dict:
     logger.info("Sit down executed.")
     return {"status": "success", "message": "Robot dog is now sitting"}
 
-def detect_door() -> Dict:
-    """Detect doors in the current field of view (Action). 
-    This tool is called if there is direct command from user to detect doors or modified query from RAG system indicates door detection.
-    
-    Returns:
-        Dict: 'Status': 'success' or 'failure' indicating the detection result,
-              'message': A message indicating the result of the action,
-              'doors_detected' (int): Number of doors detected 
-    """
-    logger.info("Detect door executed.")
-    return {
-            "status": "success",
-            "doors_detected": 1,
-            "message": "Found 1 door"
-    }
-
 @tool
-def navigate_to(person: str, location: str) -> Dict:
+def navigate(person: str, location: str) -> Dict:
     """Navigate to a specific coordinate (x, y) (Action). 
 
     Note: This tool is called if there is direct command from user to navigate or modified query from RAG system indicates navigation action or any other context requiring navigation.
@@ -67,40 +51,19 @@ def navigate_to(person: str, location: str) -> Dict:
     Returns:
         Dict: 'Status': 'success' or 'failure' indicating the navigation result,
               'message': A message indicating the result of the action,
-              'current_position': The robot dog's current position as a dict with 'x', 'y' keys.
-    """
-    logger.info(f"Navigate to ({person}, {location}) executed.")
-    
-    detect_door_result = detect_door()
-    if detect_door_result.get("doors_detected", 0) == 0:
-        return {"status": "failure", "message": "No doors detected, cannot navigate"}
+    """    
+    logger.info(f"Navigate to ({person}, {location}) requested.")
 
-    detect_obstacles_result = detect_obstacles()
-    if detect_obstacles_result.get("obstacles_detected", 0) > 0:
-        return {"status": "failure", "message": "Obstacles detected, cannot navigate"}
-        
-    return {
-            "status": "success",
-            "message": f"Moving to {person} at {location}",
-        }
+    # the person coordinates is mapped on Jetson side
+    goal = {"person": person, "room": location}
 
-# helper functions for navigation tool
-def detect_obstacles() -> Dict:
-    """Detect obstacles in the surrounding area. (Action). 
-    This tool is called if there is direct command from user to detect obstacles or modified query from RAG system indicates obstacle detection.
-    
-    Returns:
-        Dict: 'Status': 'success' or 'failure' indicating the detection result,
-              'obstacles_detected' (int): Number of obstacles detected,
-              'message': A message indicating the result of the action."""
-    logger.info("Detect obstacles executed.")
-    return {
-            "status": "success",
-            "obstacles_detected": 0,
-            "message": "No obstacles found"
-        }
+    try:
+        ros_client = RosCommandClient()
+        result = ros_client.start_navigation(goal, timeout=900) # empty result dict is returned if using movebase action
+        return {"status": "success", "reason": result["reason"], "message": f"Robot arrived at {location}."}
+    except RuntimeError as e:
+        return {"status": "failure", "reason": str(e)}
 
-@tool
 def emergency_stop() -> Dict:
     """Emergency stop - halt all movement (Action). 
     
@@ -112,31 +75,6 @@ def emergency_stop() -> Dict:
     logger.info("Emergency stop executed.")
     return {"status": "success", "message": "Emergency stop activated"}
 
-@tool
-def get_sensor_data() -> Dict:
-    """Get current sensor readings such as temperature, battery level, etc. (Action). 
-
-    Note: This tool is called if there is direct command from user to get sensor data or modified query from RAG system indicates sensor data retrieval.
-    This serves to provide real-time status of the robot dog to ensure it is operating within safe parameters.
-    
-    Returns:
-        Dict: 'Status': 'success' or 'failure' indicating the retrieval state, 
-              'temperature' (float): Current temperature reading,
-              'battery' (int): Current battery level percentage,
-              'message': A message indicating the result of the action.
-    """
-    logger.info("Get sensor data executed.")
-    return {
-            "status": "success",
-            "temperature": 25.0,
-            "battery": 85,
-            "message": "Sensor data retrieved"
-        }
-
 tools = [
-    stand_up,
-    sit_down,
-    navigate_to,
-    emergency_stop,
-    get_sensor_data,
+    navigate,
 ]

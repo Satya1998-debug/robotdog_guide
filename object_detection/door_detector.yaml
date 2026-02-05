@@ -1,8 +1,8 @@
 # yaml for training door detector model
 
-train: door_dataset_ias_lab/images/train
-val: door_dataset_ias_lab/images/val
-test: door_dataset_ias_lab/images/test
+train: doortypes_dataset_ias_lab/images/train
+val: doortypes_dataset_ias_lab/images/val
+test: doortypes_dataset_ias_lab/images/test
 
 epochs: 300
 batch: 32
@@ -26,9 +26,9 @@ hsv_h: 0.015  # default 0.015
 hsv_s: 0.7  # for saturation adjustment, default 0.7
 hsv_v: 0.4 # for brightness adjustment, default 0.4
 
-nc: 4
+nc: 3
+
 names:
- 0: door
- 1: handle
- 2: cabinet door
- 3: refrigerator door
+ 0: door_double
+ 1: door_single
+ 2: handle

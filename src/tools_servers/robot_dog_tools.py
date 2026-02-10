@@ -8,9 +8,11 @@ import logging
 import time
 from typing import Dict
 from langchain.tools import tool
+from langgraph.types import interrupt
 from src.logger import logger
 from src.tools_servers.ros_client import RosCommandClient
 
+@tool
 def stand_up() -> Dict:
     """Method to make the robot dog stand up (Action). 
     
@@ -24,6 +26,7 @@ def stand_up() -> Dict:
     logger.info("Stand up executed.")
     return {"status": "success", "message": "Robot dog is now standing"}
 
+@tool
 def sit_down() -> Dict:
     """Method to make the robot dog sit down (Action). 
 
@@ -45,25 +48,41 @@ def navigate(person: str, location: str) -> Dict:
     This tool will need further confirmation from the user before executing the navigation action.
 
     Args:
-        person (str): Name of the person to navigate to.
+        person (str): Name of the person to navigate to. Extract from state("person")
         location (str): Location to navigate to.
     
     Returns:
         Dict: 'Status': 'success' or 'failure' indicating the navigation result,
               'message': A message indicating the result of the action,
-    """    
-    logger.info(f"Navigate to ({person}, {location}) requested.")
+    """
 
     # the person coordinates is mapped on Jetson side
     goal = {"person": person, "room": location}
-
-    try:
-        ros_client = RosCommandClient()
-        result = ros_client.start_navigation(goal, timeout=900) # empty result dict is returned if using movebase action
-        return {"status": "success", "reason": result["reason"], "message": f"Robot arrived at {location}."}
-    except RuntimeError as e:
-        return {"status": "failure", "reason": str(e)}
-
+    
+    # TODO: Human-In-the-loop confirmation before executing navigation tool
+    # Pause execution to ask for user approval, using interrupt
+    logger.info(f"Navigate to ({person}, {location}) requested.")
+    response = interrupt({
+        "action": "navigate",
+        "person": person,
+        "location": location,
+        "message": f"Do you approve the navigation to {location} for {person}?"
+    })
+    
+    if response.get("approved"):
+        # go head with navigation
+        logger.info(f"User approved navigation to {location} for {person}. Executing navigation.")
+        try:
+            ros_client = RosCommandClient()
+            result = ros_client.start_navigation(goal, timeout=900) # empty result dict is returned if using movebase action
+            return {"status": "success", "reason": result["reason"], "message": f"Robot arrived at {location}."}
+        except RuntimeError as e:
+            return {"status": "failure", "reason": str(e)}
+    else: # otherwise reject navigation
+        logger.info(f"User rejected navigation to {location} for {person}.")
+        return {"status": "failure", "reason": "User rejected navigation."}
+        
+@tool
 def emergency_stop() -> Dict:
     """Emergency stop - halt all movement (Action). 
     

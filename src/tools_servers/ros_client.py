@@ -1,4 +1,4 @@
-import roslibpy
+#import roslibpy
 import time
 
 class RosCommandClient:

@@ -1,13 +1,23 @@
 import random
 from src.graph.workflow import build_robotdog_workflow_graph
 from langchain_core.messages import SystemMessage
-import asyncio
 from src.logger import logger
+from langgraph.types import Command
 
-async def main():
+def get_user_permission():
+    # user text from speech
+    from src.nodes.speech_process_nodes import speech_to_text
+    input_text = speech_to_text("")
+    if "yes" in input_text.lower() or "approve" in input_text.lower() or "okay" in input_text.lower():
+        return {"approved": True}
+    else:        
+        return {"approved": False}
+    
+
+def main():
 
     print("Hello from robotdog-guide!")
-    robot_graph = await build_robotdog_workflow_graph()
+    robot_graph = build_robotdog_workflow_graph()
     
     # # # Save the graph as PNG
     # graph_png = robot_graph.get_graph(xray=True).draw_mermaid_png()
@@ -34,10 +44,20 @@ async def main():
         # TODO: speak few sentences to start conversation
         
         print("Starting robotdog conversation ...")
-        final_state = await robot_graph.invoke(initial_state, config=config_thread, )
+        result = robot_graph.invoke(initial_state, config=config_thread, )
+        
+        interrupt = result.get("__interrupt__", [])
+        if interrupt:
+            from src.nodes.speech_process_nodes import text_to_speech
+            print(interrupt[0])
+            text = interrupt[0].value.get("message")
+            text_to_speech(text)
+        
+        # need to resume graph
+        final_state = robot_graph.invoke(Command(resume=get_user_permission()), config=config_thread)
         
         # TODO: add audio saying goodbye
         logger.info("Your RobotDog session has ended. Thank you!")
         
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

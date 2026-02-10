@@ -10,7 +10,6 @@ from src.nodes.feedback_nodes import summarizer_node
 from langgraph.checkpoint.memory import MemorySaver
 
 import os
-import asyncio
 
 from langgraph.prebuilt import ToolNode, tools_condition
 
@@ -55,7 +54,7 @@ from src.logger import logger
 #     return _mcp_tools
 
 
-async def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
+def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     """
     Build LangGraph workflow with MCP tool integration.
     """

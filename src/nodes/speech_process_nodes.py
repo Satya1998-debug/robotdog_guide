@@ -17,7 +17,9 @@ def text_to_speech(text: str) -> str:
     Convert text to audio using TTS model.
     """
     # uses TTS model
-    audio_data = "this is audio data generated from text"
+    #audio_data = "this is audio data generated from text"
+    audio_data = text  # Placeholder for actual audio data
+    print(f"{text}")
     return audio_data
 
 def listen_to_human(state: RobotDogState) -> RobotDogState:

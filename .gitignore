@@ -20,3 +20,7 @@ object_detection/door_dataset/
 # runs
 runs/
 *.pt
+
+# speech related files
+src/rag_server/output
+src/rag_server/speech_model

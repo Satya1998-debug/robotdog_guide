@@ -14,12 +14,6 @@ summarizer_LLM_model = "qwen2.5:3b-instruct"        # LLM-6: Summarization for f
 ENABLE_SUMMARY = True  # this will enable summarizer_node in workflow all the time
 
 ollama_base_url = "http://localhost:11434"
-# ollama_base_url_context = "http://localhost:11434"
-# ollama_base_url_conv = "http://localhost:11435"
-# ollama_base_url_rag = "http://localhost:11436"
-# ollama_base_url_tool = "http://localhost:11437"
-# ollama_base_url_summarizer = "http://localhost:11438"
-# ollama_base_url_clar = "http://localhost:11439"
 
 ## for orin
 # context_LLM_model        = "qwen2.5:7b-instruct"

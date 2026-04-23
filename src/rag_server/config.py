@@ -29,4 +29,4 @@ SPEECH_OUTPUT_DIR = "/home/ias/satya/robotdog_guide/src/rag_server/output/"
 VOSK_ENABLE_LOGS = False
 QUIET_ALSA_WARNINGS = True
 SPEAKER_DEVICE_INDEX = 26
-MIC_DEVICE_INDEX = 25
+MIC_DEVICE_INDEX = 1

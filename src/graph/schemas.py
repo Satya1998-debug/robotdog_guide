@@ -8,12 +8,12 @@ from typing import List, Dict, Optional, Literal
 
 # this indicates the object/state variabe within each node's output
 
-class SpeechToTextOutput(BaseModel):
-    original_query: str = Field(..., description="Transcribed text from audio input")
+# class SpeechToTextOutput(BaseModel):
+#     original_query: str = Field(..., description="Transcribed text from audio input")
 
 
-class TextToSpeechOutput(BaseModel):
-    audio_output: bool = Field(default=False, description="Whether audio was successfully generated")
+# class TextToSpeechOutput(BaseModel):
+#     audio_output: bool = Field(default=False, description="Whether audio was successfully generated")
 
 
 class ContextProcessorOutput(BaseModel):

@@ -9,7 +9,7 @@ import contextlib
 import time
 from datetime import datetime
     
-from config import (
+from src.rag_server.config import (
     SPEECH_RECOGNITION_MODEL_PATH,
     SPEECH_RECOGNITION_MODEL,
     SPEECH_OUTPUT_DIR,
@@ -262,26 +262,40 @@ class VoiceAssistant:
         if hasattr(self, "audio_interface") and self.audio_interface is not None:
             self.audio_interface.terminate()
 
-if __name__ == "__main__":
-    assistant = VoiceAssistant(enable_listening=True)
-    try:
-        # only play wav file for testing
-        # assistant.speak("/home/ias/satya/catkin_ws/src/door_navigation/scripts/output/dog-bark.wav")
-        text_response = "Hello! I am your door navigation assistant. How can I help you today?"
-        assistant.speak(text_response)
-        if assistant.recognizer is None:
-            print("Listening is disabled. Enable listening to use voice input.")
-        else:
-            while True:
-                user_input = assistant.get_voice_input()
-                print(f"You said: {user_input}")
-                if "exit" in user_input or "quit" in user_input:
-                    print("Exiting voice assistant.")
-                    break
-                response = f"You said: {user_input}"
-                assistant.speak(response)
+_voice_assistant_instance = None
 
-    finally:
-        assistant.close()
+def get_voice_assistant(enable_listening=True):
+    """Return a process-wide shared VoiceAssistant instance.
+
+    The instance is created lazily on first call so importing this module
+    does not initialize audio devices or Vosk.
+    """
+    global _voice_assistant_instance
+    if _voice_assistant_instance is None:
+        _voice_assistant_instance = VoiceAssistant(enable_listening=enable_listening)
+    return _voice_assistant_instance
+
+
+# if __name__ == "__main__":
+#     assistant = VoiceAssistant(enable_listening=True)
+#     try:
+#         # only play wav file for testing
+#         # assistant.speak("/home/ias/satya/catkin_ws/src/door_navigation/scripts/output/dog-bark.wav")
+#         text_response = "Hello! I am your door navigation assistant. How can I help you today?"
+#         assistant.speak(text_response)
+#         if assistant.recognizer is None:
+#             print("Listening is disabled. Enable listening to use voice input.")
+#         else:
+#             while True:
+#                 user_input = assistant.get_voice_input()
+#                 print(f"You said: {user_input}")
+#                 if "exit" in user_input or "quit" in user_input:
+#                     print("Exiting voice assistant.")
+#                     break
+#                 response = f"You said: {user_input}"
+#                 assistant.speak(response)
+
+#     finally:
+#         assistant.close()
     
  

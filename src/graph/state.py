@@ -6,7 +6,6 @@ from langgraph.graph.message import add_messages
 
 from src.graph.schemas import (
     ActionInputToToolsLLM,
-    SpeechToTextOutput,
     ContextProcessorOutput,
     DecisionNodeOutput,
     ConversationNodeOutput,
@@ -22,9 +21,6 @@ class RobotDogState(TypedDict):
 
     start_conversation: bool  # true if starting new conversation, of pursuit existing
     original_query: str       # raw user input query
-
-    # Speech Processing 
-    stt_node_output: Optional[SpeechToTextOutput]         # structured ASR output, has original_query
     
     # Context & Decision 
     # context_LLM_model: str                           # LLM-1 model used for context processing

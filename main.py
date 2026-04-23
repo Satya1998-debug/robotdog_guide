@@ -3,28 +3,30 @@ from src.graph.workflow import build_robotdog_workflow_graph
 from langchain_core.messages import SystemMessage
 from src.logger import logger
 from langgraph.types import Command
+from src.nodes.speech_process_nodes import text_to_speech, speech_to_text
+
 
 def get_user_permission():
     # user text from speech
-    from src.nodes.speech_process_nodes import speech_to_text
-    input_text = speech_to_text("")
-    if "yes" in input_text.lower() or "approve" in input_text.lower() or "okay" in input_text.lower():
+    input_text = speech_to_text()
+    if "yes" in input_text.lower() or "approve" in input_text.lower() or "okay" in input_text.lower() or "go ahead" in input_text.lower() or "proceed" in input_text.lower():
         return {"approved": True}
     else:        
         return {"approved": False}
     
 
-def main():
-
-    print("Hello from robotdog-guide!")
+def main(generate_graph=False):
+    logger.info("Initializing RobotDog system with ROS client and voice assistant")
+    logger.info("voice assiatnt imported. Building RobotDog workflow graph...")
     robot_graph = build_robotdog_workflow_graph()
     
     # # # Save the graph as PNG
-    # graph_png = robot_graph.get_graph(xray=True).draw_mermaid_png()
-    # with open("robotdog_graph10.png", "wb") as f:
-    #     f.write(graph_png)
-    # print("Graph saved.")    
-    
+    if generate_graph:
+        graph_png = robot_graph.get_graph(xray=True).draw_mermaid_png()
+        with open("robotdog_graph10.png", "wb") as f:
+            f.write(graph_png)
+        print("Graph saved.")    
+        
     logger.info("Starting RobotDog conversation loop...")
     while True:
         
@@ -42,22 +44,22 @@ def main():
         logger.info(f"A RobotDog session with thread ID: {thread_id} started.")
 
         # TODO: speak few sentences to start conversation
-        
-        print("Starting robotdog conversation ...")
+        logger.info("Starting RobotDog conversation...")
+        text_to_speech("Hello! I am your RobotDog assistant. How can I help you today?")
         result = robot_graph.invoke(initial_state, config=config_thread, )
         
         interrupt = result.get("__interrupt__", [])
         if interrupt:
-            from src.nodes.speech_process_nodes import text_to_speech
-            print(interrupt[0])
+            logger.info(f"Interrupt received: {interrupt[0]}")
             text = interrupt[0].value.get("message")
             text_to_speech(text)
         
         # need to resume graph
         final_state = robot_graph.invoke(Command(resume=get_user_permission()), config=config_thread)
         
-        # TODO: add audio saying goodbye
-        logger.info("Your RobotDog session has ended. Thank you!")
+        logger.info("Your RobotDog session has ended.")
+        end_text = "Your RobotDog session has ended. If you need further assistance, please start a new session. Goodbye!"
+        text_to_speech(end_text)
         
 if __name__ == "__main__":
     main()

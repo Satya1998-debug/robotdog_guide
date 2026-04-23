@@ -70,7 +70,7 @@ def navigate(person: str, location: str) -> Dict:
         "action": "navigate",
         "person": person,
         "location": location,
-        "message": f"Do you approve the navigation to {location} for {person}?"
+        "message": f"Do you approve the navigation to {location} for {person}? Shall I proceed with the navigation? Please say 'yes' to approve or 'no' to reject."
     })
     
     if response.get("approved"):

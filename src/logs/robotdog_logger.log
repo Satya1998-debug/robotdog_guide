@@ -1231,3 +1231,126 @@ Ready to go? Where would you like to start?
 2026-02-10 23:15:58,305 - INFO - Navigate to (Joachim Grimstad, 3.251) requested.
 2026-02-10 23:16:08,307 - INFO - Navigate to (Joachim Grimstad, 3.251) requested.
 2026-02-10 23:16:08,307 - INFO - User approved navigation to 3.251 for Joachim Grimstad. Executing navigation.
+2026-03-28 21:26:08,270 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:08,298 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:08,326 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:11,867 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:12,150 - INFO - Connection to ROS ready.
+2026-03-28 21:26:12,150 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:26:12,194 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:37,082 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:37,107 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:37,135 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:40,368 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:26:40,643 - INFO - Connection to ROS ready.
+2026-03-28 21:26:40,644 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:26:40,685 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:32,813 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:32,839 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:32,867 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:36,076 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:36,350 - INFO - Connection to ROS ready.
+2026-03-28 21:27:36,351 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:27:36,392 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:49,781 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:27:49,784 - INFO - Initializing RobotDog system with ROS client and voice assistant
+2026-03-28 21:27:49,785 - INFO - voice assiatnt imported. Building RobotDog workflow graph...
+2026-03-28 21:27:49,790 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-03-28 21:27:49,825 - INFO - Starting RobotDog conversation loop...
+2026-03-28 21:27:49,825 - INFO - A RobotDog session with thread ID: 141184 started.
+2026-03-28 21:27:49,825 - INFO - Starting RobotDog conversation...
+2026-03-28 21:27:49,830 - INFO - [Node] -> listen_to_human_node
+2026-03-28 21:32:12,263 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:12,289 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:12,317 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:15,533 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:15,810 - INFO - Connection to ROS ready.
+2026-03-28 21:32:15,810 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:32:15,852 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:28,102 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:32:28,105 - INFO - Initializing RobotDog system with ROS client and voice assistant
+2026-03-28 21:32:28,105 - INFO - voice assiatnt imported. Building RobotDog workflow graph...
+2026-03-28 21:32:28,110 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-03-28 21:32:28,143 - INFO - Starting RobotDog conversation loop...
+2026-03-28 21:32:28,143 - INFO - A RobotDog session with thread ID: 308614 started.
+2026-03-28 21:32:28,143 - INFO - Starting RobotDog conversation...
+2026-03-28 21:32:28,147 - INFO - [Node] -> listen_to_human_node
+2026-03-28 21:33:45,295 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:33:45,322 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:33:45,349 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:33:48,553 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:33:48,827 - INFO - Connection to ROS ready.
+2026-03-28 21:33:48,828 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:33:48,869 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:34:00,949 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:34:00,952 - INFO - Initializing RobotDog system with ROS client and voice assistant
+2026-03-28 21:34:00,952 - INFO - voice assiatnt imported. Building RobotDog workflow graph...
+2026-03-28 21:34:00,957 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-03-28 21:34:00,990 - INFO - Starting RobotDog conversation loop...
+2026-03-28 21:34:00,990 - INFO - A RobotDog session with thread ID: 277166 started.
+2026-03-28 21:34:00,990 - INFO - Starting RobotDog conversation...
+2026-03-28 21:35:04,283 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:04,308 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:04,336 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:07,565 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:07,840 - INFO - Connection to ROS ready.
+2026-03-28 21:35:07,840 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:35:07,882 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:19,988 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:35:19,991 - INFO - Initializing RobotDog system with ROS client and voice assistant
+2026-03-28 21:35:19,991 - INFO - voice assiatnt imported. Building RobotDog workflow graph...
+2026-03-28 21:35:19,996 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-03-28 21:35:20,029 - INFO - Starting RobotDog conversation loop...
+2026-03-28 21:35:20,029 - INFO - A RobotDog session with thread ID: 402833 started.
+2026-03-28 21:35:20,029 - INFO - Starting RobotDog conversation...
+2026-03-28 21:35:20,029 - INFO - [text_to_speech] Speaking: Hello! I am your RobotDog assistant. How can I help you today?
+2026-03-28 21:35:24,509 - INFO - [Node] -> listen_to_human_node
+2026-03-28 21:37:31,510 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:31,536 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:31,565 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:34,777 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:35,051 - INFO - Connection to ROS ready.
+2026-03-28 21:37:35,052 - INFO - Connected to ROS Bridge at 0.0.0.0:9090
+2026-03-28 21:37:35,093 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:47,263 - INFO - HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-03-28 21:37:47,266 - INFO - Initializing RobotDog system with ROS client and voice assistant
+2026-03-28 21:37:47,266 - INFO - voice assiatnt imported. Building RobotDog workflow graph...
+2026-03-28 21:37:47,271 - INFO - 
+=========== GRAPH Initialized ===========
+
+2026-03-28 21:37:47,305 - INFO - Starting RobotDog conversation loop...
+2026-03-28 21:37:47,305 - INFO - A RobotDog session with thread ID: 421991 started.
+2026-03-28 21:37:47,305 - INFO - Starting RobotDog conversation...
+2026-03-28 21:37:47,305 - INFO - [text_to_speech] Speaking: Hello! I am your RobotDog assistant. How can I help you today?
+2026-03-28 21:37:51,789 - INFO - [Node] -> listen_to_human_node
+2026-03-28 21:37:58,795 - INFO - [speech_to_text] Converted text: can you please take me to professor young's office
+2026-03-28 21:37:58,795 - INFO - [listen_to_human] Converted text: can you please take me to professor young's office
+2026-03-28 21:37:58,798 - INFO - [Node] -> context_processor_node
+2026-03-28 21:37:58,799 - INFO - [context_processor] Invoking context LLM...
+2026-03-28 21:38:08,935 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-03-28 21:38:29,357 - INFO - [context_processor] Context LLM completed. Intent: institutional
+2026-03-28 21:38:29,360 - INFO - [Node] -> decision_node
+2026-03-28 21:38:29,360 - INFO - [DecisionNode] Final intent: institutional | Confidence: {'institutional': 0.95, 'functional': 0.02, 'ambiguous': 0.03, 'conversation': 0.0}
+2026-03-28 21:38:29,361 - INFO - [Router] decide_query_intention: institutional -> rag_node
+2026-03-28 21:38:29,362 - INFO - [Node] -> rag_node
+2026-03-28 21:38:29,363 - INFO - [rag_node] Starting document retrieval...
+2026-03-28 21:38:29,363 - INFO - [RAG] Initializing DatabaseHandler...
+2026-03-28 21:38:29,401 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-03-28 21:38:29,615 - INFO - Use pytorch device_name: cpu
+2026-03-28 21:38:29,616 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2026-03-28 21:38:34,029 - INFO - DatabaseHandler initialized successfully.
+2026-03-28 21:38:34,030 - INFO - [RAG] DatabaseHandler initialized successfully
+2026-03-28 21:38:34,030 - INFO - [RAG] Querying vector database...
+2026-03-28 21:38:34,030 - INFO - Executing Query Retrieval.
+2026-03-28 21:38:34,474 - ERROR - [RAG Pipeline] Error in retrieving RAG output: Collection expecting embedding with dimension of 384, got 768
+2026-03-28 21:38:34,474 - INFO - [rag_node] Retrieved 0 docs | Query: can you please take me to professor young's office
+2026-03-28 21:38:34,474 - INFO - [rag_node] Invoking RAG LLM for structured output...
+2026-03-28 21:38:38,675 - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"

@@ -16,7 +16,7 @@ context_llm = ChatOllama(
     temperature=0.2,
 )
 
-# Use LLM-2 (conversation model) to generate response
+# use LLM-2 (conversation model) to generate response
 conv_llm = ChatOllama(
         model=conversation_LLM_model,
         base_url=ollama_base_url,
@@ -24,7 +24,7 @@ conv_llm = ChatOllama(
         temperature=0.7,  # higher temperature for more natural conversation
     )
 
-# Use same LLM (LLM-1) to generate clarification questionllm = ChatOllama(
+# use same LLM (LLM-1) to generate clarification questionllm = ChatOllama(
 clar_llm = ChatOllama(
         model=clarrification_LLM_model,
         base_url=ollama_base_url,
@@ -43,7 +43,7 @@ def context_processor(state: RobotDogState) -> RobotDogState:
     narrate("thinking")
     query = state.get("original_query", "")
 
-    # Combined prompt that extracts context AND classifies intent in ONE LLM call
+    # combined prompt that extracts context AND classifies intent in ONE LLM call
     system_prompt = """You are an expert assistant that performs comprehensive query analysis:
         1. Extract context tags (keywords related to university services, robot functions, location info, person names, etc.)
         2. Classify the intent into one of: institutional, functional, ambiguous, or conversation

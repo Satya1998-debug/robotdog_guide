@@ -2,7 +2,7 @@
 MCP Tools for RobotDog Indoor Navigation
 Dummy methods that will be exposed as MCP tools for controlling and interacting with RobotDog
 """
-
+# NOTE: This is the old MCP tools server. It is not used in the new workflow.
 import json
 import logging
 from typing import Dict, List, Tuple, Optional

@@ -7,7 +7,6 @@ from src.config import ollama_base_url, action_planner_LLM_model, tool_LLM_model
 from src.logger import logger
 
 # LLM with tools
-# Create LLM with tools bound (LangGraph pattern) once here
 tools_llm = ChatOllama(
         model=tool_LLM_model,  # LLM-5
         base_url=ollama_base_url,
@@ -25,7 +24,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
     logger.info("[Node] -> action_classifier_node")
     rag_node_output = state.get("rag_node_output", {})
     
-    # Extract action decision from RAG
+    # extract action decision from RAG
     requires_robot_action = rag_node_output.get("requires_robot_action", False)
     action_confidence = rag_node_output.get("action_confidence", 0.0)
     target_location = rag_node_output.get("target_location", None)
@@ -55,7 +54,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
     
     else:
     
-        # Robot action is needed - classify action type
+        # robot action is needed - classify action type
                 
         # fallback filters for action type classification
         if target_location or "navigation" in probable_actions or \
@@ -72,7 +71,7 @@ def action_classifier(state: RobotDogState) -> RobotDogState:
         
         logger.info(f"[action_classifier] Action type: {action_type} | Intent: {action_intent} | Location: {target_location} | Person: {target_person}")
                 
-        # Create ActionInput with all RAG data
+        # ActionInput object with all RAG data
         action_input_to_tools_llm = ActionInputToToolsLLM(
             rag_modified_query=query_lower,
             action_intent=action_intent,
@@ -106,7 +105,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
     
     messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
     
-    # Use LLM to generate action input with structured output
+    # use LLM to generate action input with structured output
     system_prompt = """You are a robot action planner that analyzes user commands and creates action inputs for robot execution.
 
         Your role is to:
@@ -149,7 +148,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
         HumanMessage(content=user_prompt),
     ])
 
-    # Use LLM-4 (action planning model) to generate ActionInputToMCP
+    # use LLM-4 (action planning model) to generate ActionInputToMCP
     action_llm = ChatOllama(
         model=state.get("action_planner_LLM_model", action_planner_LLM_model),  # LLM-4
         base_url=ollama_base_url,
@@ -157,7 +156,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
         temperature=0.3,  # Moderate temperature for creative but reliable planning
     )
 
-    # Invoke LLM with error handling
+    # invoke LLM with error handling
     try:
         logger.info("[action_planner] Invoking action planner LLM...")
         structured_llm = action_llm.with_structured_output(ActionInputToMCP)
@@ -165,7 +164,7 @@ def action_planner(state: RobotDogState) -> RobotDogState:
         logger.info(f"[action_planner] Action planner completed. Action type: {action_input_to_mcp.action_type}")
     except Exception as e:
         logger.error(f"[action_planner] Error invoking action planner LLM: {e}")
-        # Fallback - create basic action input
+        # fallback - create basic action input
         from src.graph.schemas import ActionInputToMCP
         action_input_to_mcp = ActionInputToMCP(
             action_intent="unknown",
@@ -182,10 +181,10 @@ def action_planner(state: RobotDogState) -> RobotDogState:
 
 def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     """
-    MCP model node following LangGraph documentation pattern.
+    LLM with tools node following LangGraph documentation pattern.
     
     Pattern:
-    1. Get MCP tools from global cache (initialized in workflow)
+    1. Get LLM with tools from global cache (initialized in workflow)
     2. Bind tools to LLM using bind_tools()
     3. Build context-rich messages from action_input_to_mcp
     4. LLM decides which tools to call (or none)
@@ -199,11 +198,11 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     from src.nodes.speech_process_nodes import narrate
     narrate("acting")
 
-    # Get action context
+    # get action context
     action_input_data = state.get("action_input_to_tools_llm", {})
     original_query = state.get("original_query", "")
     
-    # Extract action details
+    # extract action details
     action_intent = action_input_data.get("action_intent", "")
     action_type = action_input_data.get("action_type", "")
     target_location = action_input_data.get("target_location")
@@ -219,7 +218,7 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
     
     messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
     
-    # Build context-rich system message
+    # build context-rich system message
     system_msg = f"""You are a RobotDog assistant executing physical robot actions.
         Current Action Context:
         - Action Intent: {action_intent}
@@ -238,7 +237,7 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
         
         NOTE: After tool execution, generate a final response summarizing the action taken considering previous conversation."""
     
-    # Build user message
+    # build user message
     user_msg = f"""Execute this robot action: {rag_modified_query}
         Action Details:
         - Original query: {original_query}
@@ -258,18 +257,18 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
         toolnode_messages = state.get("messages", [])
         messages.extend(toolnode_messages)
     
-    # Invoke LLM with tools already bound, LLM will decide which tools to call
+    # invoke LLM with tools already bound, LLM will decide which tools to call
     try:
         logger.info("[llm_tools_node] Invoking LLM with tools...")
         response = llm_with_tools.invoke(messages)
         logger.info("[llm_tools_node] LLM with tools completed successfully")
     except Exception as e:
         logger.error(f"[llm_tools_node] Error invoking LLM with tools: {e}")
-        # Create a fallback AIMessage with no tool calls (will exit loop)
+        # create a fallback AIMessage with no tool calls (will exit loop)
         from langchain_core.messages import AIMessage
         response = AIMessage(content=f"I encountered an error while trying to execute the action: {str(e)}")
     
-    # Check what tools LLM decided to call
+    # check what tools LLM decided to call
     if hasattr(response, 'tool_calls') and response.tool_calls:
         tool_names = [tc.get("name") for tc in response.tool_calls]
         logger.info(f"[llm_tools_node] LLM decided tools: {tool_names}")
@@ -278,7 +277,7 @@ def call_llm_with_tools(state: RobotDogState) -> RobotDogState:
 
     # response_content = f"""Tool response: {response.toolcall_response}\nTools called: {response.tools_called}"""
     
-    # Return response with messages
+    # return response with messages
     # tools_condition will check if there are tool_calls and route accordingly
     return {"messages": [response],  # this message field is only the tool node to check the last message and execute tools if any call is made
             "chat_history": [SystemMessage(content="You are a helpful assistant that calls tools for robot actions."),

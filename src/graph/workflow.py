@@ -15,44 +15,6 @@ from langgraph.prebuilt import ToolNode, tools_condition
 
 from src.logger import logger
 
-# Initialize MCP client globally
-# _mcp_client = None
-# _mcp_tools = None
-
-# async def get_mcp_tools_async():
-#     """Get MCP tools asynchronously (cached after first call)"""
-#     global _mcp_client, _mcp_tools
-    
-#     if _mcp_tools is None:
-#         _mcp_client = MultiServerMCPClient(
-#             {
-#                 "robot_dog_tools_server": {
-#                     "command": "python",
-#                     "args": [os.path.join(os.path.dirname(__file__), "..", "mcp_servers", "robot_dog_tools_server.py")],
-#                     "transport": "stdio"
-#                 }
-#             }
-#         )
-#         # Get tools asynchronously
-#         _mcp_tools = await _mcp_client.get_tools()
-#         print(f"[Workflow] MCP tools initialized: {len(_mcp_tools)} tools available")
-    
-#     return _mcp_tools
-
-
-
-
-# def get_mcp_tools():
-#     """
-#     Get cached MCP tools (synchronous access).
-#     Must be called AFTER async initialization via get_mcp_tools_async().
-#     Used by action nodes that run synchronously in the graph.
-#     """
-#     global _mcp_tools
-#     if _mcp_tools is None:
-#         raise RuntimeError("MCP tools not initialized. Call get_mcp_tools_async() first during graph build.")
-#     return _mcp_tools
-
 
 def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     """
@@ -60,41 +22,41 @@ def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     """
     all_tools = get_all_tools()
 
-    # Graph definition
+    # graph definition
     graph = StateGraph(RobotDogState)
 
-    # Speech & Decision nodes
+    # speech & decision nodes
     graph.add_node("listen_to_human_node", listen_to_human)
     graph.add_node("context_processor_node", context_processor) # use LLM-1
     graph.add_node("decision_node", decision_node)
 
-    # Conversation nodes
+    # conversation nodes
     graph.add_node("conversation_node", conversation_node) # use LLM-2
     graph.add_node("clarification_node", clarification_node)
     
-    # RAG & Action nodes
+    # RAG & action nodes
     graph.add_node("rag_node", rag_pipeline) # use LLM-3
     graph.add_node("action_classifier_node", action_classifier)
     # graph.add_node("action_planner_node", action_planner) # use LLM-4
 
-    # MCP nodes (LangGraph pattern with ToolNode)
+    # LLM with tools nodes (LangGraph pattern with ToolNode)
     graph.add_node("llm_tools_node", call_llm_with_tools)  # Model decides which tools to call
     graph.add_node(ToolNode(all_tools))      # the node name has to be default "tools", as lagraph expects
 
-    # Feedback nodes
+    # feedback nodes
     # graph.add_node("perception_feedback_node", perception_feedback)
     graph.add_node("summarizer_node", summarizer_node)
     graph.add_node("speak_to_human_node", speak_to_human)
 
-    # Edges - main flow
+    # edges - main flow
     graph.add_edge(START, "listen_to_human_node")
     graph.add_conditional_edges("listen_to_human_node", should_continue)
     graph.add_edge("context_processor_node", "decision_node")  
 
-    # Decision routing
+    # decision routing
     graph.add_conditional_edges("decision_node", decide_query_intention)
 
-    # Conversation path
+    # conversation path
     graph.add_edge("conversation_node", "summarizer_node")
     graph.add_edge("clarification_node", "summarizer_node")
     
@@ -102,7 +64,7 @@ def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     graph.add_edge("rag_node", "action_classifier_node")
     graph.add_conditional_edges("action_classifier_node", decide_tool_call_execution)
     
-    # Action planner path (direct to MCP)
+    # action planner path (direct to LLM with tools)
     # graph.add_edge("action_planner_node", "llm_tools_node")
     
     # llm_tools_node -> tools_condition -> either "tools" or "__end__"
@@ -125,7 +87,7 @@ def build_robotdog_workflow_graph() -> StateGraph[RobotDogState]:
     # for history tracking
     checkpointer = MemorySaver() # save in ram
     
-    # Debug: Print graph structure
+    # debug: print graph structure
     logger.info("\n=========== GRAPH Initialized ===========\n")
 
     return graph.compile(checkpointer=checkpointer)

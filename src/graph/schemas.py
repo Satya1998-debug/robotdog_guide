@@ -8,14 +8,6 @@ from typing import List, Dict, Optional, Literal
 
 # this indicates the object/state variabe within each node's output
 
-# class SpeechToTextOutput(BaseModel):
-#     original_query: str = Field(..., description="Transcribed text from audio input")
-
-
-# class TextToSpeechOutput(BaseModel):
-#     audio_output: bool = Field(default=False, description="Whether audio was successfully generated")
-
-
 class ContextProcessorOutput(BaseModel):
     """Combined output from context processor that includes BOTH context extraction AND intent classification"""
     context_tags: Dict[str, str] = Field(default_factory=dict, description="Extracted context tags like location, time, person names, etc.")

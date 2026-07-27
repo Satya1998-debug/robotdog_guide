@@ -4,7 +4,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, RemoveMessage
 from src.config import summarizer_LLM_model, ollama_base_url, ENABLE_SUMMARY
 from src.logger import logger
 
-# Initialize summarization LLM
+# initialize summarization LLM
 summary_llm = ChatOllama(
                     model=summarizer_LLM_model,  # LLM-6
                     base_url=ollama_base_url,

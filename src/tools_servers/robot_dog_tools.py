@@ -14,6 +14,7 @@ from src.tools_servers.ros_client import RosCommandClient
 
 ros_client = RosCommandClient(logger=logger)
 
+# NOTE: not used as tool 
 def stand_up() -> Dict:
     """Method to make the robot dog stand up (Action). 
     
@@ -27,6 +28,7 @@ def stand_up() -> Dict:
     logger.info("Stand up executed.")
     return {"status": "success", "message": "Robot dog is now standing"}
 
+# NOTE: not used as tool 
 def sit_down() -> Dict:
     """Method to make the robot dog sit down (Action). 
 
@@ -57,11 +59,11 @@ def navigate(person: str, location: str) -> Dict:
     """
 
     # goal = {"person": person, "room": location}
-    # testing goal
+    
+    # testing goal used in the experiments
     goal = {"person": "satya", "room": "pos3"}
     
-    # TODO: Human-In-the-loop confirmation before executing navigation tool
-    # Pause execution to ask for user approval, using interrupt
+    # pause execution to ask for user approval, using interrupt HTIPL-1
     logger.info(f"Navigate to ({person}, {location}) requested.")
     response = interrupt({
         "action": "navigate",
@@ -74,7 +76,7 @@ def navigate(person: str, location: str) -> Dict:
         # go head with navigation
         logger.info(f"User approved navigation to {location} for {person}. Executing navigation.")
         try:
-            result = ros_client.start_navigation(goal, timeout=3)
+            result = ros_client.start_navigation(goal, timeout=600)
             if result.get("success"):
                 return {
                     "status": "success",
@@ -92,7 +94,8 @@ def navigate(person: str, location: str) -> Dict:
     else: # otherwise reject navigation
         logger.info(f"User rejected navigation to {location} for {person}.")
         return {"status": "failure", "reason": "User rejected navigation."}
-        
+
+# NOTE: not used as tool 
 def emergency_stop() -> Dict:
     """Emergency stop - halt all movement (Action). 
     
@@ -104,6 +107,7 @@ def emergency_stop() -> Dict:
     logger.info("Emergency stop executed.")
     return {"status": "success", "message": "Emergency stop activated"}
 
+# list of tools to be used in the workflow
 tools = [
     navigate,
 ]

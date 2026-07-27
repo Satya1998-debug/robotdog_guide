@@ -56,7 +56,7 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
     messages = []
     summary = state.get("summary", "")
     
-    # Retrieve relevant documents from vector database with error handling
+    # retrieve relevant documents from vector database with error handling
     try:
         logger.info("[rag_node] Starting document retrieval...")
         retrieved_docs = get_rag_output(summary + "\n" + query + "\n" + str(context_tags))
@@ -67,13 +67,13 @@ def rag_pipeline(state: RobotDogState) -> RobotDogState:
         retrieved_docs = []
         retrieved_context = "Error retrieving documents from knowledge base."
 
-    if summary:  # insert the summary first
+    if summary:  # insert the summary first for context
         summary_system_msg = f"Previous conversation summary: {summary}"
         messages.append(SystemMessage(content=summary_system_msg))
     
     messages.extend(state.get("chat_history", [])) # include prior chat history after previous session's summary
 
-    # Use LLM-3 to generate RAG-based response with structured output
+    # use LLM-3 to generate RAG-based response with structured output
     system_prompt = system_prompt = """
         You are a highly reliable robot assistant. You answer questions ONLY using the retrieved institutional context and your reasoning rules.
 
@@ -184,10 +184,10 @@ def get_rag_output(query):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         os.makedirs(rag_config.CHROMA_PATH, exist_ok=True)
 
-        # Get the handler (lazy initialization)
+        # get the handler (lazy initialization)
         vector_db_handler = get_vector_db_handler()
         
-        # Query with logging
+        # query with logging
         logger.info(f"[RAG] Querying vector database...")
         retrieved_docs = vector_db_handler.query(query) # get context from documents
         logger.info(f"[RAG] Query completed, retrieved {len(retrieved_docs) if retrieved_docs else 0} documents")

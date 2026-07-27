@@ -29,10 +29,10 @@ urllib3
 certifi
 
 # Voice/Audio Processing
-pyttsx3
-gtts
-# pyaudio - needs dependencies on Jetson: sudo apt-get install portaudio19-dev python3-pyaudio
-pyaudio
+# All audio (TTS, ASR, mic/speaker access) is delegated to the
+# `voice_assistant_node` on the robot side over rosbridge. The guide
+# process no longer opens pyaudio, vosk or pyttsx3 directly.
+# gtts  # kept commented in case a future non-rosbridge fallback is needed
 
 # Pydantic for data validation
 pydantic

@@ -28,7 +28,7 @@ SPEECH_RECOGNITION_MODEL_PATH = "/home/ias/satya/robotdog_guide/src/rag_server/s
 SPEECH_OUTPUT_DIR = "/home/ias/satya/robotdog_guide/src/rag_server/output/"
 VOSK_ENABLE_LOGS = False
 QUIET_ALSA_WARNINGS = True
-SPEAKER_DEVICE_INDEX = 1
+SPEAKER_DEVICE_INDEX = 25
 MIC_DEVICE_INDEX = 0
 
 # Speak short natural fillers at long-running graph nodes so the user

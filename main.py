@@ -1,6 +1,6 @@
 import os
 
-# Force fully offline operation for Hugging Face / Transformers:
+# fully offline operation for huggingface / transformers:
 # use only the local model cache, never contact huggingface.co.
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
@@ -27,7 +27,7 @@ def main(generate_graph=False):
     logger.info("voice assiatnt imported. Building RobotDog workflow graph...")
     robot_graph = build_robotdog_workflow_graph()
     
-    # # # Save the graph as PNG
+    # Save the graph as PNG
     if generate_graph:
         graph_png = robot_graph.get_graph(xray=True).draw_mermaid_png()
         with open("robotdog_graph10.png", "wb") as f:
@@ -50,12 +50,12 @@ def main(generate_graph=False):
         config_thread = {"configurable": {"thread_id": thread_id}, "recursion_limit": 100}  # this is number of nodes it will execute before hitting a END condition
         logger.info(f"A RobotDog session with thread ID: {thread_id} started.")
 
-        # TODO: speak few sentences to start conversation
+        # speak few sentences to start conversation
         logger.info("Starting RobotDog conversation...")
         text_to_speech("Hello! I am your RobotDog assistant. How can I help you today?")
         result = robot_graph.invoke(initial_state, config=config_thread)
 
-        # Handle any (possibly repeated) human-in-the-loop interrupts raised by tools.
+        # handle any (possibly repeated) human-in-the-loop interrupts raised by tools.
         while True:
             interrupt_list = result.get("__interrupt__", [])
             if not interrupt_list:

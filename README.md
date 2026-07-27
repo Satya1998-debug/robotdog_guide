@@ -10,17 +10,17 @@ Companion package on the ROS side: `[door_navigation](../catkin_ws/src/door_navi
 
 The guide connects speech input, the LangGraph agent, tool execution, rosbridge, and the downstream ROS navigation stack:
 
-Overall human-agent-rosbridge-ROS workflow
+![Overall human-agent-rosbridge-ROS workflow](docs/images/01_overall_workflow.png)
 
 ### Agent workflow through rosbridge
 
 The detailed agent graph routes each interaction through context processing, intent classification, RAG or conversation handling, human approval, and tool execution:
 
-Agentic workflow through the ROS bridge handover
+![Agentic workflow through the ROS bridge handover](docs/images/02_agentic_flow_till_bridge.png)
 
 The approved tool request is validated, packaged, and transported over the rosbridge WebSocket before execution feedback is returned to the agent:
 
-Tool invocation and rosbridge transport flow
+![Tool invocation and rosbridge transport flow](docs/images/03_bridge_flow.png)
 
 ---
 

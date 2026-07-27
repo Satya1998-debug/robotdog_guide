@@ -2,7 +2,7 @@
 
 Python 3.10 **LangGraph agent** that runs on the Jetson **outside ROS** and drives the Go1 by calling the `door_navigation` package's ROS services over **rosbridge**. It handles the human side of the guide use-case — listening, RAG-based knowledge answers, LLM-based intent classification, tool calls (navigate, etc.), human-in-the-loop confirmation, and speaking back.
 
-Companion package on the ROS side: `[door_navigation](../catkin_ws/src/door_navigation/README.md)`.
+Door Navigation ROS package (perception + coordinator + `/agent/start_navigation` service): [**door_navigation**](https://github.com/Satya1998-debug/door_navigation).
 
 ## Architecture highlights
 
